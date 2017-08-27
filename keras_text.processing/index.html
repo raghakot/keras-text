@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Tokenizing and padding - keras-text Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  <link href="../css/extras.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Tokenizing and padding";
+    var mkdocs_page_input_path = "keras_text.processing.md";
+    var mkdocs_page_url = "/keras_text.processing/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> keras-text Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">API Docs</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <span class="caption-text">Models</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.models.sequence_encoders/">Sequence Processing Models</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.models.token_model/">Sequence Model Builder Factory</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.models.sentence_model/">Sentence Model Builder Factory</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.models.layers/">Custom Layers</a>
+                </li>
+    </ul>
+                </li>
+                <li class=" current">
+                    
+    <span class="caption-text">Data Processing</span>
+    <ul class="subnav">
+                <li class="toctree-l3 current">
+                    
+    <a class="current" href="./">Tokenizing and padding</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l4"><a href="#pad_sequences">pad_sequences</a></li>
+    
+
+    <li class="toctree-l4"><a href="#unicodify">unicodify</a></li>
+    
+
+    <li class="toctree-l4"><a href="#tokenizer">Tokenizer</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l5" href="#tokenizerhas_vocab">Tokenizer.has_vocab</a></li>
+        
+            <li><a class="toctree-l5" href="#tokenizernum_texts">Tokenizer.num_texts</a></li>
+        
+            <li><a class="toctree-l5" href="#tokenizernum_tokens">Tokenizer.num_tokens</a></li>
+        
+            <li><a class="toctree-l5" href="#tokenizertoken_counts">Tokenizer.token_counts</a></li>
+        
+            <li><a class="toctree-l5" href="#tokenizertoken_index">Tokenizer.token_index</a></li>
+        
+            <li><a class="toctree-l5" href="#tokenizer__init__">Tokenizer.__init__</a></li>
+        
+            <li><a class="toctree-l5" href="#tokenizerapply_encoding_options">Tokenizer.apply_encoding_options</a></li>
+        
+            <li><a class="toctree-l5" href="#tokenizerbuild_vocab">Tokenizer.build_vocab</a></li>
+        
+            <li><a class="toctree-l5" href="#tokenizercreate_token_indices">Tokenizer.create_token_indices</a></li>
+        
+            <li><a class="toctree-l5" href="#tokenizerdecode_texts">Tokenizer.decode_texts</a></li>
+        
+            <li><a class="toctree-l5" href="#tokenizerencode_texts">Tokenizer.encode_texts</a></li>
+        
+            <li><a class="toctree-l5" href="#tokenizerget_counts">Tokenizer.get_counts</a></li>
+        
+            <li><a class="toctree-l5" href="#tokenizerget_stats">Tokenizer.get_stats</a></li>
+        
+            <li><a class="toctree-l5" href="#tokenizersave">Tokenizer.save</a></li>
+        
+            <li><a class="toctree-l5" href="#tokenizertoken_generator">Tokenizer.token_generator</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l4"><a href="#wordtokenizer">WordTokenizer</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l5" href="#wordtokenizerhas_vocab">WordTokenizer.has_vocab</a></li>
+        
+            <li><a class="toctree-l5" href="#wordtokenizernum_texts">WordTokenizer.num_texts</a></li>
+        
+            <li><a class="toctree-l5" href="#wordtokenizernum_tokens">WordTokenizer.num_tokens</a></li>
+        
+            <li><a class="toctree-l5" href="#wordtokenizertoken_counts">WordTokenizer.token_counts</a></li>
+        
+            <li><a class="toctree-l5" href="#wordtokenizertoken_index">WordTokenizer.token_index</a></li>
+        
+            <li><a class="toctree-l5" href="#wordtokenizer__init__">WordTokenizer.__init__</a></li>
+        
+            <li><a class="toctree-l5" href="#wordtokenizerapply_encoding_options">WordTokenizer.apply_encoding_options</a></li>
+        
+            <li><a class="toctree-l5" href="#wordtokenizerbuild_vocab">WordTokenizer.build_vocab</a></li>
+        
+            <li><a class="toctree-l5" href="#wordtokenizercreate_token_indices">WordTokenizer.create_token_indices</a></li>
+        
+            <li><a class="toctree-l5" href="#wordtokenizerdecode_texts">WordTokenizer.decode_texts</a></li>
+        
+            <li><a class="toctree-l5" href="#wordtokenizerencode_texts">WordTokenizer.encode_texts</a></li>
+        
+            <li><a class="toctree-l5" href="#wordtokenizerget_counts">WordTokenizer.get_counts</a></li>
+        
+            <li><a class="toctree-l5" href="#wordtokenizerget_stats">WordTokenizer.get_stats</a></li>
+        
+            <li><a class="toctree-l5" href="#wordtokenizersave">WordTokenizer.save</a></li>
+        
+            <li><a class="toctree-l5" href="#wordtokenizertoken_generator">WordTokenizer.token_generator</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l4"><a href="#sentencewordtokenizer">SentenceWordTokenizer</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l5" href="#sentencewordtokenizerhas_vocab">SentenceWordTokenizer.has_vocab</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencewordtokenizernum_texts">SentenceWordTokenizer.num_texts</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencewordtokenizernum_tokens">SentenceWordTokenizer.num_tokens</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencewordtokenizertoken_counts">SentenceWordTokenizer.token_counts</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencewordtokenizertoken_index">SentenceWordTokenizer.token_index</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencewordtokenizer__init__">SentenceWordTokenizer.__init__</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencewordtokenizerapply_encoding_options">SentenceWordTokenizer.apply_encoding_options</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencewordtokenizerbuild_vocab">SentenceWordTokenizer.build_vocab</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencewordtokenizercreate_token_indices">SentenceWordTokenizer.create_token_indices</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencewordtokenizerdecode_texts">SentenceWordTokenizer.decode_texts</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencewordtokenizerencode_texts">SentenceWordTokenizer.encode_texts</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencewordtokenizerget_counts">SentenceWordTokenizer.get_counts</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencewordtokenizerget_stats">SentenceWordTokenizer.get_stats</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencewordtokenizersave">SentenceWordTokenizer.save</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencewordtokenizertoken_generator">SentenceWordTokenizer.token_generator</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l4"><a href="#chartokenizer">CharTokenizer</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l5" href="#chartokenizerhas_vocab">CharTokenizer.has_vocab</a></li>
+        
+            <li><a class="toctree-l5" href="#chartokenizernum_texts">CharTokenizer.num_texts</a></li>
+        
+            <li><a class="toctree-l5" href="#chartokenizernum_tokens">CharTokenizer.num_tokens</a></li>
+        
+            <li><a class="toctree-l5" href="#chartokenizertoken_counts">CharTokenizer.token_counts</a></li>
+        
+            <li><a class="toctree-l5" href="#chartokenizertoken_index">CharTokenizer.token_index</a></li>
+        
+            <li><a class="toctree-l5" href="#chartokenizer__init__">CharTokenizer.__init__</a></li>
+        
+            <li><a class="toctree-l5" href="#chartokenizerapply_encoding_options">CharTokenizer.apply_encoding_options</a></li>
+        
+            <li><a class="toctree-l5" href="#chartokenizerbuild_vocab">CharTokenizer.build_vocab</a></li>
+        
+            <li><a class="toctree-l5" href="#chartokenizercreate_token_indices">CharTokenizer.create_token_indices</a></li>
+        
+            <li><a class="toctree-l5" href="#chartokenizerdecode_texts">CharTokenizer.decode_texts</a></li>
+        
+            <li><a class="toctree-l5" href="#chartokenizerencode_texts">CharTokenizer.encode_texts</a></li>
+        
+            <li><a class="toctree-l5" href="#chartokenizerget_counts">CharTokenizer.get_counts</a></li>
+        
+            <li><a class="toctree-l5" href="#chartokenizerget_stats">CharTokenizer.get_stats</a></li>
+        
+            <li><a class="toctree-l5" href="#chartokenizersave">CharTokenizer.save</a></li>
+        
+            <li><a class="toctree-l5" href="#chartokenizertoken_generator">CharTokenizer.token_generator</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l4"><a href="#sentencechartokenizer">SentenceCharTokenizer</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l5" href="#sentencechartokenizerhas_vocab">SentenceCharTokenizer.has_vocab</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencechartokenizernum_texts">SentenceCharTokenizer.num_texts</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencechartokenizernum_tokens">SentenceCharTokenizer.num_tokens</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencechartokenizertoken_counts">SentenceCharTokenizer.token_counts</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencechartokenizertoken_index">SentenceCharTokenizer.token_index</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencechartokenizer__init__">SentenceCharTokenizer.__init__</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencechartokenizerapply_encoding_options">SentenceCharTokenizer.apply_encoding_options</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencechartokenizerbuild_vocab">SentenceCharTokenizer.build_vocab</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencechartokenizercreate_token_indices">SentenceCharTokenizer.create_token_indices</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencechartokenizerdecode_texts">SentenceCharTokenizer.decode_texts</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencechartokenizerencode_texts">SentenceCharTokenizer.encode_texts</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencechartokenizerget_counts">SentenceCharTokenizer.get_counts</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencechartokenizerget_stats">SentenceCharTokenizer.get_stats</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencechartokenizersave">SentenceCharTokenizer.save</a></li>
+        
+            <li><a class="toctree-l5" href="#sentencechartokenizertoken_generator">SentenceCharTokenizer.token_generator</a></li>
+        
+        </ul>
+    
+
+    </ul>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.data/">Dataset management</a>
+                </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Utilities</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.generators/">Generators</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.sampling/">Sampling</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.utils/">Utils</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">keras-text Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>API Docs &raquo;</li>
+        
+      
+        
+          <li>Data Processing &raquo;</li>
+        
+      
+    
+    <li>Tokenizing and padding</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="http://github.com/raghakot/keras-text/blob/master/docs/templates/keras_text.processing.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L0">keras_text/processing.py#L0</a></p>
+<hr />
+<h3 id="pad_sequences"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L171">pad_sequences</a></h3>
+<pre><code class="python">pad_sequences(sequences, max_sentences=None, max_tokens=None, padding=&quot;pre&quot;, truncating=&quot;post&quot;, \
+    value=0.0)
+</code></pre>
+
+<p>Pads each sequence to the same length (length of the longest sequence or provided override).</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>sequences</strong>:  list of list (samples, words) or list of list of list (samples, sentences, words)</li>
+<li><strong>max_sentences</strong>:  The max sentence length to use. If None, largest sentence length is used.</li>
+<li><strong>max_tokens</strong>:  The max word length to use. If None, largest word length is used.</li>
+<li><strong>padding</strong>:  'pre' or 'post', pad either before or after each sequence.</li>
+<li><strong>truncating</strong>:  'pre' or 'post', remove values from sequences larger than max_sentences or max_tokens
+  either in the beginning or in the end of the sentence or word sequence respectively.</li>
+<li><strong>value</strong>:  The padding value.</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>Numpy array of (samples, max_sentences, max_tokens) or (samples, max_tokens) depending on the sequence input.</p>
+<p><em>Raises:</em></p>
+<ul>
+<li><strong>ValueError</strong>:  in case of invalid values for <code>truncating</code> or <code>padding</code>.</li>
+</ul>
+<hr />
+<h3 id="unicodify"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L206">unicodify</a></h3>
+<pre><code class="python">unicodify(texts)
+</code></pre>
+
+<p>Encodes all text sequences as unicode. This is a python2 hassle.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>texts</strong>:  The sequence of texts.</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>Unicode encoded sequences.</p>
+<hr />
+<h2 id="tokenizer"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L218">Tokenizer</a></h2>
+<h4 id="tokenizerhas_vocab">Tokenizer.has_vocab</h4>
+<h4 id="tokenizernum_texts">Tokenizer.num_texts</h4>
+<p>The number of texts used to build the vocabulary.</p>
+<h4 id="tokenizernum_tokens">Tokenizer.num_tokens</h4>
+<p>Number of unique tokens for use in enccoding/decoding.
+This can change with calls to <code>apply_encoding_options</code>.</p>
+<h4 id="tokenizertoken_counts">Tokenizer.token_counts</h4>
+<p>Dictionary of token -&gt; count values for the text corpus used to <code>build_vocab</code>.</p>
+<h4 id="tokenizertoken_index">Tokenizer.token_index</h4>
+<p>Dictionary of token -&gt; idx mappings. This can change with calls to <code>apply_encoding_options</code>.</p>
+<hr />
+<h3 id="tokenizer__init__"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L220">Tokenizer.<code>__init__</code></a></h3>
+<pre><code class="python">__init__(self, lang=&quot;en&quot;, lower=True)
+</code></pre>
+
+<p>Encodes text into <code>(samples, aux_indices..., token)</code> where each token is mapped to a unique index starting
+from <code>1</code>. Note that <code>0</code> is a reserved for unknown tokens.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>lang</strong>:  The spacy language to use. (Default value: 'en')</li>
+<li><strong>lower</strong>:  Lower cases the tokens if True. (Default value: True)</li>
+</ul>
+<hr />
+<h3 id="tokenizerapply_encoding_options"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L266">Tokenizer.apply_encoding_options</a></h3>
+<pre><code class="python">apply_encoding_options(self, min_token_count=1, max_tokens=None)
+</code></pre>
+
+<p>Applies the given settings for subsequent calls to <code>encode_texts</code> and <code>decode_texts</code>. This allows you to
+play with different settings without having to re-run tokenization on the entire corpus.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>min_token_count</strong>:  The minimum token count (frequency) in order to include during encoding. All tokens
+  below this frequency will be encoded to <code>0</code> which corresponds to unknown token. (Default value = 1)</li>
+<li><strong>max_tokens</strong>:  The maximum number of tokens to keep, based their frequency. Only the most common <code>max_tokens</code>
+  tokens will be kept. Set to None to keep everything. (Default value: None)</li>
+</ul>
+<hr />
+<h3 id="tokenizerbuild_vocab"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L352">Tokenizer.build_vocab</a></h3>
+<pre><code class="python">build_vocab(self, texts, verbose=1, **kwargs)
+</code></pre>
+
+<p>Builds the internal vocabulary and computes various statistics.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>texts</strong>:  The list of text items to encode.</li>
+<li><strong>verbose</strong>:  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)
+**kwargs: The kwargs for <code>token_generator</code>.</li>
+</ul>
+<hr />
+<h3 id="tokenizercreate_token_indices"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L256">Tokenizer.create_token_indices</a></h3>
+<pre><code class="python">create_token_indices(self, tokens)
+</code></pre>
+
+<p>If <code>apply_encoding_options</code> is inadequate, one can retrieve tokens from <code>self.token_counts</code>, filter with
+a desired strategy and regenerate <code>token_index</code> using this method. The token index is subsequently used
+when <code>encode_texts</code> or <code>decode_texts</code> methods are called.</p>
+<hr />
+<h3 id="tokenizerdecode_texts"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L332">Tokenizer.decode_texts</a></h3>
+<pre><code class="python">decode_texts(self, encoded_texts, unknown_token=&quot;&lt;UNK&gt;&quot;, inplace=True)
+</code></pre>
+
+<p>Decodes the texts using internal vocabulary. The list structure is maintained.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>encoded_texts</strong>:  The list of texts to decode.</li>
+<li><strong>unknown_token</strong>:  The placeholder value for unknown token. (Default value: "<UNK>")</li>
+<li><strong>inplace</strong>:  True to make changes inplace. (Default value: True)</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The decoded texts.</p>
+<hr />
+<h3 id="tokenizerencode_texts"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L297">Tokenizer.encode_texts</a></h3>
+<pre><code class="python">encode_texts(self, texts, include_oov=False, verbose=1, **kwargs)
+</code></pre>
+
+<p>Encodes the given texts using internal vocabulary with optionally applied encoding options. See
+<code>`apply_encoding_options</code> to set various options.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>texts</strong>:  The list of text items to encode.</li>
+<li><strong>include_oov</strong>:  True to map unknown (out of vocab) tokens to 0. False to exclude the token.</li>
+<li><strong>verbose</strong>:  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)
+**kwargs: The kwargs for <code>token_generator</code>.</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The encoded texts.</p>
+<hr />
+<h3 id="tokenizerget_counts"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L385">Tokenizer.get_counts</a></h3>
+<pre><code class="python">get_counts(self, i)
+</code></pre>
+
+<p>Numpy array of count values for aux_indices. For example, if <code>token_generator</code> generates
+<code>(text_idx, sentence_idx, word)</code>, then <code>get_counts(0)</code> returns the numpy array of sentence lengths across
+texts. Similarly, <code>get_counts(1)</code> will return the numpy array of token lengths across sentences.</p>
+<p>This is useful to plot histogram or eyeball the distributions. For getting standard statistics, you can use
+<code>get_stats</code> method.</p>
+<hr />
+<h3 id="tokenizerget_stats"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L397">Tokenizer.get_stats</a></h3>
+<pre><code class="python">get_stats(self, i)
+</code></pre>
+
+<p>Gets the standard statistics for aux_index <code>i</code>. For example, if <code>token_generator</code> generates
+<code>(text_idx, sentence_idx, word)</code>, then <code>get_stats(0)</code> will return various statistics about sentence lengths
+across texts. Similarly, <code>get_counts(1)</code> will return statistics of token lengths across sentences.</p>
+<p>This information can be used to pad or truncate inputs.</p>
+<hr />
+<h3 id="tokenizersave"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L412">Tokenizer.save</a></h3>
+<pre><code class="python">save(self, file_path)
+</code></pre>
+
+<p>Serializes this tokenizer to a file.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>file_path</strong>:  The file path to use.</li>
+</ul>
+<hr />
+<h3 id="tokenizertoken_generator"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L241">Tokenizer.token_generator</a></h3>
+<pre><code class="python">token_generator(self, texts, **kwargs)
+</code></pre>
+
+<p>Generator for yielding tokens. You need to implement this method.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>texts</strong>:  list of text items to tokenize.
+**kwargs: The kwargs propagated from <code>build_vocab_and_encode</code> or <code>encode_texts</code> call.</li>
+</ul>
+<p><em>Returns:</em></p>
+<p><code>(text_idx, aux_indices..., token)</code> where aux_indices are optional. For example, if you want to vectorize
+  <code>texts</code> as <code>(text_idx, sentences, words), you should return</code>(text_idx, sentence_idx, word_token)`.
+  Similarly, you can include paragraph, page level information etc., if needed.</p>
+<hr />
+<h2 id="wordtokenizer"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L462">WordTokenizer</a></h2>
+<h4 id="wordtokenizerhas_vocab">WordTokenizer.has_vocab</h4>
+<h4 id="wordtokenizernum_texts">WordTokenizer.num_texts</h4>
+<p>The number of texts used to build the vocabulary.</p>
+<h4 id="wordtokenizernum_tokens">WordTokenizer.num_tokens</h4>
+<p>Number of unique tokens for use in enccoding/decoding.
+This can change with calls to <code>apply_encoding_options</code>.</p>
+<h4 id="wordtokenizertoken_counts">WordTokenizer.token_counts</h4>
+<p>Dictionary of token -&gt; count values for the text corpus used to <code>build_vocab</code>.</p>
+<h4 id="wordtokenizertoken_index">WordTokenizer.token_index</h4>
+<p>Dictionary of token -&gt; idx mappings. This can change with calls to <code>apply_encoding_options</code>.</p>
+<hr />
+<h3 id="wordtokenizer__init__"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L464">WordTokenizer.<code>__init__</code></a></h3>
+<pre><code class="python">__init__(self, lang=&quot;en&quot;, lower=True, lemmatize=False, remove_punct=True, remove_digits=True, \
+    remove_stop_words=False, exclude_oov=False, exclude_pos_tags=None, \
+    exclude_entities=['PERSON'])
+</code></pre>
+
+<p>Encodes text into <code>(samples, words)</code></p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>lang</strong>:  The spacy language to use. (Default value: 'en')</li>
+<li><strong>lower</strong>:  Lower cases the tokens if True. (Default value: True)</li>
+<li><strong>lemmatize</strong>:  Lemmatizes words when set to True. This also makes the word lower case
+  irrespective if the <code>lower</code> setting. (Default value: False)</li>
+<li><strong>remove_punct</strong>:  Removes punct words if True. (Default value: True)</li>
+<li><strong>remove_digits</strong>:  Removes digit words if True. (Default value: True)</li>
+<li><strong>remove_stop_words</strong>:  Removes stop words if True. (Default value: False)</li>
+<li><strong>exclude_oov</strong>:  Exclude words that are out of spacy embedding's vocabulary.
+  By default, GloVe 1 million, 300 dim are used. You can override spacy vocabulary with a custom
+  embedding to change this. (Default value: False)</li>
+<li><strong>exclude_pos_tags</strong>:  A list of parts of speech tags to exclude. Can be any of spacy.parts_of_speech.IDS
+  (Default value: None)</li>
+<li><strong>exclude_entities</strong>:  A list of entity types to be excluded.
+  Supported entity types can be found here: https://spacy.io/docs/usage/entity-recognition#entity-types
+  (Default value: ['PERSON'])</li>
+</ul>
+<hr />
+<h3 id="wordtokenizerapply_encoding_options"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L266">WordTokenizer.apply_encoding_options</a></h3>
+<pre><code class="python">apply_encoding_options(self, min_token_count=1, max_tokens=None)
+</code></pre>
+
+<p>Applies the given settings for subsequent calls to <code>encode_texts</code> and <code>decode_texts</code>. This allows you to
+play with different settings without having to re-run tokenization on the entire corpus.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>min_token_count</strong>:  The minimum token count (frequency) in order to include during encoding. All tokens
+  below this frequency will be encoded to <code>0</code> which corresponds to unknown token. (Default value = 1)</li>
+<li><strong>max_tokens</strong>:  The maximum number of tokens to keep, based their frequency. Only the most common <code>max_tokens</code>
+  tokens will be kept. Set to None to keep everything. (Default value: None)</li>
+</ul>
+<hr />
+<h3 id="wordtokenizerbuild_vocab"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L352">WordTokenizer.build_vocab</a></h3>
+<pre><code class="python">build_vocab(self, texts, verbose=1, **kwargs)
+</code></pre>
+
+<p>Builds the internal vocabulary and computes various statistics.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>texts</strong>:  The list of text items to encode.</li>
+<li><strong>verbose</strong>:  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)
+**kwargs: The kwargs for <code>token_generator</code>.</li>
+</ul>
+<hr />
+<h3 id="wordtokenizercreate_token_indices"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L256">WordTokenizer.create_token_indices</a></h3>
+<pre><code class="python">create_token_indices(self, tokens)
+</code></pre>
+
+<p>If <code>apply_encoding_options</code> is inadequate, one can retrieve tokens from <code>self.token_counts</code>, filter with
+a desired strategy and regenerate <code>token_index</code> using this method. The token index is subsequently used
+when <code>encode_texts</code> or <code>decode_texts</code> methods are called.</p>
+<hr />
+<h3 id="wordtokenizerdecode_texts"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L332">WordTokenizer.decode_texts</a></h3>
+<pre><code class="python">decode_texts(self, encoded_texts, unknown_token=&quot;&lt;UNK&gt;&quot;, inplace=True)
+</code></pre>
+
+<p>Decodes the texts using internal vocabulary. The list structure is maintained.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>encoded_texts</strong>:  The list of texts to decode.</li>
+<li><strong>unknown_token</strong>:  The placeholder value for unknown token. (Default value: "<UNK>")</li>
+<li><strong>inplace</strong>:  True to make changes inplace. (Default value: True)</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The decoded texts.</p>
+<hr />
+<h3 id="wordtokenizerencode_texts"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L297">WordTokenizer.encode_texts</a></h3>
+<pre><code class="python">encode_texts(self, texts, include_oov=False, verbose=1, **kwargs)
+</code></pre>
+
+<p>Encodes the given texts using internal vocabulary with optionally applied encoding options. See
+<code>`apply_encoding_options</code> to set various options.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>texts</strong>:  The list of text items to encode.</li>
+<li><strong>include_oov</strong>:  True to map unknown (out of vocab) tokens to 0. False to exclude the token.</li>
+<li><strong>verbose</strong>:  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)
+**kwargs: The kwargs for <code>token_generator</code>.</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The encoded texts.</p>
+<hr />
+<h3 id="wordtokenizerget_counts"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L385">WordTokenizer.get_counts</a></h3>
+<pre><code class="python">get_counts(self, i)
+</code></pre>
+
+<p>Numpy array of count values for aux_indices. For example, if <code>token_generator</code> generates
+<code>(text_idx, sentence_idx, word)</code>, then <code>get_counts(0)</code> returns the numpy array of sentence lengths across
+texts. Similarly, <code>get_counts(1)</code> will return the numpy array of token lengths across sentences.</p>
+<p>This is useful to plot histogram or eyeball the distributions. For getting standard statistics, you can use
+<code>get_stats</code> method.</p>
+<hr />
+<h3 id="wordtokenizerget_stats"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L397">WordTokenizer.get_stats</a></h3>
+<pre><code class="python">get_stats(self, i)
+</code></pre>
+
+<p>Gets the standard statistics for aux_index <code>i</code>. For example, if <code>token_generator</code> generates
+<code>(text_idx, sentence_idx, word)</code>, then <code>get_stats(0)</code> will return various statistics about sentence lengths
+across texts. Similarly, <code>get_counts(1)</code> will return statistics of token lengths across sentences.</p>
+<p>This information can be used to pad or truncate inputs.</p>
+<hr />
+<h3 id="wordtokenizersave"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L412">WordTokenizer.save</a></h3>
+<pre><code class="python">save(self, file_path)
+</code></pre>
+
+<p>Serializes this tokenizer to a file.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>file_path</strong>:  The file path to use.</li>
+</ul>
+<hr />
+<h3 id="wordtokenizertoken_generator"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L531">WordTokenizer.token_generator</a></h3>
+<pre><code class="python">token_generator(self, texts, **kwargs)
+</code></pre>
+
+<p>Yields tokens from texts as <code>(text_idx, word)</code></p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>texts</strong>:  The list of texts.
+**kwargs: Supported args include:
+  n_threads/num_threads: Number of threads to use. Uses num_cpus - 1 by default.</li>
+<li><strong>batch_size</strong>:  The number of texts to accumulate into a common working set before processing.
+  (Default value: 1000)</li>
+</ul>
+<hr />
+<h2 id="sentencewordtokenizer"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L558">SentenceWordTokenizer</a></h2>
+<h4 id="sentencewordtokenizerhas_vocab">SentenceWordTokenizer.has_vocab</h4>
+<h4 id="sentencewordtokenizernum_texts">SentenceWordTokenizer.num_texts</h4>
+<p>The number of texts used to build the vocabulary.</p>
+<h4 id="sentencewordtokenizernum_tokens">SentenceWordTokenizer.num_tokens</h4>
+<p>Number of unique tokens for use in enccoding/decoding.
+This can change with calls to <code>apply_encoding_options</code>.</p>
+<h4 id="sentencewordtokenizertoken_counts">SentenceWordTokenizer.token_counts</h4>
+<p>Dictionary of token -&gt; count values for the text corpus used to <code>build_vocab</code>.</p>
+<h4 id="sentencewordtokenizertoken_index">SentenceWordTokenizer.token_index</h4>
+<p>Dictionary of token -&gt; idx mappings. This can change with calls to <code>apply_encoding_options</code>.</p>
+<hr />
+<h3 id="sentencewordtokenizer__init__"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L560">SentenceWordTokenizer.<code>__init__</code></a></h3>
+<pre><code class="python">__init__(self, lang=&quot;en&quot;, lower=True, lemmatize=False, remove_punct=True, remove_digits=True, \
+    remove_stop_words=False, exclude_oov=False, exclude_pos_tags=None, \
+    exclude_entities=['PERSON'])
+</code></pre>
+
+<p>Encodes text into <code>(samples, sentences, words)</code></p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>lang</strong>:  The spacy language to use. (Default value: 'en')</li>
+<li><strong>lower</strong>:  Lower cases the tokens if True. (Default value: True)</li>
+<li><strong>lemmatize</strong>:  Lemmatizes words when set to True. This also makes the word lower case
+  irrespective if the <code>lower</code> setting. (Default value: False)</li>
+<li><strong>remove_punct</strong>:  Removes punct words if True. (Default value: True)</li>
+<li><strong>remove_digits</strong>:  Removes digit words if True. (Default value: True)</li>
+<li><strong>remove_stop_words</strong>:  Removes stop words if True. (Default value: False)</li>
+<li><strong>exclude_oov</strong>:  Exclude words that are out of spacy embedding's vocabulary.
+  By default, GloVe 1 million, 300 dim are used. You can override spacy vocabulary with a custom
+  embedding to change this. (Default value: False)</li>
+<li><strong>exclude_pos_tags</strong>:  A list of parts of speech tags to exclude. Can be any of spacy.parts_of_speech.IDS
+  (Default value: None)</li>
+<li><strong>exclude_entities</strong>:  A list of entity types to be excluded.
+  Supported entity types can be found here: https://spacy.io/docs/usage/entity-recognition#entity-types
+  (Default value: ['PERSON'])</li>
+</ul>
+<hr />
+<h3 id="sentencewordtokenizerapply_encoding_options"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L266">SentenceWordTokenizer.apply_encoding_options</a></h3>
+<pre><code class="python">apply_encoding_options(self, min_token_count=1, max_tokens=None)
+</code></pre>
+
+<p>Applies the given settings for subsequent calls to <code>encode_texts</code> and <code>decode_texts</code>. This allows you to
+play with different settings without having to re-run tokenization on the entire corpus.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>min_token_count</strong>:  The minimum token count (frequency) in order to include during encoding. All tokens
+  below this frequency will be encoded to <code>0</code> which corresponds to unknown token. (Default value = 1)</li>
+<li><strong>max_tokens</strong>:  The maximum number of tokens to keep, based their frequency. Only the most common <code>max_tokens</code>
+  tokens will be kept. Set to None to keep everything. (Default value: None)</li>
+</ul>
+<hr />
+<h3 id="sentencewordtokenizerbuild_vocab"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L352">SentenceWordTokenizer.build_vocab</a></h3>
+<pre><code class="python">build_vocab(self, texts, verbose=1, **kwargs)
+</code></pre>
+
+<p>Builds the internal vocabulary and computes various statistics.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>texts</strong>:  The list of text items to encode.</li>
+<li><strong>verbose</strong>:  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)
+**kwargs: The kwargs for <code>token_generator</code>.</li>
+</ul>
+<hr />
+<h3 id="sentencewordtokenizercreate_token_indices"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L256">SentenceWordTokenizer.create_token_indices</a></h3>
+<pre><code class="python">create_token_indices(self, tokens)
+</code></pre>
+
+<p>If <code>apply_encoding_options</code> is inadequate, one can retrieve tokens from <code>self.token_counts</code>, filter with
+a desired strategy and regenerate <code>token_index</code> using this method. The token index is subsequently used
+when <code>encode_texts</code> or <code>decode_texts</code> methods are called.</p>
+<hr />
+<h3 id="sentencewordtokenizerdecode_texts"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L332">SentenceWordTokenizer.decode_texts</a></h3>
+<pre><code class="python">decode_texts(self, encoded_texts, unknown_token=&quot;&lt;UNK&gt;&quot;, inplace=True)
+</code></pre>
+
+<p>Decodes the texts using internal vocabulary. The list structure is maintained.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>encoded_texts</strong>:  The list of texts to decode.</li>
+<li><strong>unknown_token</strong>:  The placeholder value for unknown token. (Default value: "<UNK>")</li>
+<li><strong>inplace</strong>:  True to make changes inplace. (Default value: True)</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The decoded texts.</p>
+<hr />
+<h3 id="sentencewordtokenizerencode_texts"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L297">SentenceWordTokenizer.encode_texts</a></h3>
+<pre><code class="python">encode_texts(self, texts, include_oov=False, verbose=1, **kwargs)
+</code></pre>
+
+<p>Encodes the given texts using internal vocabulary with optionally applied encoding options. See
+<code>`apply_encoding_options</code> to set various options.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>texts</strong>:  The list of text items to encode.</li>
+<li><strong>include_oov</strong>:  True to map unknown (out of vocab) tokens to 0. False to exclude the token.</li>
+<li><strong>verbose</strong>:  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)
+**kwargs: The kwargs for <code>token_generator</code>.</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The encoded texts.</p>
+<hr />
+<h3 id="sentencewordtokenizerget_counts"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L385">SentenceWordTokenizer.get_counts</a></h3>
+<pre><code class="python">get_counts(self, i)
+</code></pre>
+
+<p>Numpy array of count values for aux_indices. For example, if <code>token_generator</code> generates
+<code>(text_idx, sentence_idx, word)</code>, then <code>get_counts(0)</code> returns the numpy array of sentence lengths across
+texts. Similarly, <code>get_counts(1)</code> will return the numpy array of token lengths across sentences.</p>
+<p>This is useful to plot histogram or eyeball the distributions. For getting standard statistics, you can use
+<code>get_stats</code> method.</p>
+<hr />
+<h3 id="sentencewordtokenizerget_stats"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L397">SentenceWordTokenizer.get_stats</a></h3>
+<pre><code class="python">get_stats(self, i)
+</code></pre>
+
+<p>Gets the standard statistics for aux_index <code>i</code>. For example, if <code>token_generator</code> generates
+<code>(text_idx, sentence_idx, word)</code>, then <code>get_stats(0)</code> will return various statistics about sentence lengths
+across texts. Similarly, <code>get_counts(1)</code> will return statistics of token lengths across sentences.</p>
+<p>This information can be used to pad or truncate inputs.</p>
+<hr />
+<h3 id="sentencewordtokenizersave"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L412">SentenceWordTokenizer.save</a></h3>
+<pre><code class="python">save(self, file_path)
+</code></pre>
+
+<p>Serializes this tokenizer to a file.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>file_path</strong>:  The file path to use.</li>
+</ul>
+<hr />
+<h3 id="sentencewordtokenizertoken_generator"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L599">SentenceWordTokenizer.token_generator</a></h3>
+<pre><code class="python">token_generator(self, texts, **kwargs)
+</code></pre>
+
+<p>Yields tokens from texts as <code>(text_idx, sent_idx, word)</code></p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>texts</strong>:  The list of texts.
+**kwargs: Supported args include:
+  n_threads/num_threads: Number of threads to use. Uses num_cpus - 1 by default.</li>
+<li><strong>batch_size</strong>:  The number of texts to accumulate into a common working set before processing.
+  (Default value: 1000)</li>
+</ul>
+<hr />
+<h2 id="chartokenizer"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L626">CharTokenizer</a></h2>
+<h4 id="chartokenizerhas_vocab">CharTokenizer.has_vocab</h4>
+<h4 id="chartokenizernum_texts">CharTokenizer.num_texts</h4>
+<p>The number of texts used to build the vocabulary.</p>
+<h4 id="chartokenizernum_tokens">CharTokenizer.num_tokens</h4>
+<p>Number of unique tokens for use in enccoding/decoding.
+This can change with calls to <code>apply_encoding_options</code>.</p>
+<h4 id="chartokenizertoken_counts">CharTokenizer.token_counts</h4>
+<p>Dictionary of token -&gt; count values for the text corpus used to <code>build_vocab</code>.</p>
+<h4 id="chartokenizertoken_index">CharTokenizer.token_index</h4>
+<p>Dictionary of token -&gt; idx mappings. This can change with calls to <code>apply_encoding_options</code>.</p>
+<hr />
+<h3 id="chartokenizer__init__"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L628">CharTokenizer.<code>__init__</code></a></h3>
+<pre><code class="python">__init__(self, lang=&quot;en&quot;, lower=True, charset=None)
+</code></pre>
+
+<p>Encodes text into <code>(samples, characters)</code></p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>lang</strong>:  The spacy language to use. (Default value: 'en')</li>
+<li><strong>lower</strong>:  Lower cases the tokens if True. (Default value: True)</li>
+<li><strong>charset</strong>:  The character set to use. For example <code>charset = 'abc123'</code>. If None, all characters will be used.
+  (Default value: None)</li>
+</ul>
+<hr />
+<h3 id="chartokenizerapply_encoding_options"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L266">CharTokenizer.apply_encoding_options</a></h3>
+<pre><code class="python">apply_encoding_options(self, min_token_count=1, max_tokens=None)
+</code></pre>
+
+<p>Applies the given settings for subsequent calls to <code>encode_texts</code> and <code>decode_texts</code>. This allows you to
+play with different settings without having to re-run tokenization on the entire corpus.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>min_token_count</strong>:  The minimum token count (frequency) in order to include during encoding. All tokens
+  below this frequency will be encoded to <code>0</code> which corresponds to unknown token. (Default value = 1)</li>
+<li><strong>max_tokens</strong>:  The maximum number of tokens to keep, based their frequency. Only the most common <code>max_tokens</code>
+  tokens will be kept. Set to None to keep everything. (Default value: None)</li>
+</ul>
+<hr />
+<h3 id="chartokenizerbuild_vocab"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L352">CharTokenizer.build_vocab</a></h3>
+<pre><code class="python">build_vocab(self, texts, verbose=1, **kwargs)
+</code></pre>
+
+<p>Builds the internal vocabulary and computes various statistics.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>texts</strong>:  The list of text items to encode.</li>
+<li><strong>verbose</strong>:  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)
+**kwargs: The kwargs for <code>token_generator</code>.</li>
+</ul>
+<hr />
+<h3 id="chartokenizercreate_token_indices"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L256">CharTokenizer.create_token_indices</a></h3>
+<pre><code class="python">create_token_indices(self, tokens)
+</code></pre>
+
+<p>If <code>apply_encoding_options</code> is inadequate, one can retrieve tokens from <code>self.token_counts</code>, filter with
+a desired strategy and regenerate <code>token_index</code> using this method. The token index is subsequently used
+when <code>encode_texts</code> or <code>decode_texts</code> methods are called.</p>
+<hr />
+<h3 id="chartokenizerdecode_texts"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L332">CharTokenizer.decode_texts</a></h3>
+<pre><code class="python">decode_texts(self, encoded_texts, unknown_token=&quot;&lt;UNK&gt;&quot;, inplace=True)
+</code></pre>
+
+<p>Decodes the texts using internal vocabulary. The list structure is maintained.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>encoded_texts</strong>:  The list of texts to decode.</li>
+<li><strong>unknown_token</strong>:  The placeholder value for unknown token. (Default value: "<UNK>")</li>
+<li><strong>inplace</strong>:  True to make changes inplace. (Default value: True)</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The decoded texts.</p>
+<hr />
+<h3 id="chartokenizerencode_texts"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L297">CharTokenizer.encode_texts</a></h3>
+<pre><code class="python">encode_texts(self, texts, include_oov=False, verbose=1, **kwargs)
+</code></pre>
+
+<p>Encodes the given texts using internal vocabulary with optionally applied encoding options. See
+<code>`apply_encoding_options</code> to set various options.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>texts</strong>:  The list of text items to encode.</li>
+<li><strong>include_oov</strong>:  True to map unknown (out of vocab) tokens to 0. False to exclude the token.</li>
+<li><strong>verbose</strong>:  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)
+**kwargs: The kwargs for <code>token_generator</code>.</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The encoded texts.</p>
+<hr />
+<h3 id="chartokenizerget_counts"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L385">CharTokenizer.get_counts</a></h3>
+<pre><code class="python">get_counts(self, i)
+</code></pre>
+
+<p>Numpy array of count values for aux_indices. For example, if <code>token_generator</code> generates
+<code>(text_idx, sentence_idx, word)</code>, then <code>get_counts(0)</code> returns the numpy array of sentence lengths across
+texts. Similarly, <code>get_counts(1)</code> will return the numpy array of token lengths across sentences.</p>
+<p>This is useful to plot histogram or eyeball the distributions. For getting standard statistics, you can use
+<code>get_stats</code> method.</p>
+<hr />
+<h3 id="chartokenizerget_stats"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L397">CharTokenizer.get_stats</a></h3>
+<pre><code class="python">get_stats(self, i)
+</code></pre>
+
+<p>Gets the standard statistics for aux_index <code>i</code>. For example, if <code>token_generator</code> generates
+<code>(text_idx, sentence_idx, word)</code>, then <code>get_stats(0)</code> will return various statistics about sentence lengths
+across texts. Similarly, <code>get_counts(1)</code> will return statistics of token lengths across sentences.</p>
+<p>This information can be used to pad or truncate inputs.</p>
+<hr />
+<h3 id="chartokenizersave"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L412">CharTokenizer.save</a></h3>
+<pre><code class="python">save(self, file_path)
+</code></pre>
+
+<p>Serializes this tokenizer to a file.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>file_path</strong>:  The file path to use.</li>
+</ul>
+<hr />
+<h3 id="chartokenizertoken_generator"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L643">CharTokenizer.token_generator</a></h3>
+<pre><code class="python">token_generator(self, texts, **kwargs)
+</code></pre>
+
+<p>Yields tokens from texts as <code>(text_idx, character)</code></p>
+<hr />
+<h2 id="sentencechartokenizer"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L653">SentenceCharTokenizer</a></h2>
+<h4 id="sentencechartokenizerhas_vocab">SentenceCharTokenizer.has_vocab</h4>
+<h4 id="sentencechartokenizernum_texts">SentenceCharTokenizer.num_texts</h4>
+<p>The number of texts used to build the vocabulary.</p>
+<h4 id="sentencechartokenizernum_tokens">SentenceCharTokenizer.num_tokens</h4>
+<p>Number of unique tokens for use in enccoding/decoding.
+This can change with calls to <code>apply_encoding_options</code>.</p>
+<h4 id="sentencechartokenizertoken_counts">SentenceCharTokenizer.token_counts</h4>
+<p>Dictionary of token -&gt; count values for the text corpus used to <code>build_vocab</code>.</p>
+<h4 id="sentencechartokenizertoken_index">SentenceCharTokenizer.token_index</h4>
+<p>Dictionary of token -&gt; idx mappings. This can change with calls to <code>apply_encoding_options</code>.</p>
+<hr />
+<h3 id="sentencechartokenizer__init__"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L655">SentenceCharTokenizer.<code>__init__</code></a></h3>
+<pre><code class="python">__init__(self, lang=&quot;en&quot;, lower=True, charset=None)
+</code></pre>
+
+<p>Encodes text into <code>(samples, sentences, characters)</code></p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>lang</strong>:  The spacy language to use. (Default value: 'en')</li>
+<li><strong>lower</strong>:  Lower cases the tokens if True. (Default value: True)</li>
+<li><strong>charset</strong>:  The character set to use. For example <code>charset = 'abc123'</code>. If None, all characters will be used.
+  (Default value: None)</li>
+</ul>
+<hr />
+<h3 id="sentencechartokenizerapply_encoding_options"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L266">SentenceCharTokenizer.apply_encoding_options</a></h3>
+<pre><code class="python">apply_encoding_options(self, min_token_count=1, max_tokens=None)
+</code></pre>
+
+<p>Applies the given settings for subsequent calls to <code>encode_texts</code> and <code>decode_texts</code>. This allows you to
+play with different settings without having to re-run tokenization on the entire corpus.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>min_token_count</strong>:  The minimum token count (frequency) in order to include during encoding. All tokens
+  below this frequency will be encoded to <code>0</code> which corresponds to unknown token. (Default value = 1)</li>
+<li><strong>max_tokens</strong>:  The maximum number of tokens to keep, based their frequency. Only the most common <code>max_tokens</code>
+  tokens will be kept. Set to None to keep everything. (Default value: None)</li>
+</ul>
+<hr />
+<h3 id="sentencechartokenizerbuild_vocab"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L352">SentenceCharTokenizer.build_vocab</a></h3>
+<pre><code class="python">build_vocab(self, texts, verbose=1, **kwargs)
+</code></pre>
+
+<p>Builds the internal vocabulary and computes various statistics.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>texts</strong>:  The list of text items to encode.</li>
+<li><strong>verbose</strong>:  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)
+**kwargs: The kwargs for <code>token_generator</code>.</li>
+</ul>
+<hr />
+<h3 id="sentencechartokenizercreate_token_indices"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L256">SentenceCharTokenizer.create_token_indices</a></h3>
+<pre><code class="python">create_token_indices(self, tokens)
+</code></pre>
+
+<p>If <code>apply_encoding_options</code> is inadequate, one can retrieve tokens from <code>self.token_counts</code>, filter with
+a desired strategy and regenerate <code>token_index</code> using this method. The token index is subsequently used
+when <code>encode_texts</code> or <code>decode_texts</code> methods are called.</p>
+<hr />
+<h3 id="sentencechartokenizerdecode_texts"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L332">SentenceCharTokenizer.decode_texts</a></h3>
+<pre><code class="python">decode_texts(self, encoded_texts, unknown_token=&quot;&lt;UNK&gt;&quot;, inplace=True)
+</code></pre>
+
+<p>Decodes the texts using internal vocabulary. The list structure is maintained.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>encoded_texts</strong>:  The list of texts to decode.</li>
+<li><strong>unknown_token</strong>:  The placeholder value for unknown token. (Default value: "<UNK>")</li>
+<li><strong>inplace</strong>:  True to make changes inplace. (Default value: True)</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The decoded texts.</p>
+<hr />
+<h3 id="sentencechartokenizerencode_texts"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L297">SentenceCharTokenizer.encode_texts</a></h3>
+<pre><code class="python">encode_texts(self, texts, include_oov=False, verbose=1, **kwargs)
+</code></pre>
+
+<p>Encodes the given texts using internal vocabulary with optionally applied encoding options. See
+<code>`apply_encoding_options</code> to set various options.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>texts</strong>:  The list of text items to encode.</li>
+<li><strong>include_oov</strong>:  True to map unknown (out of vocab) tokens to 0. False to exclude the token.</li>
+<li><strong>verbose</strong>:  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)
+**kwargs: The kwargs for <code>token_generator</code>.</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The encoded texts.</p>
+<hr />
+<h3 id="sentencechartokenizerget_counts"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L385">SentenceCharTokenizer.get_counts</a></h3>
+<pre><code class="python">get_counts(self, i)
+</code></pre>
+
+<p>Numpy array of count values for aux_indices. For example, if <code>token_generator</code> generates
+<code>(text_idx, sentence_idx, word)</code>, then <code>get_counts(0)</code> returns the numpy array of sentence lengths across
+texts. Similarly, <code>get_counts(1)</code> will return the numpy array of token lengths across sentences.</p>
+<p>This is useful to plot histogram or eyeball the distributions. For getting standard statistics, you can use
+<code>get_stats</code> method.</p>
+<hr />
+<h3 id="sentencechartokenizerget_stats"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L397">SentenceCharTokenizer.get_stats</a></h3>
+<pre><code class="python">get_stats(self, i)
+</code></pre>
+
+<p>Gets the standard statistics for aux_index <code>i</code>. For example, if <code>token_generator</code> generates
+<code>(text_idx, sentence_idx, word)</code>, then <code>get_stats(0)</code> will return various statistics about sentence lengths
+across texts. Similarly, <code>get_counts(1)</code> will return statistics of token lengths across sentences.</p>
+<p>This information can be used to pad or truncate inputs.</p>
+<hr />
+<h3 id="sentencechartokenizersave"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L412">SentenceCharTokenizer.save</a></h3>
+<pre><code class="python">save(self, file_path)
+</code></pre>
+
+<p>Serializes this tokenizer to a file.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>file_path</strong>:  The file path to use.</li>
+</ul>
+<hr />
+<h3 id="sentencechartokenizertoken_generator"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/processing.py#L669">SentenceCharTokenizer.token_generator</a></h3>
+<pre><code class="python">token_generator(self, texts, **kwargs)
+</code></pre>
+
+<p>Yields tokens from texts as <code>(text_idx, sent_idx, character)</code></p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>texts</strong>:  The list of texts.
+**kwargs: Supported args include:
+  n_threads/num_threads: Number of threads to use. Uses num_cpus - 1 by default.</li>
+<li><strong>batch_size</strong>:  The number of texts to accumulate into a common working set before processing.
+  (Default value: 1000)</li>
+</ul>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../keras_text.data/" class="btn btn-neutral float-right" title="Dataset management">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../keras_text.models.layers/" class="btn btn-neutral" title="Custom Layers"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="http://github.com/raghakot/keras-text" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../keras_text.models.layers/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../keras_text.data/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../js/theme.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+</html>

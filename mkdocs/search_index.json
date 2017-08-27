@@ -1,0 +1,1044 @@
+{
+    "docs": [
+        {
+            "location": "/", 
+            "text": "Keras Visualization Toolkit\n\n\n\n\n\n\n\n\nkeras-vis is a high-level toolkit for visualizing and debugging your trained keras neural net models. Currently\nsupported visualizations include:\n\n\n\n\nActivation maximization\n\n\nSaliency maps\n\n\nClass activation maps\n\n\n\n\nAll visualizations by default support N-dimensional image inputs. i.e., it generalizes to N-dim image inputs \nto your model.\n\n\nThe toolkit generalizes all of the above as energy minimization problems with a clean, easy to use, \nand extendable interface. Compatible with both theano and tensorflow backends with 'channels_first', 'channels_last' \ndata format.\n\n\nQuick links\n\n\n\n\nRead the documentation at \nhttps://raghakot.github.io/keras-vis\n. \n\n\nJoin the slack \nchannel\n for questions/discussions.\n\n\nWe are tracking new features/tasks in \nwaffle.io\n. Would love it if you lend us \na hand and submit PRs.\n\n\n\n\nGetting Started\n\n\nIn image backprop problems, the goal is to generate an input image that minimizes some loss function.\nSetting up an image backprop problem is easy.\n\n\nDefine weighted loss function\n\n\nVarious useful loss functions are defined in \nlosses\n.\nA custom loss function can be defined by implementing \nLoss.build_loss\n.\n\n\nfrom vis.losses import ActivationMaximization\nfrom vis.regularizers import TotalVariation, LPNorm\n\nfilter_indices = [1, 2, 3]\n\n# Tuple consists of (loss_function, weight)\n# Add regularizers as needed.\nlosses = [\n    (ActivationMaximization(keras_layer, filter_indices), 1),\n    (LPNorm(model.input), 10),\n    (TotalVariation(model.input), 10)\n]\n\n\n\n\nConfigure optimizer to minimize weighted loss\n\n\nIn order to generate natural looking images, image search space is constrained using regularization penalties. \nSome common regularizers are defined in \nregularizers\n.\nLike loss functions, custom regularizer can be defined by implementing \n\nLoss.build_loss\n.\n\n\nfrom vis.optimizer import Optimizer\n\noptimizer = Optimizer(model.input, losses)\nopt_img, grads, _ = optimizer.minimize()\n\n\n\n\nConcrete examples of various supported visualizations can be found in \n\nexamples folder\n.\n\n\nInstallation\n\n\n1) Install \nkeras\n \nwith theano or tensorflow backend. Note that this library requires Keras \n 2.0\n\n\n2) Install keras-vis\n\n\n\n\nFrom sources\n\n\n\n\nsudo python setup.py install\n\n\n\n\n\n\nPyPI package\n\n\n\n\nsudo pip install keras-vis\n\n\n\n\nVisualizations\n\n\nNOTE: The links are currently broken and the entire documentation is being reworked.\nPlease see examples/ for samples.\n\n\nNeural nets are black boxes. In the recent years, several approaches for understanding and visualizing Convolutional \nNetworks have been developed in the literature. They give us a way to peer into the black boxes, \ndiagnose mis-classifications, and assess whether the network is over/under fitting. \n\n\nGuided backprop can also be used to create \ntrippy art\n, neural/texture \n\nstyle transfer\n among the list of other growing applications.\n\n\nVarious visualizations, documented in their own pages, are summarized here.\n\n\n\n\n\nConv filter visualization\n\n\n\n\nConvolutional filters learn 'template matching' filters that maximize the output when a similar template \npattern is found in the input image. Visualize those templates via Activation Maximization.\n\n\n\n\n\nDense layer visualization\n\n\n\n\nHow can we assess whether a network is over/under fitting or generalizing well?\n\n\n\n\n\nAttention Maps\n\n\n\n\nHow can we assess whether a network is attending to correct parts of the image in order to generate a decision?\n\n\n\n\n\nGenerating animated gif of optimization progress\n\n\nIt is possible to generate an animated gif of optimization progress by leveraging \n\ncallbacks\n. Following example shows how to visualize the \nactivation maximization for 'ouzel' class (output_index: 20).\n\n\nfrom vis.losses import ActivationMaximization\nfrom vis.regularizers import TotalVariation, LPNorm\nfrom vis.modifiers import Jitter\nfrom vis.optimizer import Optimizer\n\nfrom vis.callbacks import GifGenerator\nfrom vis.utils.vggnet import VGG16\n\n# Build the VGG16 network with ImageNet weights\nmodel = VGG16(weights='imagenet', include_top=True)\nprint('Model loaded.')\n\n# The name of the layer we want to visualize\n# (see model definition in vggnet.py)\nlayer_name = 'predictions'\nlayer_dict = dict([(layer.name, layer) for layer in model.layers[1:]])\noutput_class = [20]\n\nlosses = [\n    (ActivationMaximization(layer_dict[layer_name], output_class), 2),\n    (LPNorm(model.input), 10),\n    (TotalVariation(model.input), 10)\n]\nopt = Optimizer(model.input, losses)\nopt.minimize(max_iter=500, verbose=True, image_modifiers=[Jitter()], callbacks=[GifGenerator('opt_progress')])\n\n\n\n\n\nNotice how the output jitters around? This is because we used \nJitter\n, \na kind of \nImageModifier\n that is known to produce \ncrisper activation maximization images. As an exercise, try:\n\n\n\n\nWithout Jitter\n\n\nVarying various loss weights\n\n\n\n\n\n\n\n\n\nCitation\n\n\nPlease cite keras-vis in your publications if it helped your research. Here is an example BibTeX entry:\n\n\n@misc{raghakotkerasvis\n  title={keras-vis},\n  author={Kotikalapudi, Raghavendra and contributors},\n  year={2017},\n  publisher={GitHub},\n  howpublished={\\url{https://github.com/raghakot/keras-vis}},\n}", 
+            "title": "Home"
+        }, 
+        {
+            "location": "/#keras-visualization-toolkit", 
+            "text": "keras-vis is a high-level toolkit for visualizing and debugging your trained keras neural net models. Currently\nsupported visualizations include:   Activation maximization  Saliency maps  Class activation maps   All visualizations by default support N-dimensional image inputs. i.e., it generalizes to N-dim image inputs \nto your model.  The toolkit generalizes all of the above as energy minimization problems with a clean, easy to use, \nand extendable interface. Compatible with both theano and tensorflow backends with 'channels_first', 'channels_last' \ndata format.", 
+            "title": "Keras Visualization Toolkit"
+        }, 
+        {
+            "location": "/#quick-links", 
+            "text": "Read the documentation at  https://raghakot.github.io/keras-vis .   Join the slack  channel  for questions/discussions.  We are tracking new features/tasks in  waffle.io . Would love it if you lend us \na hand and submit PRs.", 
+            "title": "Quick links"
+        }, 
+        {
+            "location": "/#getting-started", 
+            "text": "In image backprop problems, the goal is to generate an input image that minimizes some loss function.\nSetting up an image backprop problem is easy.  Define weighted loss function  Various useful loss functions are defined in  losses .\nA custom loss function can be defined by implementing  Loss.build_loss .  from vis.losses import ActivationMaximization\nfrom vis.regularizers import TotalVariation, LPNorm\n\nfilter_indices = [1, 2, 3]\n\n# Tuple consists of (loss_function, weight)\n# Add regularizers as needed.\nlosses = [\n    (ActivationMaximization(keras_layer, filter_indices), 1),\n    (LPNorm(model.input), 10),\n    (TotalVariation(model.input), 10)\n]  Configure optimizer to minimize weighted loss  In order to generate natural looking images, image search space is constrained using regularization penalties. \nSome common regularizers are defined in  regularizers .\nLike loss functions, custom regularizer can be defined by implementing  Loss.build_loss .  from vis.optimizer import Optimizer\n\noptimizer = Optimizer(model.input, losses)\nopt_img, grads, _ = optimizer.minimize()  Concrete examples of various supported visualizations can be found in  examples folder .", 
+            "title": "Getting Started"
+        }, 
+        {
+            "location": "/#installation", 
+            "text": "1) Install  keras  \nwith theano or tensorflow backend. Note that this library requires Keras   2.0  2) Install keras-vis   From sources   sudo python setup.py install   PyPI package   sudo pip install keras-vis", 
+            "title": "Installation"
+        }, 
+        {
+            "location": "/#visualizations", 
+            "text": "NOTE: The links are currently broken and the entire documentation is being reworked.\nPlease see examples/ for samples.  Neural nets are black boxes. In the recent years, several approaches for understanding and visualizing Convolutional \nNetworks have been developed in the literature. They give us a way to peer into the black boxes, \ndiagnose mis-classifications, and assess whether the network is over/under fitting.   Guided backprop can also be used to create  trippy art , neural/texture  style transfer  among the list of other growing applications.  Various visualizations, documented in their own pages, are summarized here.", 
+            "title": "Visualizations"
+        }, 
+        {
+            "location": "/#conv-filter-visualization", 
+            "text": "Convolutional filters learn 'template matching' filters that maximize the output when a similar template \npattern is found in the input image. Visualize those templates via Activation Maximization.", 
+            "title": "Conv filter visualization"
+        }, 
+        {
+            "location": "/#dense-layer-visualization", 
+            "text": "How can we assess whether a network is over/under fitting or generalizing well?", 
+            "title": "Dense layer visualization"
+        }, 
+        {
+            "location": "/#attention-maps", 
+            "text": "How can we assess whether a network is attending to correct parts of the image in order to generate a decision?", 
+            "title": "Attention Maps"
+        }, 
+        {
+            "location": "/#generating-animated-gif-of-optimization-progress", 
+            "text": "It is possible to generate an animated gif of optimization progress by leveraging  callbacks . Following example shows how to visualize the \nactivation maximization for 'ouzel' class (output_index: 20).  from vis.losses import ActivationMaximization\nfrom vis.regularizers import TotalVariation, LPNorm\nfrom vis.modifiers import Jitter\nfrom vis.optimizer import Optimizer\n\nfrom vis.callbacks import GifGenerator\nfrom vis.utils.vggnet import VGG16\n\n# Build the VGG16 network with ImageNet weights\nmodel = VGG16(weights='imagenet', include_top=True)\nprint('Model loaded.')\n\n# The name of the layer we want to visualize\n# (see model definition in vggnet.py)\nlayer_name = 'predictions'\nlayer_dict = dict([(layer.name, layer) for layer in model.layers[1:]])\noutput_class = [20]\n\nlosses = [\n    (ActivationMaximization(layer_dict[layer_name], output_class), 2),\n    (LPNorm(model.input), 10),\n    (TotalVariation(model.input), 10)\n]\nopt = Optimizer(model.input, losses)\nopt.minimize(max_iter=500, verbose=True, image_modifiers=[Jitter()], callbacks=[GifGenerator('opt_progress')])  Notice how the output jitters around? This is because we used  Jitter , \na kind of  ImageModifier  that is known to produce \ncrisper activation maximization images. As an exercise, try:   Without Jitter  Varying various loss weights", 
+            "title": "Generating animated gif of optimization progress"
+        }, 
+        {
+            "location": "/#citation", 
+            "text": "Please cite keras-vis in your publications if it helped your research. Here is an example BibTeX entry:  @misc{raghakotkerasvis\n  title={keras-vis},\n  author={Kotikalapudi, Raghavendra and contributors},\n  year={2017},\n  publisher={GitHub},\n  howpublished={\\url{https://github.com/raghakot/keras-vis}},\n}", 
+            "title": "Citation"
+        }, 
+        {
+            "location": "/keras_text.models.sequence_encoders/", 
+            "text": "Source:\n \nkeras_text/models/sequence_encoders.py#L0\n\n\n\n\nSequenceEncoderBase\n\n\n\n\nSequenceEncoderBase.\n__init__\n\n\n__init__(self, dropout_rate=0.5)\n\n\n\n\nCreates a new instance of sequence encoder.\n\n\nArgs:\n\n\n\n\ndropout_rate\n:  The final encoded output dropout.\n\n\n\n\n\n\nSequenceEncoderBase.build_model\n\n\nbuild_model(self, x)\n\n\n\n\nBuild your model graph here.\n\n\nArgs:\n\n\n\n\nx\n:  The encoded or embedded input sequence.\n\n\n\n\nReturns:\n\n\nThe model output tensor without the classification block.\n\n\n\n\nSequenceEncoderBase.requires_padding\n\n\nrequires_padding(self)\n\n\n\n\nReturn a boolean indicating whether this model expects inputs to be padded or not.\n\n\n\n\nYoonKimCNN\n\n\n\n\nYoonKimCNN.\n__init__\n\n\n__init__(self, num_filters=64, filter_sizes=[3, 4, 5], dropout_rate=0.5, **conv_kwargs)\n\n\n\n\nYoon Kim's shallow cnn model: https://arxiv.org/pdf/1408.5882.pdf\n\n\nArgs:\n\n\n\n\nnum_filters\n:  The number of filters to use per \nfilter_size\n. (Default value = 64)\n\n\nfilter_sizes\n:  The filter sizes for each convolutional layer. (Default value = [3, 4, 5])\n**cnn_kwargs: Additional args for building the \nConv1D\n layer.\n\n\n\n\n\n\nYoonKimCNN.build_model\n\n\nbuild_model(self, x)\n\n\n\n\n\n\nYoonKimCNN.requires_padding\n\n\nrequires_padding(self)\n\n\n\n\n\n\nStackedRNN\n\n\n\n\nStackedRNN.\n__init__\n\n\n__init__(self, rnn_class=\nclass 'keras.layers.recurrent.GRU'\n, hidden_dims=[50, 50], \\\n    bidirectional=True, dropout_rate=0.5, **rnn_kwargs)\n\n\n\n\nCreates a stacked RNN.\n\n\nArgs:\n\n\n\n\nrnn_class\n:  The type of RNN to use.\n\n\nhidden_dims\n:  The hidden dims for corresponding stacks of RNNs.\n\n\nbidirectional\n:  Whether to use bidirectional encoding.\n**rnn_kwargs: Additional args for building the RNN.\n\n\n\n\n\n\nStackedRNN.build_model\n\n\nbuild_model(self, x)\n\n\n\n\n\n\nStackedRNN.requires_padding\n\n\nrequires_padding(self)\n\n\n\n\n\n\nAttentionRNN\n\n\n\n\nAttentionRNN.\n__init__\n\n\n__init__(self, rnn_class=\nclass 'keras.layers.recurrent.GRU'\n, encoder_dims=50, \\\n    bidirectional=True, dropout_rate=0.5, **rnn_kwargs)\n\n\n\n\nCreates an RNN model with attention. The attention mechanism is implemented as described\nin https://www.cs.cmu.edu/~hovy/papers/16HLT-hierarchical-attention-networks.pdf, but without\nsentence level attention.\n\n\nArgs:\n\n\n\n\nrnn_class\n:  The type of RNN to use.\n\n\nencoder_dims\n:  The number of hidden units of RNN.\n\n\nbidirectional\n:  Whether to use bidirectional encoding.\n**rnn_kwargs: Additional args for building the RNN.\n\n\n\n\n\n\nAttentionRNN.build_model\n\n\nbuild_model(self, x)\n\n\n\n\n\n\nAttentionRNN.get_attention_tensor\n\n\nget_attention_tensor(self)\n\n\n\n\n\n\nAttentionRNN.requires_padding\n\n\nrequires_padding(self)\n\n\n\n\n\n\nAveragingEncoder\n\n\n\n\nAveragingEncoder.\n__init__\n\n\n__init__(self, dropout_rate=0)\n\n\n\n\nAn encoder that averages sequence inputs.\n\n\n\n\nAveragingEncoder.build_model\n\n\nbuild_model(self, x)\n\n\n\n\n\n\nAveragingEncoder.requires_padding\n\n\nrequires_padding(self)", 
+            "title": "Sequence Processing Models"
+        }, 
+        {
+            "location": "/keras_text.models.sequence_encoders/#sequenceencoderbase", 
+            "text": "", 
+            "title": "SequenceEncoderBase"
+        }, 
+        {
+            "location": "/keras_text.models.sequence_encoders/#sequenceencoderbase__init__", 
+            "text": "__init__(self, dropout_rate=0.5)  Creates a new instance of sequence encoder.  Args:   dropout_rate :  The final encoded output dropout.", 
+            "title": "SequenceEncoderBase.__init__"
+        }, 
+        {
+            "location": "/keras_text.models.sequence_encoders/#sequenceencoderbasebuild_model", 
+            "text": "build_model(self, x)  Build your model graph here.  Args:   x :  The encoded or embedded input sequence.   Returns:  The model output tensor without the classification block.", 
+            "title": "SequenceEncoderBase.build_model"
+        }, 
+        {
+            "location": "/keras_text.models.sequence_encoders/#sequenceencoderbaserequires_padding", 
+            "text": "requires_padding(self)  Return a boolean indicating whether this model expects inputs to be padded or not.", 
+            "title": "SequenceEncoderBase.requires_padding"
+        }, 
+        {
+            "location": "/keras_text.models.sequence_encoders/#yoonkimcnn", 
+            "text": "", 
+            "title": "YoonKimCNN"
+        }, 
+        {
+            "location": "/keras_text.models.sequence_encoders/#yoonkimcnn__init__", 
+            "text": "__init__(self, num_filters=64, filter_sizes=[3, 4, 5], dropout_rate=0.5, **conv_kwargs)  Yoon Kim's shallow cnn model: https://arxiv.org/pdf/1408.5882.pdf  Args:   num_filters :  The number of filters to use per  filter_size . (Default value = 64)  filter_sizes :  The filter sizes for each convolutional layer. (Default value = [3, 4, 5])\n**cnn_kwargs: Additional args for building the  Conv1D  layer.", 
+            "title": "YoonKimCNN.__init__"
+        }, 
+        {
+            "location": "/keras_text.models.sequence_encoders/#yoonkimcnnbuild_model", 
+            "text": "build_model(self, x)", 
+            "title": "YoonKimCNN.build_model"
+        }, 
+        {
+            "location": "/keras_text.models.sequence_encoders/#yoonkimcnnrequires_padding", 
+            "text": "requires_padding(self)", 
+            "title": "YoonKimCNN.requires_padding"
+        }, 
+        {
+            "location": "/keras_text.models.sequence_encoders/#stackedrnn", 
+            "text": "", 
+            "title": "StackedRNN"
+        }, 
+        {
+            "location": "/keras_text.models.sequence_encoders/#stackedrnn__init__", 
+            "text": "__init__(self, rnn_class= class 'keras.layers.recurrent.GRU' , hidden_dims=[50, 50], \\\n    bidirectional=True, dropout_rate=0.5, **rnn_kwargs)  Creates a stacked RNN.  Args:   rnn_class :  The type of RNN to use.  hidden_dims :  The hidden dims for corresponding stacks of RNNs.  bidirectional :  Whether to use bidirectional encoding.\n**rnn_kwargs: Additional args for building the RNN.", 
+            "title": "StackedRNN.__init__"
+        }, 
+        {
+            "location": "/keras_text.models.sequence_encoders/#stackedrnnbuild_model", 
+            "text": "build_model(self, x)", 
+            "title": "StackedRNN.build_model"
+        }, 
+        {
+            "location": "/keras_text.models.sequence_encoders/#stackedrnnrequires_padding", 
+            "text": "requires_padding(self)", 
+            "title": "StackedRNN.requires_padding"
+        }, 
+        {
+            "location": "/keras_text.models.sequence_encoders/#attentionrnn", 
+            "text": "", 
+            "title": "AttentionRNN"
+        }, 
+        {
+            "location": "/keras_text.models.sequence_encoders/#attentionrnn__init__", 
+            "text": "__init__(self, rnn_class= class 'keras.layers.recurrent.GRU' , encoder_dims=50, \\\n    bidirectional=True, dropout_rate=0.5, **rnn_kwargs)  Creates an RNN model with attention. The attention mechanism is implemented as described\nin https://www.cs.cmu.edu/~hovy/papers/16HLT-hierarchical-attention-networks.pdf, but without\nsentence level attention.  Args:   rnn_class :  The type of RNN to use.  encoder_dims :  The number of hidden units of RNN.  bidirectional :  Whether to use bidirectional encoding.\n**rnn_kwargs: Additional args for building the RNN.", 
+            "title": "AttentionRNN.__init__"
+        }, 
+        {
+            "location": "/keras_text.models.sequence_encoders/#attentionrnnbuild_model", 
+            "text": "build_model(self, x)", 
+            "title": "AttentionRNN.build_model"
+        }, 
+        {
+            "location": "/keras_text.models.sequence_encoders/#attentionrnnget_attention_tensor", 
+            "text": "get_attention_tensor(self)", 
+            "title": "AttentionRNN.get_attention_tensor"
+        }, 
+        {
+            "location": "/keras_text.models.sequence_encoders/#attentionrnnrequires_padding", 
+            "text": "requires_padding(self)", 
+            "title": "AttentionRNN.requires_padding"
+        }, 
+        {
+            "location": "/keras_text.models.sequence_encoders/#averagingencoder", 
+            "text": "", 
+            "title": "AveragingEncoder"
+        }, 
+        {
+            "location": "/keras_text.models.sequence_encoders/#averagingencoder__init__", 
+            "text": "__init__(self, dropout_rate=0)  An encoder that averages sequence inputs.", 
+            "title": "AveragingEncoder.__init__"
+        }, 
+        {
+            "location": "/keras_text.models.sequence_encoders/#averagingencoderbuild_model", 
+            "text": "build_model(self, x)", 
+            "title": "AveragingEncoder.build_model"
+        }, 
+        {
+            "location": "/keras_text.models.sequence_encoders/#averagingencoderrequires_padding", 
+            "text": "requires_padding(self)", 
+            "title": "AveragingEncoder.requires_padding"
+        }, 
+        {
+            "location": "/keras_text.models.token_model/", 
+            "text": "Source:\n \nkeras_text/models/token_model.py#L0\n\n\n\n\nTokenModelFactory\n\n\n\n\nTokenModelFactory.\n__init__\n\n\n__init__(self, num_classes, token_index, max_tokens, embedding_type=\nglove.6B.100d\n, \\\n    embedding_dims=100)\n\n\n\n\nCreates a \nTokenModelFactory\n instance for building various models that operate over\n(samples, max_tokens) input. The token can be character, word or any other elementary token.\n\n\nArgs:\n\n\n\n\nnum_classes\n:  The number of output classes.\n\n\ntoken_index\n:  The dictionary of token and its corresponding integer index value.\n\n\nmax_tokens\n:  The max number of tokens across all documents. Depending on\n  \nSequenceEncoderBase.requires_padding\n, this value is either used or discarded.\n\n\nembedding_type\n:  The embedding type to use. Set to None to use random embeddings.\n  (Default value: 'glove.6B.100d')\n\n\nembedding_dims\n:  The number of embedding dims to use for representing a word. This argument will be ignored\n  when \nembedding_type\n is set. (Default value: 100)\n\n\n\n\n\n\nTokenModelFactory.build_model\n\n\nbuild_model(self, token_encoder_model, trainable_embeddings=True, output_activation=\nsoftmax\n)\n\n\n\n\nBuilds a model using the given \ntext_model\n\n\nArgs:\n\n\n\n\ntoken_encoder_model\n:  An instance of \nSequenceEncoderBase\n for encoding all the tokens within a document.\n  This encoding is then fed into a final \nDense\n layer for classification.\n\n\ntrainable_embeddings\n:  Whether or not to fine tune embeddings.\n\n\noutput_activation\n:  The output activation to use. (Default value: 'softmax')\n\n\nUse\n: \n\n\nsoftmax\n for binary or multi-class.\n\n\nsigmoid\n for multi-label classification.\n\n\nlinear\n for regression output.\n\n\n\n\nReturns:\n\n\nThe model output tensor.", 
+            "title": "Sequence Model Builder Factory"
+        }, 
+        {
+            "location": "/keras_text.models.token_model/#tokenmodelfactory", 
+            "text": "", 
+            "title": "TokenModelFactory"
+        }, 
+        {
+            "location": "/keras_text.models.token_model/#tokenmodelfactory__init__", 
+            "text": "__init__(self, num_classes, token_index, max_tokens, embedding_type= glove.6B.100d , \\\n    embedding_dims=100)  Creates a  TokenModelFactory  instance for building various models that operate over\n(samples, max_tokens) input. The token can be character, word or any other elementary token.  Args:   num_classes :  The number of output classes.  token_index :  The dictionary of token and its corresponding integer index value.  max_tokens :  The max number of tokens across all documents. Depending on\n   SequenceEncoderBase.requires_padding , this value is either used or discarded.  embedding_type :  The embedding type to use. Set to None to use random embeddings.\n  (Default value: 'glove.6B.100d')  embedding_dims :  The number of embedding dims to use for representing a word. This argument will be ignored\n  when  embedding_type  is set. (Default value: 100)", 
+            "title": "TokenModelFactory.__init__"
+        }, 
+        {
+            "location": "/keras_text.models.token_model/#tokenmodelfactorybuild_model", 
+            "text": "build_model(self, token_encoder_model, trainable_embeddings=True, output_activation= softmax )  Builds a model using the given  text_model  Args:   token_encoder_model :  An instance of  SequenceEncoderBase  for encoding all the tokens within a document.\n  This encoding is then fed into a final  Dense  layer for classification.  trainable_embeddings :  Whether or not to fine tune embeddings.  output_activation :  The output activation to use. (Default value: 'softmax')  Use :   softmax  for binary or multi-class.  sigmoid  for multi-label classification.  linear  for regression output.   Returns:  The model output tensor.", 
+            "title": "TokenModelFactory.build_model"
+        }, 
+        {
+            "location": "/keras_text.models.sentence_model/", 
+            "text": "Source:\n \nkeras_text/models/sentence_model.py#L0\n\n\n\n\nSentenceModelFactory\n\n\n\n\nSentenceModelFactory.\n__init__\n\n\n__init__(self, num_classes, token_index, max_sents, max_tokens, embedding_type=\nglove.6B.100d\n, \\\n    embedding_dims=100)\n\n\n\n\nCreates a \nSentenceModelFactory\n instance for building various models that operate over\n(samples, max_sentences, max_tokens) input.\n\n\nArgs:\n\n\n\n\nnum_classes\n:  The number of output classes.\n\n\ntoken_index\n:  The dictionary of token and its corresponding integer index value.\n\n\nmax_sents\n:  The max sentence length across all documents.\n\n\nmax_tokens\n:  The max number of tokens across all sentences.\n\n\nembedding_type\n:  The embedding type to use. Set to None to use random embeddings.\n  (Default value: 'glove.6B.100d')\n\n\nembedding_dims\n:  The number of embedding dims to use for representing a word. This argument will be ignored\n  when \nembedding_type\n is set. (Default value: 100)\n\n\n\n\n\n\nSentenceModelFactory.build_model\n\n\nbuild_model(self, token_encoder_model, sentence_encoder_model, trainable_embeddings=True, \\\n    output_activation=\nsoftmax\n)\n\n\n\n\nBuilds a model that first encodes all words within sentences using \ntoken_encoder_model\n, followed by\n\nsentence_encoder_model\n.\n\n\nArgs:\n\n\n\n\ntoken_encoder_model\n:  An instance of \nSequenceEncoderBase\n for encoding tokens within sentences. This model\n  will be applied across all sentences to create a sentence encoding.\n\n\nsentence_encoder_model\n:  An instance of \nSequenceEncoderBase\n operating on sentence encoding generated by\n  \ntoken_encoder_model\n. This encoding is then fed into a final \nDense\n layer for classification.\n\n\ntrainable_embeddings\n:  Whether or not to fine tune embeddings.\n\n\noutput_activation\n:  The output activation to use. (Default value: 'softmax')\n\n\nUse\n: \n\n\nsoftmax\n for binary or multi-class.\n\n\nsigmoid\n for multi-label classification.\n\n\nlinear\n for regression output.\n\n\n\n\nReturns:\n\n\nThe model output tensor.", 
+            "title": "Sentence Model Builder Factory"
+        }, 
+        {
+            "location": "/keras_text.models.sentence_model/#sentencemodelfactory", 
+            "text": "", 
+            "title": "SentenceModelFactory"
+        }, 
+        {
+            "location": "/keras_text.models.sentence_model/#sentencemodelfactory__init__", 
+            "text": "__init__(self, num_classes, token_index, max_sents, max_tokens, embedding_type= glove.6B.100d , \\\n    embedding_dims=100)  Creates a  SentenceModelFactory  instance for building various models that operate over\n(samples, max_sentences, max_tokens) input.  Args:   num_classes :  The number of output classes.  token_index :  The dictionary of token and its corresponding integer index value.  max_sents :  The max sentence length across all documents.  max_tokens :  The max number of tokens across all sentences.  embedding_type :  The embedding type to use. Set to None to use random embeddings.\n  (Default value: 'glove.6B.100d')  embedding_dims :  The number of embedding dims to use for representing a word. This argument will be ignored\n  when  embedding_type  is set. (Default value: 100)", 
+            "title": "SentenceModelFactory.__init__"
+        }, 
+        {
+            "location": "/keras_text.models.sentence_model/#sentencemodelfactorybuild_model", 
+            "text": "build_model(self, token_encoder_model, sentence_encoder_model, trainable_embeddings=True, \\\n    output_activation= softmax )  Builds a model that first encodes all words within sentences using  token_encoder_model , followed by sentence_encoder_model .  Args:   token_encoder_model :  An instance of  SequenceEncoderBase  for encoding tokens within sentences. This model\n  will be applied across all sentences to create a sentence encoding.  sentence_encoder_model :  An instance of  SequenceEncoderBase  operating on sentence encoding generated by\n   token_encoder_model . This encoding is then fed into a final  Dense  layer for classification.  trainable_embeddings :  Whether or not to fine tune embeddings.  output_activation :  The output activation to use. (Default value: 'softmax')  Use :   softmax  for binary or multi-class.  sigmoid  for multi-label classification.  linear  for regression output.   Returns:  The model output tensor.", 
+            "title": "SentenceModelFactory.build_model"
+        }, 
+        {
+            "location": "/keras_text.models.layers/", 
+            "text": "Source:\n \nkeras_text/models/layers.py#L0\n\n\n\n\nAttentionLayer\n\n\nAttention layer that computes a learned attention over input sequence.\n\n\nFor details, see papers:\n- https://www.cs.cmu.edu/~diyiy/docs/naacl16.pdf\n- http://colinraffel.com/publications/iclr2016feed.pdf (fig 1)\n\n\nInput:\n - \nx\n:  Input tensor of shape \n(..., time_steps, features)\n where \nfeatures\n must be static (known).\n\n\nOutput:\n2D tensor of shape \n(..., features)\n. i.e., \ntime_steps\n axis is attended over and reduced.\n\n\nAttentionLayer.built\n\n\nAttentionLayer.input\n\n\nRetrieves the input tensor(s) of a layer.\n\n\nOnly applicable if the layer has exactly one inbound node,\ni.e. if it is connected to one incoming layer.\n\n\nReturns\n\n\nInput tensor or list of input tensors.\n\n\nRaises\n\n\n\n\nAttributeError\n:  if the layer is connected to\nmore than one incoming layers.\n\n\n\n\nAttentionLayer.input_mask\n\n\nRetrieves the input mask tensor(s) of a layer.\n\n\nOnly applicable if the layer has exactly one inbound node,\ni.e. if it is connected to one incoming layer.\n\n\nReturns\n\n\nInput mask tensor (potentially None) or list of input\n  mask tensors.\n\n\nRaises\n\n\n\n\nAttributeError\n:  if the layer is connected to\nmore than one incoming layers.\n\n\n\n\nAttentionLayer.input_shape\n\n\nRetrieves the input shape tuple(s) of a layer.\n\n\nOnly applicable if the layer has exactly one inbound node,\ni.e. if it is connected to one incoming layer.\n\n\nReturns\n\n\nInput shape tuple\n  (or list of input shape tuples, one tuple per input tensor).\n\n\nRaises\n\n\n\n\nAttributeError\n:  if the layer is connected to\nmore than one incoming layers.\n\n\n\n\nAttentionLayer.losses\n\n\nAttentionLayer.non_trainable_weights\n\n\nAttentionLayer.output\n\n\nRetrieves the output tensor(s) of a layer.\n\n\nOnly applicable if the layer has exactly one inbound node,\ni.e. if it is connected to one incoming layer.\n\n\nReturns\n\n\nOutput tensor or list of output tensors.\n\n\nRaises\n\n\n\n\nAttributeError\n:  if the layer is connected to\nmore than one incoming layers.\n\n\n\n\nAttentionLayer.output_mask\n\n\nRetrieves the output mask tensor(s) of a layer.\n\n\nOnly applicable if the layer has exactly one inbound node,\ni.e. if it is connected to one incoming layer.\n\n\nReturns\n\n\nOutput mask tensor (potentially None) or list of output\n  mask tensors.\n\n\nRaises\n\n\n\n\nAttributeError\n:  if the layer is connected to\nmore than one incoming layers.\n\n\n\n\nAttentionLayer.output_shape\n\n\nRetrieves the output shape tuple(s) of a layer.\n\n\nOnly applicable if the layer has one inbound node,\nor if all inbound nodes have the same output shape.\n\n\nReturns\n\n\nOutput shape tuple\n  (or list of input shape tuples, one tuple per output tensor).\n\n\nRaises\n\n\n\n\nAttributeError\n:  if the layer is connected to\nmore than one incoming layers.\n\n\n\n\nAttentionLayer.trainable_weights\n\n\nAttentionLayer.updates\n\n\nAttentionLayer.weights\n\n\n\n\nAttentionLayer.\n__init__\n\n\n__init__(self, kernel_initializer=\nhe_normal\n, kernel_regularizer=None, kernel_constraint=None, \\\n    use_bias=True, bias_initializer=\nzeros\n, bias_regularizer=None, bias_constraint=None, \\\n    use_context=True, context_initializer=\nhe_normal\n, context_regularizer=None, \\\n    context_constraint=None, attention_dims=None, **kwargs)\n\n\n\n\nArgs:\n\n\n\n\nattention_dims\n:  The dimensionality of the inner attention calculating neural network.\n  For input \n(32, 10, 300)\n, with \nattention_dims\n of 100, the output is \n(32, 10, 100)\n.\n  i.e., the attended words are 100 dimensional. This is then collapsed via summation to\n  \n(32, 10, 1)\n to indicate the attention weights for 10 words.\n  If set to None, \nfeatures\n dims are used as \nattention_dims\n. (Default value: None)\n\n\n\n\n\n\nAttentionLayer.build\n\n\nbuild(self, input_shape)\n\n\n\n\n\n\nAttentionLayer.call\n\n\ncall(self, x, mask=None)\n\n\n\n\n\n\nAttentionLayer.compute_mask\n\n\ncompute_mask(self, input, input_mask=None)\n\n\n\n\n\n\nAttentionLayer.compute_output_shape\n\n\ncompute_output_shape(self, input_shape)\n\n\n\n\n\n\nAttentionLayer.get_attention_tensor\n\n\nget_attention_tensor(self)\n\n\n\n\n\n\nAttentionLayer.get_config\n\n\nget_config(self)\n\n\n\n\n\n\nConsumeMask\n\n\nLayer that prevents mask propagation.\n\n\nConsumeMask.built\n\n\nConsumeMask.input\n\n\nRetrieves the input tensor(s) of a layer.\n\n\nOnly applicable if the layer has exactly one inbound node,\ni.e. if it is connected to one incoming layer.\n\n\nReturns\n\n\nInput tensor or list of input tensors.\n\n\nRaises\n\n\n\n\nAttributeError\n:  if the layer is connected to\nmore than one incoming layers.\n\n\n\n\nConsumeMask.input_mask\n\n\nRetrieves the input mask tensor(s) of a layer.\n\n\nOnly applicable if the layer has exactly one inbound node,\ni.e. if it is connected to one incoming layer.\n\n\nReturns\n\n\nInput mask tensor (potentially None) or list of input\n  mask tensors.\n\n\nRaises\n\n\n\n\nAttributeError\n:  if the layer is connected to\nmore than one incoming layers.\n\n\n\n\nConsumeMask.input_shape\n\n\nRetrieves the input shape tuple(s) of a layer.\n\n\nOnly applicable if the layer has exactly one inbound node,\ni.e. if it is connected to one incoming layer.\n\n\nReturns\n\n\nInput shape tuple\n  (or list of input shape tuples, one tuple per input tensor).\n\n\nRaises\n\n\n\n\nAttributeError\n:  if the layer is connected to\nmore than one incoming layers.\n\n\n\n\nConsumeMask.losses\n\n\nConsumeMask.non_trainable_weights\n\n\nConsumeMask.output\n\n\nRetrieves the output tensor(s) of a layer.\n\n\nOnly applicable if the layer has exactly one inbound node,\ni.e. if it is connected to one incoming layer.\n\n\nReturns\n\n\nOutput tensor or list of output tensors.\n\n\nRaises\n\n\n\n\nAttributeError\n:  if the layer is connected to\nmore than one incoming layers.\n\n\n\n\nConsumeMask.output_mask\n\n\nRetrieves the output mask tensor(s) of a layer.\n\n\nOnly applicable if the layer has exactly one inbound node,\ni.e. if it is connected to one incoming layer.\n\n\nReturns\n\n\nOutput mask tensor (potentially None) or list of output\n  mask tensors.\n\n\nRaises\n\n\n\n\nAttributeError\n:  if the layer is connected to\nmore than one incoming layers.\n\n\n\n\nConsumeMask.output_shape\n\n\nRetrieves the output shape tuple(s) of a layer.\n\n\nOnly applicable if the layer has one inbound node,\nor if all inbound nodes have the same output shape.\n\n\nReturns\n\n\nOutput shape tuple\n  (or list of input shape tuples, one tuple per output tensor).\n\n\nRaises\n\n\n\n\nAttributeError\n:  if the layer is connected to\nmore than one incoming layers.\n\n\n\n\nConsumeMask.trainable_weights\n\n\nConsumeMask.updates\n\n\nConsumeMask.weights\n\n\n\n\nConsumeMask.call\n\n\ncall(self, x, mask=None)\n\n\n\n\n\n\nConsumeMask.compute_mask\n\n\ncompute_mask(self, input, input_mask=None)", 
+            "title": "Custom Layers"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#attentionlayer", 
+            "text": "Attention layer that computes a learned attention over input sequence.  For details, see papers:\n- https://www.cs.cmu.edu/~diyiy/docs/naacl16.pdf\n- http://colinraffel.com/publications/iclr2016feed.pdf (fig 1)  Input:\n -  x :  Input tensor of shape  (..., time_steps, features)  where  features  must be static (known).  Output:\n2D tensor of shape  (..., features) . i.e.,  time_steps  axis is attended over and reduced.", 
+            "title": "AttentionLayer"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#attentionlayerbuilt", 
+            "text": "", 
+            "title": "AttentionLayer.built"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#attentionlayerinput", 
+            "text": "Retrieves the input tensor(s) of a layer.  Only applicable if the layer has exactly one inbound node,\ni.e. if it is connected to one incoming layer.", 
+            "title": "AttentionLayer.input"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#returns", 
+            "text": "Input tensor or list of input tensors.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#raises", 
+            "text": "AttributeError :  if the layer is connected to\nmore than one incoming layers.", 
+            "title": "Raises"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#attentionlayerinput_mask", 
+            "text": "Retrieves the input mask tensor(s) of a layer.  Only applicable if the layer has exactly one inbound node,\ni.e. if it is connected to one incoming layer.", 
+            "title": "AttentionLayer.input_mask"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#returns_1", 
+            "text": "Input mask tensor (potentially None) or list of input\n  mask tensors.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#raises_1", 
+            "text": "AttributeError :  if the layer is connected to\nmore than one incoming layers.", 
+            "title": "Raises"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#attentionlayerinput_shape", 
+            "text": "Retrieves the input shape tuple(s) of a layer.  Only applicable if the layer has exactly one inbound node,\ni.e. if it is connected to one incoming layer.", 
+            "title": "AttentionLayer.input_shape"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#returns_2", 
+            "text": "Input shape tuple\n  (or list of input shape tuples, one tuple per input tensor).", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#raises_2", 
+            "text": "AttributeError :  if the layer is connected to\nmore than one incoming layers.", 
+            "title": "Raises"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#attentionlayerlosses", 
+            "text": "", 
+            "title": "AttentionLayer.losses"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#attentionlayernon_trainable_weights", 
+            "text": "", 
+            "title": "AttentionLayer.non_trainable_weights"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#attentionlayeroutput", 
+            "text": "Retrieves the output tensor(s) of a layer.  Only applicable if the layer has exactly one inbound node,\ni.e. if it is connected to one incoming layer.", 
+            "title": "AttentionLayer.output"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#returns_3", 
+            "text": "Output tensor or list of output tensors.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#raises_3", 
+            "text": "AttributeError :  if the layer is connected to\nmore than one incoming layers.", 
+            "title": "Raises"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#attentionlayeroutput_mask", 
+            "text": "Retrieves the output mask tensor(s) of a layer.  Only applicable if the layer has exactly one inbound node,\ni.e. if it is connected to one incoming layer.", 
+            "title": "AttentionLayer.output_mask"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#returns_4", 
+            "text": "Output mask tensor (potentially None) or list of output\n  mask tensors.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#raises_4", 
+            "text": "AttributeError :  if the layer is connected to\nmore than one incoming layers.", 
+            "title": "Raises"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#attentionlayeroutput_shape", 
+            "text": "Retrieves the output shape tuple(s) of a layer.  Only applicable if the layer has one inbound node,\nor if all inbound nodes have the same output shape.", 
+            "title": "AttentionLayer.output_shape"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#returns_5", 
+            "text": "Output shape tuple\n  (or list of input shape tuples, one tuple per output tensor).", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#raises_5", 
+            "text": "AttributeError :  if the layer is connected to\nmore than one incoming layers.", 
+            "title": "Raises"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#attentionlayertrainable_weights", 
+            "text": "", 
+            "title": "AttentionLayer.trainable_weights"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#attentionlayerupdates", 
+            "text": "", 
+            "title": "AttentionLayer.updates"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#attentionlayerweights", 
+            "text": "", 
+            "title": "AttentionLayer.weights"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#attentionlayer__init__", 
+            "text": "__init__(self, kernel_initializer= he_normal , kernel_regularizer=None, kernel_constraint=None, \\\n    use_bias=True, bias_initializer= zeros , bias_regularizer=None, bias_constraint=None, \\\n    use_context=True, context_initializer= he_normal , context_regularizer=None, \\\n    context_constraint=None, attention_dims=None, **kwargs)  Args:   attention_dims :  The dimensionality of the inner attention calculating neural network.\n  For input  (32, 10, 300) , with  attention_dims  of 100, the output is  (32, 10, 100) .\n  i.e., the attended words are 100 dimensional. This is then collapsed via summation to\n   (32, 10, 1)  to indicate the attention weights for 10 words.\n  If set to None,  features  dims are used as  attention_dims . (Default value: None)", 
+            "title": "AttentionLayer.__init__"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#attentionlayerbuild", 
+            "text": "build(self, input_shape)", 
+            "title": "AttentionLayer.build"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#attentionlayercall", 
+            "text": "call(self, x, mask=None)", 
+            "title": "AttentionLayer.call"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#attentionlayercompute_mask", 
+            "text": "compute_mask(self, input, input_mask=None)", 
+            "title": "AttentionLayer.compute_mask"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#attentionlayercompute_output_shape", 
+            "text": "compute_output_shape(self, input_shape)", 
+            "title": "AttentionLayer.compute_output_shape"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#attentionlayerget_attention_tensor", 
+            "text": "get_attention_tensor(self)", 
+            "title": "AttentionLayer.get_attention_tensor"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#attentionlayerget_config", 
+            "text": "get_config(self)", 
+            "title": "AttentionLayer.get_config"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#consumemask", 
+            "text": "Layer that prevents mask propagation.", 
+            "title": "ConsumeMask"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#consumemaskbuilt", 
+            "text": "", 
+            "title": "ConsumeMask.built"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#consumemaskinput", 
+            "text": "Retrieves the input tensor(s) of a layer.  Only applicable if the layer has exactly one inbound node,\ni.e. if it is connected to one incoming layer.", 
+            "title": "ConsumeMask.input"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#returns_6", 
+            "text": "Input tensor or list of input tensors.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#raises_6", 
+            "text": "AttributeError :  if the layer is connected to\nmore than one incoming layers.", 
+            "title": "Raises"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#consumemaskinput_mask", 
+            "text": "Retrieves the input mask tensor(s) of a layer.  Only applicable if the layer has exactly one inbound node,\ni.e. if it is connected to one incoming layer.", 
+            "title": "ConsumeMask.input_mask"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#returns_7", 
+            "text": "Input mask tensor (potentially None) or list of input\n  mask tensors.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#raises_7", 
+            "text": "AttributeError :  if the layer is connected to\nmore than one incoming layers.", 
+            "title": "Raises"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#consumemaskinput_shape", 
+            "text": "Retrieves the input shape tuple(s) of a layer.  Only applicable if the layer has exactly one inbound node,\ni.e. if it is connected to one incoming layer.", 
+            "title": "ConsumeMask.input_shape"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#returns_8", 
+            "text": "Input shape tuple\n  (or list of input shape tuples, one tuple per input tensor).", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#raises_8", 
+            "text": "AttributeError :  if the layer is connected to\nmore than one incoming layers.", 
+            "title": "Raises"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#consumemasklosses", 
+            "text": "", 
+            "title": "ConsumeMask.losses"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#consumemasknon_trainable_weights", 
+            "text": "", 
+            "title": "ConsumeMask.non_trainable_weights"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#consumemaskoutput", 
+            "text": "Retrieves the output tensor(s) of a layer.  Only applicable if the layer has exactly one inbound node,\ni.e. if it is connected to one incoming layer.", 
+            "title": "ConsumeMask.output"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#returns_9", 
+            "text": "Output tensor or list of output tensors.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#raises_9", 
+            "text": "AttributeError :  if the layer is connected to\nmore than one incoming layers.", 
+            "title": "Raises"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#consumemaskoutput_mask", 
+            "text": "Retrieves the output mask tensor(s) of a layer.  Only applicable if the layer has exactly one inbound node,\ni.e. if it is connected to one incoming layer.", 
+            "title": "ConsumeMask.output_mask"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#returns_10", 
+            "text": "Output mask tensor (potentially None) or list of output\n  mask tensors.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#raises_10", 
+            "text": "AttributeError :  if the layer is connected to\nmore than one incoming layers.", 
+            "title": "Raises"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#consumemaskoutput_shape", 
+            "text": "Retrieves the output shape tuple(s) of a layer.  Only applicable if the layer has one inbound node,\nor if all inbound nodes have the same output shape.", 
+            "title": "ConsumeMask.output_shape"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#returns_11", 
+            "text": "Output shape tuple\n  (or list of input shape tuples, one tuple per output tensor).", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#raises_11", 
+            "text": "AttributeError :  if the layer is connected to\nmore than one incoming layers.", 
+            "title": "Raises"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#consumemasktrainable_weights", 
+            "text": "", 
+            "title": "ConsumeMask.trainable_weights"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#consumemaskupdates", 
+            "text": "", 
+            "title": "ConsumeMask.updates"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#consumemaskweights", 
+            "text": "", 
+            "title": "ConsumeMask.weights"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#consumemaskcall", 
+            "text": "call(self, x, mask=None)", 
+            "title": "ConsumeMask.call"
+        }, 
+        {
+            "location": "/keras_text.models.layers/#consumemaskcompute_mask", 
+            "text": "compute_mask(self, input, input_mask=None)", 
+            "title": "ConsumeMask.compute_mask"
+        }, 
+        {
+            "location": "/keras_text.processing/", 
+            "text": "Source:\n \nkeras_text/processing.py#L0\n\n\n\n\npad_sequences\n\n\npad_sequences(sequences, max_sentences=None, max_tokens=None, padding=\npre\n, truncating=\npost\n, \\\n    value=0.0)\n\n\n\n\nPads each sequence to the same length (length of the longest sequence or provided override).\n\n\nArgs:\n\n\n\n\nsequences\n:  list of list (samples, words) or list of list of list (samples, sentences, words)\n\n\nmax_sentences\n:  The max sentence length to use. If None, largest sentence length is used.\n\n\nmax_tokens\n:  The max word length to use. If None, largest word length is used.\n\n\npadding\n:  'pre' or 'post', pad either before or after each sequence.\n\n\ntruncating\n:  'pre' or 'post', remove values from sequences larger than max_sentences or max_tokens\n  either in the beginning or in the end of the sentence or word sequence respectively.\n\n\nvalue\n:  The padding value.\n\n\n\n\nReturns:\n\n\nNumpy array of (samples, max_sentences, max_tokens) or (samples, max_tokens) depending on the sequence input.\n\n\nRaises:\n\n\n\n\nValueError\n:  in case of invalid values for \ntruncating\n or \npadding\n.\n\n\n\n\n\n\nunicodify\n\n\nunicodify(texts)\n\n\n\n\nEncodes all text sequences as unicode. This is a python2 hassle.\n\n\nArgs:\n\n\n\n\ntexts\n:  The sequence of texts.\n\n\n\n\nReturns:\n\n\nUnicode encoded sequences.\n\n\n\n\nTokenizer\n\n\nTokenizer.has_vocab\n\n\nTokenizer.num_texts\n\n\nThe number of texts used to build the vocabulary.\n\n\nTokenizer.num_tokens\n\n\nNumber of unique tokens for use in enccoding/decoding.\nThis can change with calls to \napply_encoding_options\n.\n\n\nTokenizer.token_counts\n\n\nDictionary of token -\n count values for the text corpus used to \nbuild_vocab\n.\n\n\nTokenizer.token_index\n\n\nDictionary of token -\n idx mappings. This can change with calls to \napply_encoding_options\n.\n\n\n\n\nTokenizer.\n__init__\n\n\n__init__(self, lang=\nen\n, lower=True)\n\n\n\n\nEncodes text into \n(samples, aux_indices..., token)\n where each token is mapped to a unique index starting\nfrom \n1\n. Note that \n0\n is a reserved for unknown tokens.\n\n\nArgs:\n\n\n\n\nlang\n:  The spacy language to use. (Default value: 'en')\n\n\nlower\n:  Lower cases the tokens if True. (Default value: True)\n\n\n\n\n\n\nTokenizer.apply_encoding_options\n\n\napply_encoding_options(self, min_token_count=1, max_tokens=None)\n\n\n\n\nApplies the given settings for subsequent calls to \nencode_texts\n and \ndecode_texts\n. This allows you to\nplay with different settings without having to re-run tokenization on the entire corpus.\n\n\nArgs:\n\n\n\n\nmin_token_count\n:  The minimum token count (frequency) in order to include during encoding. All tokens\n  below this frequency will be encoded to \n0\n which corresponds to unknown token. (Default value = 1)\n\n\nmax_tokens\n:  The maximum number of tokens to keep, based their frequency. Only the most common \nmax_tokens\n\n  tokens will be kept. Set to None to keep everything. (Default value: None)\n\n\n\n\n\n\nTokenizer.build_vocab\n\n\nbuild_vocab(self, texts, verbose=1, **kwargs)\n\n\n\n\nBuilds the internal vocabulary and computes various statistics.\n\n\nArgs:\n\n\n\n\ntexts\n:  The list of text items to encode.\n\n\nverbose\n:  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)\n**kwargs: The kwargs for \ntoken_generator\n.\n\n\n\n\n\n\nTokenizer.create_token_indices\n\n\ncreate_token_indices(self, tokens)\n\n\n\n\nIf \napply_encoding_options\n is inadequate, one can retrieve tokens from \nself.token_counts\n, filter with\na desired strategy and regenerate \ntoken_index\n using this method. The token index is subsequently used\nwhen \nencode_texts\n or \ndecode_texts\n methods are called.\n\n\n\n\nTokenizer.decode_texts\n\n\ndecode_texts(self, encoded_texts, unknown_token=\nUNK\n, inplace=True)\n\n\n\n\nDecodes the texts using internal vocabulary. The list structure is maintained.\n\n\nArgs:\n\n\n\n\nencoded_texts\n:  The list of texts to decode.\n\n\nunknown_token\n:  The placeholder value for unknown token. (Default value: \"\n\")\n\n\ninplace\n:  True to make changes inplace. (Default value: True)\n\n\n\n\nReturns:\n\n\nThe decoded texts.\n\n\n\n\nTokenizer.encode_texts\n\n\nencode_texts(self, texts, include_oov=False, verbose=1, **kwargs)\n\n\n\n\nEncodes the given texts using internal vocabulary with optionally applied encoding options. See\n\n`apply_encoding_options\n to set various options.\n\n\nArgs:\n\n\n\n\ntexts\n:  The list of text items to encode.\n\n\ninclude_oov\n:  True to map unknown (out of vocab) tokens to 0. False to exclude the token.\n\n\nverbose\n:  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)\n**kwargs: The kwargs for \ntoken_generator\n.\n\n\n\n\nReturns:\n\n\nThe encoded texts.\n\n\n\n\nTokenizer.get_counts\n\n\nget_counts(self, i)\n\n\n\n\nNumpy array of count values for aux_indices. For example, if \ntoken_generator\n generates\n\n(text_idx, sentence_idx, word)\n, then \nget_counts(0)\n returns the numpy array of sentence lengths across\ntexts. Similarly, \nget_counts(1)\n will return the numpy array of token lengths across sentences.\n\n\nThis is useful to plot histogram or eyeball the distributions. For getting standard statistics, you can use\n\nget_stats\n method.\n\n\n\n\nTokenizer.get_stats\n\n\nget_stats(self, i)\n\n\n\n\nGets the standard statistics for aux_index \ni\n. For example, if \ntoken_generator\n generates\n\n(text_idx, sentence_idx, word)\n, then \nget_stats(0)\n will return various statistics about sentence lengths\nacross texts. Similarly, \nget_counts(1)\n will return statistics of token lengths across sentences.\n\n\nThis information can be used to pad or truncate inputs.\n\n\n\n\nTokenizer.save\n\n\nsave(self, file_path)\n\n\n\n\nSerializes this tokenizer to a file.\n\n\nArgs:\n\n\n\n\nfile_path\n:  The file path to use.\n\n\n\n\n\n\nTokenizer.token_generator\n\n\ntoken_generator(self, texts, **kwargs)\n\n\n\n\nGenerator for yielding tokens. You need to implement this method.\n\n\nArgs:\n\n\n\n\ntexts\n:  list of text items to tokenize.\n**kwargs: The kwargs propagated from \nbuild_vocab_and_encode\n or \nencode_texts\n call.\n\n\n\n\nReturns:\n\n\n(text_idx, aux_indices..., token)\n where aux_indices are optional. For example, if you want to vectorize\n  \ntexts\n as \n(text_idx, sentences, words), you should return\n(text_idx, sentence_idx, word_token)`.\n  Similarly, you can include paragraph, page level information etc., if needed.\n\n\n\n\nWordTokenizer\n\n\nWordTokenizer.has_vocab\n\n\nWordTokenizer.num_texts\n\n\nThe number of texts used to build the vocabulary.\n\n\nWordTokenizer.num_tokens\n\n\nNumber of unique tokens for use in enccoding/decoding.\nThis can change with calls to \napply_encoding_options\n.\n\n\nWordTokenizer.token_counts\n\n\nDictionary of token -\n count values for the text corpus used to \nbuild_vocab\n.\n\n\nWordTokenizer.token_index\n\n\nDictionary of token -\n idx mappings. This can change with calls to \napply_encoding_options\n.\n\n\n\n\nWordTokenizer.\n__init__\n\n\n__init__(self, lang=\nen\n, lower=True, lemmatize=False, remove_punct=True, remove_digits=True, \\\n    remove_stop_words=False, exclude_oov=False, exclude_pos_tags=None, \\\n    exclude_entities=['PERSON'])\n\n\n\n\nEncodes text into \n(samples, words)\n\n\nArgs:\n\n\n\n\nlang\n:  The spacy language to use. (Default value: 'en')\n\n\nlower\n:  Lower cases the tokens if True. (Default value: True)\n\n\nlemmatize\n:  Lemmatizes words when set to True. This also makes the word lower case\n  irrespective if the \nlower\n setting. (Default value: False)\n\n\nremove_punct\n:  Removes punct words if True. (Default value: True)\n\n\nremove_digits\n:  Removes digit words if True. (Default value: True)\n\n\nremove_stop_words\n:  Removes stop words if True. (Default value: False)\n\n\nexclude_oov\n:  Exclude words that are out of spacy embedding's vocabulary.\n  By default, GloVe 1 million, 300 dim are used. You can override spacy vocabulary with a custom\n  embedding to change this. (Default value: False)\n\n\nexclude_pos_tags\n:  A list of parts of speech tags to exclude. Can be any of spacy.parts_of_speech.IDS\n  (Default value: None)\n\n\nexclude_entities\n:  A list of entity types to be excluded.\n  Supported entity types can be found here: https://spacy.io/docs/usage/entity-recognition#entity-types\n  (Default value: ['PERSON'])\n\n\n\n\n\n\nWordTokenizer.apply_encoding_options\n\n\napply_encoding_options(self, min_token_count=1, max_tokens=None)\n\n\n\n\nApplies the given settings for subsequent calls to \nencode_texts\n and \ndecode_texts\n. This allows you to\nplay with different settings without having to re-run tokenization on the entire corpus.\n\n\nArgs:\n\n\n\n\nmin_token_count\n:  The minimum token count (frequency) in order to include during encoding. All tokens\n  below this frequency will be encoded to \n0\n which corresponds to unknown token. (Default value = 1)\n\n\nmax_tokens\n:  The maximum number of tokens to keep, based their frequency. Only the most common \nmax_tokens\n\n  tokens will be kept. Set to None to keep everything. (Default value: None)\n\n\n\n\n\n\nWordTokenizer.build_vocab\n\n\nbuild_vocab(self, texts, verbose=1, **kwargs)\n\n\n\n\nBuilds the internal vocabulary and computes various statistics.\n\n\nArgs:\n\n\n\n\ntexts\n:  The list of text items to encode.\n\n\nverbose\n:  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)\n**kwargs: The kwargs for \ntoken_generator\n.\n\n\n\n\n\n\nWordTokenizer.create_token_indices\n\n\ncreate_token_indices(self, tokens)\n\n\n\n\nIf \napply_encoding_options\n is inadequate, one can retrieve tokens from \nself.token_counts\n, filter with\na desired strategy and regenerate \ntoken_index\n using this method. The token index is subsequently used\nwhen \nencode_texts\n or \ndecode_texts\n methods are called.\n\n\n\n\nWordTokenizer.decode_texts\n\n\ndecode_texts(self, encoded_texts, unknown_token=\nUNK\n, inplace=True)\n\n\n\n\nDecodes the texts using internal vocabulary. The list structure is maintained.\n\n\nArgs:\n\n\n\n\nencoded_texts\n:  The list of texts to decode.\n\n\nunknown_token\n:  The placeholder value for unknown token. (Default value: \"\n\")\n\n\ninplace\n:  True to make changes inplace. (Default value: True)\n\n\n\n\nReturns:\n\n\nThe decoded texts.\n\n\n\n\nWordTokenizer.encode_texts\n\n\nencode_texts(self, texts, include_oov=False, verbose=1, **kwargs)\n\n\n\n\nEncodes the given texts using internal vocabulary with optionally applied encoding options. See\n\n`apply_encoding_options\n to set various options.\n\n\nArgs:\n\n\n\n\ntexts\n:  The list of text items to encode.\n\n\ninclude_oov\n:  True to map unknown (out of vocab) tokens to 0. False to exclude the token.\n\n\nverbose\n:  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)\n**kwargs: The kwargs for \ntoken_generator\n.\n\n\n\n\nReturns:\n\n\nThe encoded texts.\n\n\n\n\nWordTokenizer.get_counts\n\n\nget_counts(self, i)\n\n\n\n\nNumpy array of count values for aux_indices. For example, if \ntoken_generator\n generates\n\n(text_idx, sentence_idx, word)\n, then \nget_counts(0)\n returns the numpy array of sentence lengths across\ntexts. Similarly, \nget_counts(1)\n will return the numpy array of token lengths across sentences.\n\n\nThis is useful to plot histogram or eyeball the distributions. For getting standard statistics, you can use\n\nget_stats\n method.\n\n\n\n\nWordTokenizer.get_stats\n\n\nget_stats(self, i)\n\n\n\n\nGets the standard statistics for aux_index \ni\n. For example, if \ntoken_generator\n generates\n\n(text_idx, sentence_idx, word)\n, then \nget_stats(0)\n will return various statistics about sentence lengths\nacross texts. Similarly, \nget_counts(1)\n will return statistics of token lengths across sentences.\n\n\nThis information can be used to pad or truncate inputs.\n\n\n\n\nWordTokenizer.save\n\n\nsave(self, file_path)\n\n\n\n\nSerializes this tokenizer to a file.\n\n\nArgs:\n\n\n\n\nfile_path\n:  The file path to use.\n\n\n\n\n\n\nWordTokenizer.token_generator\n\n\ntoken_generator(self, texts, **kwargs)\n\n\n\n\nYields tokens from texts as \n(text_idx, word)\n\n\nArgs:\n\n\n\n\ntexts\n:  The list of texts.\n**kwargs: Supported args include:\n  n_threads/num_threads: Number of threads to use. Uses num_cpus - 1 by default.\n\n\nbatch_size\n:  The number of texts to accumulate into a common working set before processing.\n  (Default value: 1000)\n\n\n\n\n\n\nSentenceWordTokenizer\n\n\nSentenceWordTokenizer.has_vocab\n\n\nSentenceWordTokenizer.num_texts\n\n\nThe number of texts used to build the vocabulary.\n\n\nSentenceWordTokenizer.num_tokens\n\n\nNumber of unique tokens for use in enccoding/decoding.\nThis can change with calls to \napply_encoding_options\n.\n\n\nSentenceWordTokenizer.token_counts\n\n\nDictionary of token -\n count values for the text corpus used to \nbuild_vocab\n.\n\n\nSentenceWordTokenizer.token_index\n\n\nDictionary of token -\n idx mappings. This can change with calls to \napply_encoding_options\n.\n\n\n\n\nSentenceWordTokenizer.\n__init__\n\n\n__init__(self, lang=\nen\n, lower=True, lemmatize=False, remove_punct=True, remove_digits=True, \\\n    remove_stop_words=False, exclude_oov=False, exclude_pos_tags=None, \\\n    exclude_entities=['PERSON'])\n\n\n\n\nEncodes text into \n(samples, sentences, words)\n\n\nArgs:\n\n\n\n\nlang\n:  The spacy language to use. (Default value: 'en')\n\n\nlower\n:  Lower cases the tokens if True. (Default value: True)\n\n\nlemmatize\n:  Lemmatizes words when set to True. This also makes the word lower case\n  irrespective if the \nlower\n setting. (Default value: False)\n\n\nremove_punct\n:  Removes punct words if True. (Default value: True)\n\n\nremove_digits\n:  Removes digit words if True. (Default value: True)\n\n\nremove_stop_words\n:  Removes stop words if True. (Default value: False)\n\n\nexclude_oov\n:  Exclude words that are out of spacy embedding's vocabulary.\n  By default, GloVe 1 million, 300 dim are used. You can override spacy vocabulary with a custom\n  embedding to change this. (Default value: False)\n\n\nexclude_pos_tags\n:  A list of parts of speech tags to exclude. Can be any of spacy.parts_of_speech.IDS\n  (Default value: None)\n\n\nexclude_entities\n:  A list of entity types to be excluded.\n  Supported entity types can be found here: https://spacy.io/docs/usage/entity-recognition#entity-types\n  (Default value: ['PERSON'])\n\n\n\n\n\n\nSentenceWordTokenizer.apply_encoding_options\n\n\napply_encoding_options(self, min_token_count=1, max_tokens=None)\n\n\n\n\nApplies the given settings for subsequent calls to \nencode_texts\n and \ndecode_texts\n. This allows you to\nplay with different settings without having to re-run tokenization on the entire corpus.\n\n\nArgs:\n\n\n\n\nmin_token_count\n:  The minimum token count (frequency) in order to include during encoding. All tokens\n  below this frequency will be encoded to \n0\n which corresponds to unknown token. (Default value = 1)\n\n\nmax_tokens\n:  The maximum number of tokens to keep, based their frequency. Only the most common \nmax_tokens\n\n  tokens will be kept. Set to None to keep everything. (Default value: None)\n\n\n\n\n\n\nSentenceWordTokenizer.build_vocab\n\n\nbuild_vocab(self, texts, verbose=1, **kwargs)\n\n\n\n\nBuilds the internal vocabulary and computes various statistics.\n\n\nArgs:\n\n\n\n\ntexts\n:  The list of text items to encode.\n\n\nverbose\n:  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)\n**kwargs: The kwargs for \ntoken_generator\n.\n\n\n\n\n\n\nSentenceWordTokenizer.create_token_indices\n\n\ncreate_token_indices(self, tokens)\n\n\n\n\nIf \napply_encoding_options\n is inadequate, one can retrieve tokens from \nself.token_counts\n, filter with\na desired strategy and regenerate \ntoken_index\n using this method. The token index is subsequently used\nwhen \nencode_texts\n or \ndecode_texts\n methods are called.\n\n\n\n\nSentenceWordTokenizer.decode_texts\n\n\ndecode_texts(self, encoded_texts, unknown_token=\nUNK\n, inplace=True)\n\n\n\n\nDecodes the texts using internal vocabulary. The list structure is maintained.\n\n\nArgs:\n\n\n\n\nencoded_texts\n:  The list of texts to decode.\n\n\nunknown_token\n:  The placeholder value for unknown token. (Default value: \"\n\")\n\n\ninplace\n:  True to make changes inplace. (Default value: True)\n\n\n\n\nReturns:\n\n\nThe decoded texts.\n\n\n\n\nSentenceWordTokenizer.encode_texts\n\n\nencode_texts(self, texts, include_oov=False, verbose=1, **kwargs)\n\n\n\n\nEncodes the given texts using internal vocabulary with optionally applied encoding options. See\n\n`apply_encoding_options\n to set various options.\n\n\nArgs:\n\n\n\n\ntexts\n:  The list of text items to encode.\n\n\ninclude_oov\n:  True to map unknown (out of vocab) tokens to 0. False to exclude the token.\n\n\nverbose\n:  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)\n**kwargs: The kwargs for \ntoken_generator\n.\n\n\n\n\nReturns:\n\n\nThe encoded texts.\n\n\n\n\nSentenceWordTokenizer.get_counts\n\n\nget_counts(self, i)\n\n\n\n\nNumpy array of count values for aux_indices. For example, if \ntoken_generator\n generates\n\n(text_idx, sentence_idx, word)\n, then \nget_counts(0)\n returns the numpy array of sentence lengths across\ntexts. Similarly, \nget_counts(1)\n will return the numpy array of token lengths across sentences.\n\n\nThis is useful to plot histogram or eyeball the distributions. For getting standard statistics, you can use\n\nget_stats\n method.\n\n\n\n\nSentenceWordTokenizer.get_stats\n\n\nget_stats(self, i)\n\n\n\n\nGets the standard statistics for aux_index \ni\n. For example, if \ntoken_generator\n generates\n\n(text_idx, sentence_idx, word)\n, then \nget_stats(0)\n will return various statistics about sentence lengths\nacross texts. Similarly, \nget_counts(1)\n will return statistics of token lengths across sentences.\n\n\nThis information can be used to pad or truncate inputs.\n\n\n\n\nSentenceWordTokenizer.save\n\n\nsave(self, file_path)\n\n\n\n\nSerializes this tokenizer to a file.\n\n\nArgs:\n\n\n\n\nfile_path\n:  The file path to use.\n\n\n\n\n\n\nSentenceWordTokenizer.token_generator\n\n\ntoken_generator(self, texts, **kwargs)\n\n\n\n\nYields tokens from texts as \n(text_idx, sent_idx, word)\n\n\nArgs:\n\n\n\n\ntexts\n:  The list of texts.\n**kwargs: Supported args include:\n  n_threads/num_threads: Number of threads to use. Uses num_cpus - 1 by default.\n\n\nbatch_size\n:  The number of texts to accumulate into a common working set before processing.\n  (Default value: 1000)\n\n\n\n\n\n\nCharTokenizer\n\n\nCharTokenizer.has_vocab\n\n\nCharTokenizer.num_texts\n\n\nThe number of texts used to build the vocabulary.\n\n\nCharTokenizer.num_tokens\n\n\nNumber of unique tokens for use in enccoding/decoding.\nThis can change with calls to \napply_encoding_options\n.\n\n\nCharTokenizer.token_counts\n\n\nDictionary of token -\n count values for the text corpus used to \nbuild_vocab\n.\n\n\nCharTokenizer.token_index\n\n\nDictionary of token -\n idx mappings. This can change with calls to \napply_encoding_options\n.\n\n\n\n\nCharTokenizer.\n__init__\n\n\n__init__(self, lang=\nen\n, lower=True, charset=None)\n\n\n\n\nEncodes text into \n(samples, characters)\n\n\nArgs:\n\n\n\n\nlang\n:  The spacy language to use. (Default value: 'en')\n\n\nlower\n:  Lower cases the tokens if True. (Default value: True)\n\n\ncharset\n:  The character set to use. For example \ncharset = 'abc123'\n. If None, all characters will be used.\n  (Default value: None)\n\n\n\n\n\n\nCharTokenizer.apply_encoding_options\n\n\napply_encoding_options(self, min_token_count=1, max_tokens=None)\n\n\n\n\nApplies the given settings for subsequent calls to \nencode_texts\n and \ndecode_texts\n. This allows you to\nplay with different settings without having to re-run tokenization on the entire corpus.\n\n\nArgs:\n\n\n\n\nmin_token_count\n:  The minimum token count (frequency) in order to include during encoding. All tokens\n  below this frequency will be encoded to \n0\n which corresponds to unknown token. (Default value = 1)\n\n\nmax_tokens\n:  The maximum number of tokens to keep, based their frequency. Only the most common \nmax_tokens\n\n  tokens will be kept. Set to None to keep everything. (Default value: None)\n\n\n\n\n\n\nCharTokenizer.build_vocab\n\n\nbuild_vocab(self, texts, verbose=1, **kwargs)\n\n\n\n\nBuilds the internal vocabulary and computes various statistics.\n\n\nArgs:\n\n\n\n\ntexts\n:  The list of text items to encode.\n\n\nverbose\n:  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)\n**kwargs: The kwargs for \ntoken_generator\n.\n\n\n\n\n\n\nCharTokenizer.create_token_indices\n\n\ncreate_token_indices(self, tokens)\n\n\n\n\nIf \napply_encoding_options\n is inadequate, one can retrieve tokens from \nself.token_counts\n, filter with\na desired strategy and regenerate \ntoken_index\n using this method. The token index is subsequently used\nwhen \nencode_texts\n or \ndecode_texts\n methods are called.\n\n\n\n\nCharTokenizer.decode_texts\n\n\ndecode_texts(self, encoded_texts, unknown_token=\nUNK\n, inplace=True)\n\n\n\n\nDecodes the texts using internal vocabulary. The list structure is maintained.\n\n\nArgs:\n\n\n\n\nencoded_texts\n:  The list of texts to decode.\n\n\nunknown_token\n:  The placeholder value for unknown token. (Default value: \"\n\")\n\n\ninplace\n:  True to make changes inplace. (Default value: True)\n\n\n\n\nReturns:\n\n\nThe decoded texts.\n\n\n\n\nCharTokenizer.encode_texts\n\n\nencode_texts(self, texts, include_oov=False, verbose=1, **kwargs)\n\n\n\n\nEncodes the given texts using internal vocabulary with optionally applied encoding options. See\n\n`apply_encoding_options\n to set various options.\n\n\nArgs:\n\n\n\n\ntexts\n:  The list of text items to encode.\n\n\ninclude_oov\n:  True to map unknown (out of vocab) tokens to 0. False to exclude the token.\n\n\nverbose\n:  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)\n**kwargs: The kwargs for \ntoken_generator\n.\n\n\n\n\nReturns:\n\n\nThe encoded texts.\n\n\n\n\nCharTokenizer.get_counts\n\n\nget_counts(self, i)\n\n\n\n\nNumpy array of count values for aux_indices. For example, if \ntoken_generator\n generates\n\n(text_idx, sentence_idx, word)\n, then \nget_counts(0)\n returns the numpy array of sentence lengths across\ntexts. Similarly, \nget_counts(1)\n will return the numpy array of token lengths across sentences.\n\n\nThis is useful to plot histogram or eyeball the distributions. For getting standard statistics, you can use\n\nget_stats\n method.\n\n\n\n\nCharTokenizer.get_stats\n\n\nget_stats(self, i)\n\n\n\n\nGets the standard statistics for aux_index \ni\n. For example, if \ntoken_generator\n generates\n\n(text_idx, sentence_idx, word)\n, then \nget_stats(0)\n will return various statistics about sentence lengths\nacross texts. Similarly, \nget_counts(1)\n will return statistics of token lengths across sentences.\n\n\nThis information can be used to pad or truncate inputs.\n\n\n\n\nCharTokenizer.save\n\n\nsave(self, file_path)\n\n\n\n\nSerializes this tokenizer to a file.\n\n\nArgs:\n\n\n\n\nfile_path\n:  The file path to use.\n\n\n\n\n\n\nCharTokenizer.token_generator\n\n\ntoken_generator(self, texts, **kwargs)\n\n\n\n\nYields tokens from texts as \n(text_idx, character)\n\n\n\n\nSentenceCharTokenizer\n\n\nSentenceCharTokenizer.has_vocab\n\n\nSentenceCharTokenizer.num_texts\n\n\nThe number of texts used to build the vocabulary.\n\n\nSentenceCharTokenizer.num_tokens\n\n\nNumber of unique tokens for use in enccoding/decoding.\nThis can change with calls to \napply_encoding_options\n.\n\n\nSentenceCharTokenizer.token_counts\n\n\nDictionary of token -\n count values for the text corpus used to \nbuild_vocab\n.\n\n\nSentenceCharTokenizer.token_index\n\n\nDictionary of token -\n idx mappings. This can change with calls to \napply_encoding_options\n.\n\n\n\n\nSentenceCharTokenizer.\n__init__\n\n\n__init__(self, lang=\nen\n, lower=True, charset=None)\n\n\n\n\nEncodes text into \n(samples, sentences, characters)\n\n\nArgs:\n\n\n\n\nlang\n:  The spacy language to use. (Default value: 'en')\n\n\nlower\n:  Lower cases the tokens if True. (Default value: True)\n\n\ncharset\n:  The character set to use. For example \ncharset = 'abc123'\n. If None, all characters will be used.\n  (Default value: None)\n\n\n\n\n\n\nSentenceCharTokenizer.apply_encoding_options\n\n\napply_encoding_options(self, min_token_count=1, max_tokens=None)\n\n\n\n\nApplies the given settings for subsequent calls to \nencode_texts\n and \ndecode_texts\n. This allows you to\nplay with different settings without having to re-run tokenization on the entire corpus.\n\n\nArgs:\n\n\n\n\nmin_token_count\n:  The minimum token count (frequency) in order to include during encoding. All tokens\n  below this frequency will be encoded to \n0\n which corresponds to unknown token. (Default value = 1)\n\n\nmax_tokens\n:  The maximum number of tokens to keep, based their frequency. Only the most common \nmax_tokens\n\n  tokens will be kept. Set to None to keep everything. (Default value: None)\n\n\n\n\n\n\nSentenceCharTokenizer.build_vocab\n\n\nbuild_vocab(self, texts, verbose=1, **kwargs)\n\n\n\n\nBuilds the internal vocabulary and computes various statistics.\n\n\nArgs:\n\n\n\n\ntexts\n:  The list of text items to encode.\n\n\nverbose\n:  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)\n**kwargs: The kwargs for \ntoken_generator\n.\n\n\n\n\n\n\nSentenceCharTokenizer.create_token_indices\n\n\ncreate_token_indices(self, tokens)\n\n\n\n\nIf \napply_encoding_options\n is inadequate, one can retrieve tokens from \nself.token_counts\n, filter with\na desired strategy and regenerate \ntoken_index\n using this method. The token index is subsequently used\nwhen \nencode_texts\n or \ndecode_texts\n methods are called.\n\n\n\n\nSentenceCharTokenizer.decode_texts\n\n\ndecode_texts(self, encoded_texts, unknown_token=\nUNK\n, inplace=True)\n\n\n\n\nDecodes the texts using internal vocabulary. The list structure is maintained.\n\n\nArgs:\n\n\n\n\nencoded_texts\n:  The list of texts to decode.\n\n\nunknown_token\n:  The placeholder value for unknown token. (Default value: \"\n\")\n\n\ninplace\n:  True to make changes inplace. (Default value: True)\n\n\n\n\nReturns:\n\n\nThe decoded texts.\n\n\n\n\nSentenceCharTokenizer.encode_texts\n\n\nencode_texts(self, texts, include_oov=False, verbose=1, **kwargs)\n\n\n\n\nEncodes the given texts using internal vocabulary with optionally applied encoding options. See\n\n`apply_encoding_options\n to set various options.\n\n\nArgs:\n\n\n\n\ntexts\n:  The list of text items to encode.\n\n\ninclude_oov\n:  True to map unknown (out of vocab) tokens to 0. False to exclude the token.\n\n\nverbose\n:  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)\n**kwargs: The kwargs for \ntoken_generator\n.\n\n\n\n\nReturns:\n\n\nThe encoded texts.\n\n\n\n\nSentenceCharTokenizer.get_counts\n\n\nget_counts(self, i)\n\n\n\n\nNumpy array of count values for aux_indices. For example, if \ntoken_generator\n generates\n\n(text_idx, sentence_idx, word)\n, then \nget_counts(0)\n returns the numpy array of sentence lengths across\ntexts. Similarly, \nget_counts(1)\n will return the numpy array of token lengths across sentences.\n\n\nThis is useful to plot histogram or eyeball the distributions. For getting standard statistics, you can use\n\nget_stats\n method.\n\n\n\n\nSentenceCharTokenizer.get_stats\n\n\nget_stats(self, i)\n\n\n\n\nGets the standard statistics for aux_index \ni\n. For example, if \ntoken_generator\n generates\n\n(text_idx, sentence_idx, word)\n, then \nget_stats(0)\n will return various statistics about sentence lengths\nacross texts. Similarly, \nget_counts(1)\n will return statistics of token lengths across sentences.\n\n\nThis information can be used to pad or truncate inputs.\n\n\n\n\nSentenceCharTokenizer.save\n\n\nsave(self, file_path)\n\n\n\n\nSerializes this tokenizer to a file.\n\n\nArgs:\n\n\n\n\nfile_path\n:  The file path to use.\n\n\n\n\n\n\nSentenceCharTokenizer.token_generator\n\n\ntoken_generator(self, texts, **kwargs)\n\n\n\n\nYields tokens from texts as \n(text_idx, sent_idx, character)\n\n\nArgs:\n\n\n\n\ntexts\n:  The list of texts.\n**kwargs: Supported args include:\n  n_threads/num_threads: Number of threads to use. Uses num_cpus - 1 by default.\n\n\nbatch_size\n:  The number of texts to accumulate into a common working set before processing.\n  (Default value: 1000)", 
+            "title": "Tokenizing and padding"
+        }, 
+        {
+            "location": "/keras_text.processing/#pad_sequences", 
+            "text": "pad_sequences(sequences, max_sentences=None, max_tokens=None, padding= pre , truncating= post , \\\n    value=0.0)  Pads each sequence to the same length (length of the longest sequence or provided override).  Args:   sequences :  list of list (samples, words) or list of list of list (samples, sentences, words)  max_sentences :  The max sentence length to use. If None, largest sentence length is used.  max_tokens :  The max word length to use. If None, largest word length is used.  padding :  'pre' or 'post', pad either before or after each sequence.  truncating :  'pre' or 'post', remove values from sequences larger than max_sentences or max_tokens\n  either in the beginning or in the end of the sentence or word sequence respectively.  value :  The padding value.   Returns:  Numpy array of (samples, max_sentences, max_tokens) or (samples, max_tokens) depending on the sequence input.  Raises:   ValueError :  in case of invalid values for  truncating  or  padding .", 
+            "title": "pad_sequences"
+        }, 
+        {
+            "location": "/keras_text.processing/#unicodify", 
+            "text": "unicodify(texts)  Encodes all text sequences as unicode. This is a python2 hassle.  Args:   texts :  The sequence of texts.   Returns:  Unicode encoded sequences.", 
+            "title": "unicodify"
+        }, 
+        {
+            "location": "/keras_text.processing/#tokenizer", 
+            "text": "", 
+            "title": "Tokenizer"
+        }, 
+        {
+            "location": "/keras_text.processing/#tokenizerhas_vocab", 
+            "text": "", 
+            "title": "Tokenizer.has_vocab"
+        }, 
+        {
+            "location": "/keras_text.processing/#tokenizernum_texts", 
+            "text": "The number of texts used to build the vocabulary.", 
+            "title": "Tokenizer.num_texts"
+        }, 
+        {
+            "location": "/keras_text.processing/#tokenizernum_tokens", 
+            "text": "Number of unique tokens for use in enccoding/decoding.\nThis can change with calls to  apply_encoding_options .", 
+            "title": "Tokenizer.num_tokens"
+        }, 
+        {
+            "location": "/keras_text.processing/#tokenizertoken_counts", 
+            "text": "Dictionary of token -  count values for the text corpus used to  build_vocab .", 
+            "title": "Tokenizer.token_counts"
+        }, 
+        {
+            "location": "/keras_text.processing/#tokenizertoken_index", 
+            "text": "Dictionary of token -  idx mappings. This can change with calls to  apply_encoding_options .", 
+            "title": "Tokenizer.token_index"
+        }, 
+        {
+            "location": "/keras_text.processing/#tokenizer__init__", 
+            "text": "__init__(self, lang= en , lower=True)  Encodes text into  (samples, aux_indices..., token)  where each token is mapped to a unique index starting\nfrom  1 . Note that  0  is a reserved for unknown tokens.  Args:   lang :  The spacy language to use. (Default value: 'en')  lower :  Lower cases the tokens if True. (Default value: True)", 
+            "title": "Tokenizer.__init__"
+        }, 
+        {
+            "location": "/keras_text.processing/#tokenizerapply_encoding_options", 
+            "text": "apply_encoding_options(self, min_token_count=1, max_tokens=None)  Applies the given settings for subsequent calls to  encode_texts  and  decode_texts . This allows you to\nplay with different settings without having to re-run tokenization on the entire corpus.  Args:   min_token_count :  The minimum token count (frequency) in order to include during encoding. All tokens\n  below this frequency will be encoded to  0  which corresponds to unknown token. (Default value = 1)  max_tokens :  The maximum number of tokens to keep, based their frequency. Only the most common  max_tokens \n  tokens will be kept. Set to None to keep everything. (Default value: None)", 
+            "title": "Tokenizer.apply_encoding_options"
+        }, 
+        {
+            "location": "/keras_text.processing/#tokenizerbuild_vocab", 
+            "text": "build_vocab(self, texts, verbose=1, **kwargs)  Builds the internal vocabulary and computes various statistics.  Args:   texts :  The list of text items to encode.  verbose :  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)\n**kwargs: The kwargs for  token_generator .", 
+            "title": "Tokenizer.build_vocab"
+        }, 
+        {
+            "location": "/keras_text.processing/#tokenizercreate_token_indices", 
+            "text": "create_token_indices(self, tokens)  If  apply_encoding_options  is inadequate, one can retrieve tokens from  self.token_counts , filter with\na desired strategy and regenerate  token_index  using this method. The token index is subsequently used\nwhen  encode_texts  or  decode_texts  methods are called.", 
+            "title": "Tokenizer.create_token_indices"
+        }, 
+        {
+            "location": "/keras_text.processing/#tokenizerdecode_texts", 
+            "text": "decode_texts(self, encoded_texts, unknown_token= UNK , inplace=True)  Decodes the texts using internal vocabulary. The list structure is maintained.  Args:   encoded_texts :  The list of texts to decode.  unknown_token :  The placeholder value for unknown token. (Default value: \" \")  inplace :  True to make changes inplace. (Default value: True)   Returns:  The decoded texts.", 
+            "title": "Tokenizer.decode_texts"
+        }, 
+        {
+            "location": "/keras_text.processing/#tokenizerencode_texts", 
+            "text": "encode_texts(self, texts, include_oov=False, verbose=1, **kwargs)  Encodes the given texts using internal vocabulary with optionally applied encoding options. See `apply_encoding_options  to set various options.  Args:   texts :  The list of text items to encode.  include_oov :  True to map unknown (out of vocab) tokens to 0. False to exclude the token.  verbose :  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)\n**kwargs: The kwargs for  token_generator .   Returns:  The encoded texts.", 
+            "title": "Tokenizer.encode_texts"
+        }, 
+        {
+            "location": "/keras_text.processing/#tokenizerget_counts", 
+            "text": "get_counts(self, i)  Numpy array of count values for aux_indices. For example, if  token_generator  generates (text_idx, sentence_idx, word) , then  get_counts(0)  returns the numpy array of sentence lengths across\ntexts. Similarly,  get_counts(1)  will return the numpy array of token lengths across sentences.  This is useful to plot histogram or eyeball the distributions. For getting standard statistics, you can use get_stats  method.", 
+            "title": "Tokenizer.get_counts"
+        }, 
+        {
+            "location": "/keras_text.processing/#tokenizerget_stats", 
+            "text": "get_stats(self, i)  Gets the standard statistics for aux_index  i . For example, if  token_generator  generates (text_idx, sentence_idx, word) , then  get_stats(0)  will return various statistics about sentence lengths\nacross texts. Similarly,  get_counts(1)  will return statistics of token lengths across sentences.  This information can be used to pad or truncate inputs.", 
+            "title": "Tokenizer.get_stats"
+        }, 
+        {
+            "location": "/keras_text.processing/#tokenizersave", 
+            "text": "save(self, file_path)  Serializes this tokenizer to a file.  Args:   file_path :  The file path to use.", 
+            "title": "Tokenizer.save"
+        }, 
+        {
+            "location": "/keras_text.processing/#tokenizertoken_generator", 
+            "text": "token_generator(self, texts, **kwargs)  Generator for yielding tokens. You need to implement this method.  Args:   texts :  list of text items to tokenize.\n**kwargs: The kwargs propagated from  build_vocab_and_encode  or  encode_texts  call.   Returns:  (text_idx, aux_indices..., token)  where aux_indices are optional. For example, if you want to vectorize\n   texts  as  (text_idx, sentences, words), you should return (text_idx, sentence_idx, word_token)`.\n  Similarly, you can include paragraph, page level information etc., if needed.", 
+            "title": "Tokenizer.token_generator"
+        }, 
+        {
+            "location": "/keras_text.processing/#wordtokenizer", 
+            "text": "", 
+            "title": "WordTokenizer"
+        }, 
+        {
+            "location": "/keras_text.processing/#wordtokenizerhas_vocab", 
+            "text": "", 
+            "title": "WordTokenizer.has_vocab"
+        }, 
+        {
+            "location": "/keras_text.processing/#wordtokenizernum_texts", 
+            "text": "The number of texts used to build the vocabulary.", 
+            "title": "WordTokenizer.num_texts"
+        }, 
+        {
+            "location": "/keras_text.processing/#wordtokenizernum_tokens", 
+            "text": "Number of unique tokens for use in enccoding/decoding.\nThis can change with calls to  apply_encoding_options .", 
+            "title": "WordTokenizer.num_tokens"
+        }, 
+        {
+            "location": "/keras_text.processing/#wordtokenizertoken_counts", 
+            "text": "Dictionary of token -  count values for the text corpus used to  build_vocab .", 
+            "title": "WordTokenizer.token_counts"
+        }, 
+        {
+            "location": "/keras_text.processing/#wordtokenizertoken_index", 
+            "text": "Dictionary of token -  idx mappings. This can change with calls to  apply_encoding_options .", 
+            "title": "WordTokenizer.token_index"
+        }, 
+        {
+            "location": "/keras_text.processing/#wordtokenizer__init__", 
+            "text": "__init__(self, lang= en , lower=True, lemmatize=False, remove_punct=True, remove_digits=True, \\\n    remove_stop_words=False, exclude_oov=False, exclude_pos_tags=None, \\\n    exclude_entities=['PERSON'])  Encodes text into  (samples, words)  Args:   lang :  The spacy language to use. (Default value: 'en')  lower :  Lower cases the tokens if True. (Default value: True)  lemmatize :  Lemmatizes words when set to True. This also makes the word lower case\n  irrespective if the  lower  setting. (Default value: False)  remove_punct :  Removes punct words if True. (Default value: True)  remove_digits :  Removes digit words if True. (Default value: True)  remove_stop_words :  Removes stop words if True. (Default value: False)  exclude_oov :  Exclude words that are out of spacy embedding's vocabulary.\n  By default, GloVe 1 million, 300 dim are used. You can override spacy vocabulary with a custom\n  embedding to change this. (Default value: False)  exclude_pos_tags :  A list of parts of speech tags to exclude. Can be any of spacy.parts_of_speech.IDS\n  (Default value: None)  exclude_entities :  A list of entity types to be excluded.\n  Supported entity types can be found here: https://spacy.io/docs/usage/entity-recognition#entity-types\n  (Default value: ['PERSON'])", 
+            "title": "WordTokenizer.__init__"
+        }, 
+        {
+            "location": "/keras_text.processing/#wordtokenizerapply_encoding_options", 
+            "text": "apply_encoding_options(self, min_token_count=1, max_tokens=None)  Applies the given settings for subsequent calls to  encode_texts  and  decode_texts . This allows you to\nplay with different settings without having to re-run tokenization on the entire corpus.  Args:   min_token_count :  The minimum token count (frequency) in order to include during encoding. All tokens\n  below this frequency will be encoded to  0  which corresponds to unknown token. (Default value = 1)  max_tokens :  The maximum number of tokens to keep, based their frequency. Only the most common  max_tokens \n  tokens will be kept. Set to None to keep everything. (Default value: None)", 
+            "title": "WordTokenizer.apply_encoding_options"
+        }, 
+        {
+            "location": "/keras_text.processing/#wordtokenizerbuild_vocab", 
+            "text": "build_vocab(self, texts, verbose=1, **kwargs)  Builds the internal vocabulary and computes various statistics.  Args:   texts :  The list of text items to encode.  verbose :  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)\n**kwargs: The kwargs for  token_generator .", 
+            "title": "WordTokenizer.build_vocab"
+        }, 
+        {
+            "location": "/keras_text.processing/#wordtokenizercreate_token_indices", 
+            "text": "create_token_indices(self, tokens)  If  apply_encoding_options  is inadequate, one can retrieve tokens from  self.token_counts , filter with\na desired strategy and regenerate  token_index  using this method. The token index is subsequently used\nwhen  encode_texts  or  decode_texts  methods are called.", 
+            "title": "WordTokenizer.create_token_indices"
+        }, 
+        {
+            "location": "/keras_text.processing/#wordtokenizerdecode_texts", 
+            "text": "decode_texts(self, encoded_texts, unknown_token= UNK , inplace=True)  Decodes the texts using internal vocabulary. The list structure is maintained.  Args:   encoded_texts :  The list of texts to decode.  unknown_token :  The placeholder value for unknown token. (Default value: \" \")  inplace :  True to make changes inplace. (Default value: True)   Returns:  The decoded texts.", 
+            "title": "WordTokenizer.decode_texts"
+        }, 
+        {
+            "location": "/keras_text.processing/#wordtokenizerencode_texts", 
+            "text": "encode_texts(self, texts, include_oov=False, verbose=1, **kwargs)  Encodes the given texts using internal vocabulary with optionally applied encoding options. See `apply_encoding_options  to set various options.  Args:   texts :  The list of text items to encode.  include_oov :  True to map unknown (out of vocab) tokens to 0. False to exclude the token.  verbose :  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)\n**kwargs: The kwargs for  token_generator .   Returns:  The encoded texts.", 
+            "title": "WordTokenizer.encode_texts"
+        }, 
+        {
+            "location": "/keras_text.processing/#wordtokenizerget_counts", 
+            "text": "get_counts(self, i)  Numpy array of count values for aux_indices. For example, if  token_generator  generates (text_idx, sentence_idx, word) , then  get_counts(0)  returns the numpy array of sentence lengths across\ntexts. Similarly,  get_counts(1)  will return the numpy array of token lengths across sentences.  This is useful to plot histogram or eyeball the distributions. For getting standard statistics, you can use get_stats  method.", 
+            "title": "WordTokenizer.get_counts"
+        }, 
+        {
+            "location": "/keras_text.processing/#wordtokenizerget_stats", 
+            "text": "get_stats(self, i)  Gets the standard statistics for aux_index  i . For example, if  token_generator  generates (text_idx, sentence_idx, word) , then  get_stats(0)  will return various statistics about sentence lengths\nacross texts. Similarly,  get_counts(1)  will return statistics of token lengths across sentences.  This information can be used to pad or truncate inputs.", 
+            "title": "WordTokenizer.get_stats"
+        }, 
+        {
+            "location": "/keras_text.processing/#wordtokenizersave", 
+            "text": "save(self, file_path)  Serializes this tokenizer to a file.  Args:   file_path :  The file path to use.", 
+            "title": "WordTokenizer.save"
+        }, 
+        {
+            "location": "/keras_text.processing/#wordtokenizertoken_generator", 
+            "text": "token_generator(self, texts, **kwargs)  Yields tokens from texts as  (text_idx, word)  Args:   texts :  The list of texts.\n**kwargs: Supported args include:\n  n_threads/num_threads: Number of threads to use. Uses num_cpus - 1 by default.  batch_size :  The number of texts to accumulate into a common working set before processing.\n  (Default value: 1000)", 
+            "title": "WordTokenizer.token_generator"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencewordtokenizer", 
+            "text": "", 
+            "title": "SentenceWordTokenizer"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencewordtokenizerhas_vocab", 
+            "text": "", 
+            "title": "SentenceWordTokenizer.has_vocab"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencewordtokenizernum_texts", 
+            "text": "The number of texts used to build the vocabulary.", 
+            "title": "SentenceWordTokenizer.num_texts"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencewordtokenizernum_tokens", 
+            "text": "Number of unique tokens for use in enccoding/decoding.\nThis can change with calls to  apply_encoding_options .", 
+            "title": "SentenceWordTokenizer.num_tokens"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencewordtokenizertoken_counts", 
+            "text": "Dictionary of token -  count values for the text corpus used to  build_vocab .", 
+            "title": "SentenceWordTokenizer.token_counts"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencewordtokenizertoken_index", 
+            "text": "Dictionary of token -  idx mappings. This can change with calls to  apply_encoding_options .", 
+            "title": "SentenceWordTokenizer.token_index"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencewordtokenizer__init__", 
+            "text": "__init__(self, lang= en , lower=True, lemmatize=False, remove_punct=True, remove_digits=True, \\\n    remove_stop_words=False, exclude_oov=False, exclude_pos_tags=None, \\\n    exclude_entities=['PERSON'])  Encodes text into  (samples, sentences, words)  Args:   lang :  The spacy language to use. (Default value: 'en')  lower :  Lower cases the tokens if True. (Default value: True)  lemmatize :  Lemmatizes words when set to True. This also makes the word lower case\n  irrespective if the  lower  setting. (Default value: False)  remove_punct :  Removes punct words if True. (Default value: True)  remove_digits :  Removes digit words if True. (Default value: True)  remove_stop_words :  Removes stop words if True. (Default value: False)  exclude_oov :  Exclude words that are out of spacy embedding's vocabulary.\n  By default, GloVe 1 million, 300 dim are used. You can override spacy vocabulary with a custom\n  embedding to change this. (Default value: False)  exclude_pos_tags :  A list of parts of speech tags to exclude. Can be any of spacy.parts_of_speech.IDS\n  (Default value: None)  exclude_entities :  A list of entity types to be excluded.\n  Supported entity types can be found here: https://spacy.io/docs/usage/entity-recognition#entity-types\n  (Default value: ['PERSON'])", 
+            "title": "SentenceWordTokenizer.__init__"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencewordtokenizerapply_encoding_options", 
+            "text": "apply_encoding_options(self, min_token_count=1, max_tokens=None)  Applies the given settings for subsequent calls to  encode_texts  and  decode_texts . This allows you to\nplay with different settings without having to re-run tokenization on the entire corpus.  Args:   min_token_count :  The minimum token count (frequency) in order to include during encoding. All tokens\n  below this frequency will be encoded to  0  which corresponds to unknown token. (Default value = 1)  max_tokens :  The maximum number of tokens to keep, based their frequency. Only the most common  max_tokens \n  tokens will be kept. Set to None to keep everything. (Default value: None)", 
+            "title": "SentenceWordTokenizer.apply_encoding_options"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencewordtokenizerbuild_vocab", 
+            "text": "build_vocab(self, texts, verbose=1, **kwargs)  Builds the internal vocabulary and computes various statistics.  Args:   texts :  The list of text items to encode.  verbose :  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)\n**kwargs: The kwargs for  token_generator .", 
+            "title": "SentenceWordTokenizer.build_vocab"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencewordtokenizercreate_token_indices", 
+            "text": "create_token_indices(self, tokens)  If  apply_encoding_options  is inadequate, one can retrieve tokens from  self.token_counts , filter with\na desired strategy and regenerate  token_index  using this method. The token index is subsequently used\nwhen  encode_texts  or  decode_texts  methods are called.", 
+            "title": "SentenceWordTokenizer.create_token_indices"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencewordtokenizerdecode_texts", 
+            "text": "decode_texts(self, encoded_texts, unknown_token= UNK , inplace=True)  Decodes the texts using internal vocabulary. The list structure is maintained.  Args:   encoded_texts :  The list of texts to decode.  unknown_token :  The placeholder value for unknown token. (Default value: \" \")  inplace :  True to make changes inplace. (Default value: True)   Returns:  The decoded texts.", 
+            "title": "SentenceWordTokenizer.decode_texts"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencewordtokenizerencode_texts", 
+            "text": "encode_texts(self, texts, include_oov=False, verbose=1, **kwargs)  Encodes the given texts using internal vocabulary with optionally applied encoding options. See `apply_encoding_options  to set various options.  Args:   texts :  The list of text items to encode.  include_oov :  True to map unknown (out of vocab) tokens to 0. False to exclude the token.  verbose :  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)\n**kwargs: The kwargs for  token_generator .   Returns:  The encoded texts.", 
+            "title": "SentenceWordTokenizer.encode_texts"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencewordtokenizerget_counts", 
+            "text": "get_counts(self, i)  Numpy array of count values for aux_indices. For example, if  token_generator  generates (text_idx, sentence_idx, word) , then  get_counts(0)  returns the numpy array of sentence lengths across\ntexts. Similarly,  get_counts(1)  will return the numpy array of token lengths across sentences.  This is useful to plot histogram or eyeball the distributions. For getting standard statistics, you can use get_stats  method.", 
+            "title": "SentenceWordTokenizer.get_counts"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencewordtokenizerget_stats", 
+            "text": "get_stats(self, i)  Gets the standard statistics for aux_index  i . For example, if  token_generator  generates (text_idx, sentence_idx, word) , then  get_stats(0)  will return various statistics about sentence lengths\nacross texts. Similarly,  get_counts(1)  will return statistics of token lengths across sentences.  This information can be used to pad or truncate inputs.", 
+            "title": "SentenceWordTokenizer.get_stats"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencewordtokenizersave", 
+            "text": "save(self, file_path)  Serializes this tokenizer to a file.  Args:   file_path :  The file path to use.", 
+            "title": "SentenceWordTokenizer.save"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencewordtokenizertoken_generator", 
+            "text": "token_generator(self, texts, **kwargs)  Yields tokens from texts as  (text_idx, sent_idx, word)  Args:   texts :  The list of texts.\n**kwargs: Supported args include:\n  n_threads/num_threads: Number of threads to use. Uses num_cpus - 1 by default.  batch_size :  The number of texts to accumulate into a common working set before processing.\n  (Default value: 1000)", 
+            "title": "SentenceWordTokenizer.token_generator"
+        }, 
+        {
+            "location": "/keras_text.processing/#chartokenizer", 
+            "text": "", 
+            "title": "CharTokenizer"
+        }, 
+        {
+            "location": "/keras_text.processing/#chartokenizerhas_vocab", 
+            "text": "", 
+            "title": "CharTokenizer.has_vocab"
+        }, 
+        {
+            "location": "/keras_text.processing/#chartokenizernum_texts", 
+            "text": "The number of texts used to build the vocabulary.", 
+            "title": "CharTokenizer.num_texts"
+        }, 
+        {
+            "location": "/keras_text.processing/#chartokenizernum_tokens", 
+            "text": "Number of unique tokens for use in enccoding/decoding.\nThis can change with calls to  apply_encoding_options .", 
+            "title": "CharTokenizer.num_tokens"
+        }, 
+        {
+            "location": "/keras_text.processing/#chartokenizertoken_counts", 
+            "text": "Dictionary of token -  count values for the text corpus used to  build_vocab .", 
+            "title": "CharTokenizer.token_counts"
+        }, 
+        {
+            "location": "/keras_text.processing/#chartokenizertoken_index", 
+            "text": "Dictionary of token -  idx mappings. This can change with calls to  apply_encoding_options .", 
+            "title": "CharTokenizer.token_index"
+        }, 
+        {
+            "location": "/keras_text.processing/#chartokenizer__init__", 
+            "text": "__init__(self, lang= en , lower=True, charset=None)  Encodes text into  (samples, characters)  Args:   lang :  The spacy language to use. (Default value: 'en')  lower :  Lower cases the tokens if True. (Default value: True)  charset :  The character set to use. For example  charset = 'abc123' . If None, all characters will be used.\n  (Default value: None)", 
+            "title": "CharTokenizer.__init__"
+        }, 
+        {
+            "location": "/keras_text.processing/#chartokenizerapply_encoding_options", 
+            "text": "apply_encoding_options(self, min_token_count=1, max_tokens=None)  Applies the given settings for subsequent calls to  encode_texts  and  decode_texts . This allows you to\nplay with different settings without having to re-run tokenization on the entire corpus.  Args:   min_token_count :  The minimum token count (frequency) in order to include during encoding. All tokens\n  below this frequency will be encoded to  0  which corresponds to unknown token. (Default value = 1)  max_tokens :  The maximum number of tokens to keep, based their frequency. Only the most common  max_tokens \n  tokens will be kept. Set to None to keep everything. (Default value: None)", 
+            "title": "CharTokenizer.apply_encoding_options"
+        }, 
+        {
+            "location": "/keras_text.processing/#chartokenizerbuild_vocab", 
+            "text": "build_vocab(self, texts, verbose=1, **kwargs)  Builds the internal vocabulary and computes various statistics.  Args:   texts :  The list of text items to encode.  verbose :  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)\n**kwargs: The kwargs for  token_generator .", 
+            "title": "CharTokenizer.build_vocab"
+        }, 
+        {
+            "location": "/keras_text.processing/#chartokenizercreate_token_indices", 
+            "text": "create_token_indices(self, tokens)  If  apply_encoding_options  is inadequate, one can retrieve tokens from  self.token_counts , filter with\na desired strategy and regenerate  token_index  using this method. The token index is subsequently used\nwhen  encode_texts  or  decode_texts  methods are called.", 
+            "title": "CharTokenizer.create_token_indices"
+        }, 
+        {
+            "location": "/keras_text.processing/#chartokenizerdecode_texts", 
+            "text": "decode_texts(self, encoded_texts, unknown_token= UNK , inplace=True)  Decodes the texts using internal vocabulary. The list structure is maintained.  Args:   encoded_texts :  The list of texts to decode.  unknown_token :  The placeholder value for unknown token. (Default value: \" \")  inplace :  True to make changes inplace. (Default value: True)   Returns:  The decoded texts.", 
+            "title": "CharTokenizer.decode_texts"
+        }, 
+        {
+            "location": "/keras_text.processing/#chartokenizerencode_texts", 
+            "text": "encode_texts(self, texts, include_oov=False, verbose=1, **kwargs)  Encodes the given texts using internal vocabulary with optionally applied encoding options. See `apply_encoding_options  to set various options.  Args:   texts :  The list of text items to encode.  include_oov :  True to map unknown (out of vocab) tokens to 0. False to exclude the token.  verbose :  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)\n**kwargs: The kwargs for  token_generator .   Returns:  The encoded texts.", 
+            "title": "CharTokenizer.encode_texts"
+        }, 
+        {
+            "location": "/keras_text.processing/#chartokenizerget_counts", 
+            "text": "get_counts(self, i)  Numpy array of count values for aux_indices. For example, if  token_generator  generates (text_idx, sentence_idx, word) , then  get_counts(0)  returns the numpy array of sentence lengths across\ntexts. Similarly,  get_counts(1)  will return the numpy array of token lengths across sentences.  This is useful to plot histogram or eyeball the distributions. For getting standard statistics, you can use get_stats  method.", 
+            "title": "CharTokenizer.get_counts"
+        }, 
+        {
+            "location": "/keras_text.processing/#chartokenizerget_stats", 
+            "text": "get_stats(self, i)  Gets the standard statistics for aux_index  i . For example, if  token_generator  generates (text_idx, sentence_idx, word) , then  get_stats(0)  will return various statistics about sentence lengths\nacross texts. Similarly,  get_counts(1)  will return statistics of token lengths across sentences.  This information can be used to pad or truncate inputs.", 
+            "title": "CharTokenizer.get_stats"
+        }, 
+        {
+            "location": "/keras_text.processing/#chartokenizersave", 
+            "text": "save(self, file_path)  Serializes this tokenizer to a file.  Args:   file_path :  The file path to use.", 
+            "title": "CharTokenizer.save"
+        }, 
+        {
+            "location": "/keras_text.processing/#chartokenizertoken_generator", 
+            "text": "token_generator(self, texts, **kwargs)  Yields tokens from texts as  (text_idx, character)", 
+            "title": "CharTokenizer.token_generator"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencechartokenizer", 
+            "text": "", 
+            "title": "SentenceCharTokenizer"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencechartokenizerhas_vocab", 
+            "text": "", 
+            "title": "SentenceCharTokenizer.has_vocab"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencechartokenizernum_texts", 
+            "text": "The number of texts used to build the vocabulary.", 
+            "title": "SentenceCharTokenizer.num_texts"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencechartokenizernum_tokens", 
+            "text": "Number of unique tokens for use in enccoding/decoding.\nThis can change with calls to  apply_encoding_options .", 
+            "title": "SentenceCharTokenizer.num_tokens"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencechartokenizertoken_counts", 
+            "text": "Dictionary of token -  count values for the text corpus used to  build_vocab .", 
+            "title": "SentenceCharTokenizer.token_counts"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencechartokenizertoken_index", 
+            "text": "Dictionary of token -  idx mappings. This can change with calls to  apply_encoding_options .", 
+            "title": "SentenceCharTokenizer.token_index"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencechartokenizer__init__", 
+            "text": "__init__(self, lang= en , lower=True, charset=None)  Encodes text into  (samples, sentences, characters)  Args:   lang :  The spacy language to use. (Default value: 'en')  lower :  Lower cases the tokens if True. (Default value: True)  charset :  The character set to use. For example  charset = 'abc123' . If None, all characters will be used.\n  (Default value: None)", 
+            "title": "SentenceCharTokenizer.__init__"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencechartokenizerapply_encoding_options", 
+            "text": "apply_encoding_options(self, min_token_count=1, max_tokens=None)  Applies the given settings for subsequent calls to  encode_texts  and  decode_texts . This allows you to\nplay with different settings without having to re-run tokenization on the entire corpus.  Args:   min_token_count :  The minimum token count (frequency) in order to include during encoding. All tokens\n  below this frequency will be encoded to  0  which corresponds to unknown token. (Default value = 1)  max_tokens :  The maximum number of tokens to keep, based their frequency. Only the most common  max_tokens \n  tokens will be kept. Set to None to keep everything. (Default value: None)", 
+            "title": "SentenceCharTokenizer.apply_encoding_options"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencechartokenizerbuild_vocab", 
+            "text": "build_vocab(self, texts, verbose=1, **kwargs)  Builds the internal vocabulary and computes various statistics.  Args:   texts :  The list of text items to encode.  verbose :  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)\n**kwargs: The kwargs for  token_generator .", 
+            "title": "SentenceCharTokenizer.build_vocab"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencechartokenizercreate_token_indices", 
+            "text": "create_token_indices(self, tokens)  If  apply_encoding_options  is inadequate, one can retrieve tokens from  self.token_counts , filter with\na desired strategy and regenerate  token_index  using this method. The token index is subsequently used\nwhen  encode_texts  or  decode_texts  methods are called.", 
+            "title": "SentenceCharTokenizer.create_token_indices"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencechartokenizerdecode_texts", 
+            "text": "decode_texts(self, encoded_texts, unknown_token= UNK , inplace=True)  Decodes the texts using internal vocabulary. The list structure is maintained.  Args:   encoded_texts :  The list of texts to decode.  unknown_token :  The placeholder value for unknown token. (Default value: \" \")  inplace :  True to make changes inplace. (Default value: True)   Returns:  The decoded texts.", 
+            "title": "SentenceCharTokenizer.decode_texts"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencechartokenizerencode_texts", 
+            "text": "encode_texts(self, texts, include_oov=False, verbose=1, **kwargs)  Encodes the given texts using internal vocabulary with optionally applied encoding options. See `apply_encoding_options  to set various options.  Args:   texts :  The list of text items to encode.  include_oov :  True to map unknown (out of vocab) tokens to 0. False to exclude the token.  verbose :  The verbosity level for progress. Can be 0, 1, 2. (Default value = 1)\n**kwargs: The kwargs for  token_generator .   Returns:  The encoded texts.", 
+            "title": "SentenceCharTokenizer.encode_texts"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencechartokenizerget_counts", 
+            "text": "get_counts(self, i)  Numpy array of count values for aux_indices. For example, if  token_generator  generates (text_idx, sentence_idx, word) , then  get_counts(0)  returns the numpy array of sentence lengths across\ntexts. Similarly,  get_counts(1)  will return the numpy array of token lengths across sentences.  This is useful to plot histogram or eyeball the distributions. For getting standard statistics, you can use get_stats  method.", 
+            "title": "SentenceCharTokenizer.get_counts"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencechartokenizerget_stats", 
+            "text": "get_stats(self, i)  Gets the standard statistics for aux_index  i . For example, if  token_generator  generates (text_idx, sentence_idx, word) , then  get_stats(0)  will return various statistics about sentence lengths\nacross texts. Similarly,  get_counts(1)  will return statistics of token lengths across sentences.  This information can be used to pad or truncate inputs.", 
+            "title": "SentenceCharTokenizer.get_stats"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencechartokenizersave", 
+            "text": "save(self, file_path)  Serializes this tokenizer to a file.  Args:   file_path :  The file path to use.", 
+            "title": "SentenceCharTokenizer.save"
+        }, 
+        {
+            "location": "/keras_text.processing/#sentencechartokenizertoken_generator", 
+            "text": "token_generator(self, texts, **kwargs)  Yields tokens from texts as  (text_idx, sent_idx, character)  Args:   texts :  The list of texts.\n**kwargs: Supported args include:\n  n_threads/num_threads: Number of threads to use. Uses num_cpus - 1 by default.  batch_size :  The number of texts to accumulate into a common working set before processing.\n  (Default value: 1000)", 
+            "title": "SentenceCharTokenizer.token_generator"
+        }, 
+        {
+            "location": "/keras_text.data/", 
+            "text": "Source:\n \nkeras_text/data.py#L0\n\n\n\n\nDataset\n\n\nDataset.labels\n\n\nDataset.num_classes\n\n\nDataset.test_indices\n\n\nDataset.train_indices\n\n\n\n\nDataset.\n__init__\n\n\n__init__(self, inputs, labels, test_indices=None, **kwargs)\n\n\n\n\nEncapsulates all pieces of data to run an experiment. This is basically a bag of items that makes it\neasy to serialize and deserialize everything as \n\n\nArgs:\n\n\n\n\ninputs\n:  The raw model inputs. This can be set to None if you dont want\n  to serialize this value when you save the dataset.\n\n\nlabels\n:  The raw output labels.\n\n\ntest_indices\n:  The optional test indices to use. Ideally, this should be generated one time and reused\n  across experiments to make results comparable. \ngenerate_test_indices\n can be used generate first\n  time indices.\n**kwargs: Additional key value items to store.\n\n\n\n\n\n\nDataset.save\n\n\nsave(self, file_path)\n\n\n\n\nSerializes this dataset to a file.\n\n\nArgs:\n\n\n\n\nfile_path\n:  The file path to use.\n\n\n\n\n\n\nDataset.train_val_split\n\n\ntrain_val_split(self, split_ratio=0.2)\n\n\n\n\nGenerates train and validation sets from the training indices.\n\n\nArgs:\n\n\n\n\nsplit_ratio\n:  The split proportion in [0, 1]\n\n\n\n\nReturns:\n\n\nThe stratified train and val subsets. Multi-label outputs are handled as well.", 
+            "title": "Dataset management"
+        }, 
+        {
+            "location": "/keras_text.data/#dataset", 
+            "text": "", 
+            "title": "Dataset"
+        }, 
+        {
+            "location": "/keras_text.data/#datasetlabels", 
+            "text": "", 
+            "title": "Dataset.labels"
+        }, 
+        {
+            "location": "/keras_text.data/#datasetnum_classes", 
+            "text": "", 
+            "title": "Dataset.num_classes"
+        }, 
+        {
+            "location": "/keras_text.data/#datasettest_indices", 
+            "text": "", 
+            "title": "Dataset.test_indices"
+        }, 
+        {
+            "location": "/keras_text.data/#datasettrain_indices", 
+            "text": "", 
+            "title": "Dataset.train_indices"
+        }, 
+        {
+            "location": "/keras_text.data/#dataset__init__", 
+            "text": "__init__(self, inputs, labels, test_indices=None, **kwargs)  Encapsulates all pieces of data to run an experiment. This is basically a bag of items that makes it\neasy to serialize and deserialize everything as   Args:   inputs :  The raw model inputs. This can be set to None if you dont want\n  to serialize this value when you save the dataset.  labels :  The raw output labels.  test_indices :  The optional test indices to use. Ideally, this should be generated one time and reused\n  across experiments to make results comparable.  generate_test_indices  can be used generate first\n  time indices.\n**kwargs: Additional key value items to store.", 
+            "title": "Dataset.__init__"
+        }, 
+        {
+            "location": "/keras_text.data/#datasetsave", 
+            "text": "save(self, file_path)  Serializes this dataset to a file.  Args:   file_path :  The file path to use.", 
+            "title": "Dataset.save"
+        }, 
+        {
+            "location": "/keras_text.data/#datasettrain_val_split", 
+            "text": "train_val_split(self, split_ratio=0.2)  Generates train and validation sets from the training indices.  Args:   split_ratio :  The split proportion in [0, 1]   Returns:  The stratified train and val subsets. Multi-label outputs are handled as well.", 
+            "title": "Dataset.train_val_split"
+        }, 
+        {
+            "location": "/keras_text.generators/", 
+            "text": "Source:\n \nkeras_text/generators.py#L0\n\n\n\n\nProcessingSequence\n\n\n\n\nProcessingSequence.\n__init__\n\n\n__init__(self, X, y, batch_size, process_fn=None)\n\n\n\n\nA \nSequence\n implementation that can pre-process a mini-batch via \nprocess_fn\n\n\nArgs:\n\n\n\n\nX\n:  The numpy array of inputs.\n\n\ny\n:  The numpy array of targets.\n\n\nbatch_size\n:  The generator mini-batch size.\n\n\nprocess_fn\n:  The preprocessing function to apply on \nX\n\n\n\n\n\n\nProcessingSequence.on_epoch_end\n\n\non_epoch_end(self)\n\n\n\n\n\n\nBalancedSequence\n\n\n\n\nBalancedSequence.\n__init__\n\n\n__init__(self, X, y, batch_size, process_fn=None)\n\n\n\n\nA \nSequence\n implementation that returns balanced \ny\n by undersampling majority class.\n\n\nArgs:\n\n\n\n\nX\n:  The numpy array of inputs.\n\n\ny\n:  The numpy array of targets.\n\n\nbatch_size\n:  The generator mini-batch size.\n\n\nprocess_fn\n:  The preprocessing function to apply on \nX\n\n\n\n\n\n\nBalancedSequence.on_epoch_end\n\n\non_epoch_end(self)", 
+            "title": "Generators"
+        }, 
+        {
+            "location": "/keras_text.generators/#processingsequence", 
+            "text": "", 
+            "title": "ProcessingSequence"
+        }, 
+        {
+            "location": "/keras_text.generators/#processingsequence__init__", 
+            "text": "__init__(self, X, y, batch_size, process_fn=None)  A  Sequence  implementation that can pre-process a mini-batch via  process_fn  Args:   X :  The numpy array of inputs.  y :  The numpy array of targets.  batch_size :  The generator mini-batch size.  process_fn :  The preprocessing function to apply on  X", 
+            "title": "ProcessingSequence.__init__"
+        }, 
+        {
+            "location": "/keras_text.generators/#processingsequenceon_epoch_end", 
+            "text": "on_epoch_end(self)", 
+            "title": "ProcessingSequence.on_epoch_end"
+        }, 
+        {
+            "location": "/keras_text.generators/#balancedsequence", 
+            "text": "", 
+            "title": "BalancedSequence"
+        }, 
+        {
+            "location": "/keras_text.generators/#balancedsequence__init__", 
+            "text": "__init__(self, X, y, batch_size, process_fn=None)  A  Sequence  implementation that returns balanced  y  by undersampling majority class.  Args:   X :  The numpy array of inputs.  y :  The numpy array of targets.  batch_size :  The generator mini-batch size.  process_fn :  The preprocessing function to apply on  X", 
+            "title": "BalancedSequence.__init__"
+        }, 
+        {
+            "location": "/keras_text.generators/#balancedsequenceon_epoch_end", 
+            "text": "on_epoch_end(self)", 
+            "title": "BalancedSequence.on_epoch_end"
+        }, 
+        {
+            "location": "/keras_text.sampling/", 
+            "text": "Source:\n \nkeras_text/sampling.py#L0\n\n\n\n\ncalculate_class_weights\n\n\ncalculate_class_weights(y, smooth_factor=0)\n\n\n\n\nReturns the weights for each class so as to balance distribution across classes.\n\n\nArgs:\n\n\n\n\ny\n:  list of true labels. Also works for multi-label \ny\n.\n\n\nsmooth_factor\n:  factor that smooths extremely uneven weights\n\n\n\n\nReturns: An ordered dictionary of weights keyed by class idx.\n\n\n\n\nequal_distribution_folds\n\n\nequal_distribution_folds(y, folds=2)\n\n\n\n\nCreates \nfolds\n number of indices that has roughly balanced multi-label distribution.\n\n\nArgs:\n\n\n\n\ny\n:  The multi-label outputs.\n\n\nfolds\n:  The number of folds to create.\n\n\n\n\nReturns:\n\n\nfolds\n number of indices that have roughly equal multi-label distributions.\n\n\n\n\nmulti_label_train_test_split\n\n\nmulti_label_train_test_split(y, test_size=0.2)\n\n\n\n\nCreates a test split with roughly the same multi-label distribution in \ny\n.\n\n\nArgs:\n\n\n\n\ny\n:  The multi-label outputs.\n\n\ntest_size\n:  The test size in [0, 1]\n\n\n\n\nReturns:\n\n\nThe train and test indices.", 
+            "title": "Sampling"
+        }, 
+        {
+            "location": "/keras_text.sampling/#calculate_class_weights", 
+            "text": "calculate_class_weights(y, smooth_factor=0)  Returns the weights for each class so as to balance distribution across classes.  Args:   y :  list of true labels. Also works for multi-label  y .  smooth_factor :  factor that smooths extremely uneven weights   Returns: An ordered dictionary of weights keyed by class idx.", 
+            "title": "calculate_class_weights"
+        }, 
+        {
+            "location": "/keras_text.sampling/#equal_distribution_folds", 
+            "text": "equal_distribution_folds(y, folds=2)  Creates  folds  number of indices that has roughly balanced multi-label distribution.  Args:   y :  The multi-label outputs.  folds :  The number of folds to create.   Returns:  folds  number of indices that have roughly equal multi-label distributions.", 
+            "title": "equal_distribution_folds"
+        }, 
+        {
+            "location": "/keras_text.sampling/#multi_label_train_test_split", 
+            "text": "multi_label_train_test_split(y, test_size=0.2)  Creates a test split with roughly the same multi-label distribution in  y .  Args:   y :  The multi-label outputs.  test_size :  The test size in [0, 1]   Returns:  The train and test indices.", 
+            "title": "multi_label_train_test_split"
+        }, 
+        {
+            "location": "/keras_text.utils/", 
+            "text": "Source:\n \nkeras_text/utils.py#L0\n\n\n\n\ngenerate_run_id\n\n\ngenerate_run_id()\n\n\n\n\n\n\ndump\n\n\ndump(obj, file_name)\n\n\n\n\n\n\nload\n\n\nload(file_name)", 
+            "title": "Utils"
+        }, 
+        {
+            "location": "/keras_text.utils/#generate_run_id", 
+            "text": "generate_run_id()", 
+            "title": "generate_run_id"
+        }, 
+        {
+            "location": "/keras_text.utils/#dump", 
+            "text": "dump(obj, file_name)", 
+            "title": "dump"
+        }, 
+        {
+            "location": "/keras_text.utils/#load", 
+            "text": "load(file_name)", 
+            "title": "load"
+        }
+    ]
+}

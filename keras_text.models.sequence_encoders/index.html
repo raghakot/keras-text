@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Sequence Processing Models - keras-text Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  <link href="../css/extras.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Sequence Processing Models";
+    var mkdocs_page_input_path = "keras_text.models.sequence_encoders.md";
+    var mkdocs_page_url = "/keras_text.models.sequence_encoders/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> keras-text Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">API Docs</span>
+    <ul class="subnav">
+                <li class=" current">
+                    
+    <span class="caption-text">Models</span>
+    <ul class="subnav">
+                <li class="toctree-l3 current">
+                    
+    <a class="current" href="./">Sequence Processing Models</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l4"><a href="#sequenceencoderbase">SequenceEncoderBase</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l5" href="#sequenceencoderbase__init__">SequenceEncoderBase.__init__</a></li>
+        
+            <li><a class="toctree-l5" href="#sequenceencoderbasebuild_model">SequenceEncoderBase.build_model</a></li>
+        
+            <li><a class="toctree-l5" href="#sequenceencoderbaserequires_padding">SequenceEncoderBase.requires_padding</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l4"><a href="#yoonkimcnn">YoonKimCNN</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l5" href="#yoonkimcnn__init__">YoonKimCNN.__init__</a></li>
+        
+            <li><a class="toctree-l5" href="#yoonkimcnnbuild_model">YoonKimCNN.build_model</a></li>
+        
+            <li><a class="toctree-l5" href="#yoonkimcnnrequires_padding">YoonKimCNN.requires_padding</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l4"><a href="#stackedrnn">StackedRNN</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l5" href="#stackedrnn__init__">StackedRNN.__init__</a></li>
+        
+            <li><a class="toctree-l5" href="#stackedrnnbuild_model">StackedRNN.build_model</a></li>
+        
+            <li><a class="toctree-l5" href="#stackedrnnrequires_padding">StackedRNN.requires_padding</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l4"><a href="#attentionrnn">AttentionRNN</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l5" href="#attentionrnn__init__">AttentionRNN.__init__</a></li>
+        
+            <li><a class="toctree-l5" href="#attentionrnnbuild_model">AttentionRNN.build_model</a></li>
+        
+            <li><a class="toctree-l5" href="#attentionrnnget_attention_tensor">AttentionRNN.get_attention_tensor</a></li>
+        
+            <li><a class="toctree-l5" href="#attentionrnnrequires_padding">AttentionRNN.requires_padding</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l4"><a href="#averagingencoder">AveragingEncoder</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l5" href="#averagingencoder__init__">AveragingEncoder.__init__</a></li>
+        
+            <li><a class="toctree-l5" href="#averagingencoderbuild_model">AveragingEncoder.build_model</a></li>
+        
+            <li><a class="toctree-l5" href="#averagingencoderrequires_padding">AveragingEncoder.requires_padding</a></li>
+        
+        </ul>
+    
+
+    </ul>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.models.token_model/">Sequence Model Builder Factory</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.models.sentence_model/">Sentence Model Builder Factory</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.models.layers/">Custom Layers</a>
+                </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Data Processing</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.processing/">Tokenizing and padding</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.data/">Dataset management</a>
+                </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Utilities</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.generators/">Generators</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.sampling/">Sampling</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.utils/">Utils</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">keras-text Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>API Docs &raquo;</li>
+        
+      
+        
+          <li>Models &raquo;</li>
+        
+      
+    
+    <li>Sequence Processing Models</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="http://github.com/raghakot/keras-text/blob/master/docs/templates/keras_text.models.sequence_encoders.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-text/tree/master/keras_text/models/sequence_encoders.py#L0">keras_text/models/sequence_encoders.py#L0</a></p>
+<hr />
+<h2 id="sequenceencoderbase"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/models/sequence_encoders.py#L9">SequenceEncoderBase</a></h2>
+<hr />
+<h3 id="sequenceencoderbase__init__"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/models/sequence_encoders.py#L11">SequenceEncoderBase.<code>__init__</code></a></h3>
+<pre><code class="python">__init__(self, dropout_rate=0.5)
+</code></pre>
+
+<p>Creates a new instance of sequence encoder.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>dropout_rate</strong>:  The final encoded output dropout.</li>
+</ul>
+<hr />
+<h3 id="sequenceencoderbasebuild_model"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/models/sequence_encoders.py#L33">SequenceEncoderBase.build_model</a></h3>
+<pre><code class="python">build_model(self, x)
+</code></pre>
+
+<p>Build your model graph here.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>x</strong>:  The encoded or embedded input sequence.</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The model output tensor without the classification block.</p>
+<hr />
+<h3 id="sequenceencoderbaserequires_padding"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/models/sequence_encoders.py#L44">SequenceEncoderBase.requires_padding</a></h3>
+<pre><code class="python">requires_padding(self)
+</code></pre>
+
+<p>Return a boolean indicating whether this model expects inputs to be padded or not.</p>
+<hr />
+<h2 id="yoonkimcnn"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/models/sequence_encoders.py#L50">YoonKimCNN</a></h2>
+<hr />
+<h3 id="yoonkimcnn__init__"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/models/sequence_encoders.py#L52">YoonKimCNN.<code>__init__</code></a></h3>
+<pre><code class="python">__init__(self, num_filters=64, filter_sizes=[3, 4, 5], dropout_rate=0.5, **conv_kwargs)
+</code></pre>
+
+<p>Yoon Kim's shallow cnn model: https://arxiv.org/pdf/1408.5882.pdf</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>num_filters</strong>:  The number of filters to use per <code>filter_size</code>. (Default value = 64)</li>
+<li><strong>filter_sizes</strong>:  The filter sizes for each convolutional layer. (Default value = [3, 4, 5])
+**cnn_kwargs: Additional args for building the <code>Conv1D</code> layer.</li>
+</ul>
+<hr />
+<h3 id="yoonkimcnnbuild_model"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/models/sequence_encoders.py#L65">YoonKimCNN.build_model</a></h3>
+<pre><code class="python">build_model(self, x)
+</code></pre>
+
+<hr />
+<h3 id="yoonkimcnnrequires_padding"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/models/sequence_encoders.py#L75">YoonKimCNN.requires_padding</a></h3>
+<pre><code class="python">requires_padding(self)
+</code></pre>
+
+<hr />
+<h2 id="stackedrnn"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/models/sequence_encoders.py#L79">StackedRNN</a></h2>
+<hr />
+<h3 id="stackedrnn__init__"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/models/sequence_encoders.py#L81">StackedRNN.<code>__init__</code></a></h3>
+<pre><code class="python">__init__(self, rnn_class=&lt;class 'keras.layers.recurrent.GRU'&gt;, hidden_dims=[50, 50], \
+    bidirectional=True, dropout_rate=0.5, **rnn_kwargs)
+</code></pre>
+
+<p>Creates a stacked RNN.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>rnn_class</strong>:  The type of RNN to use.</li>
+<li><strong>hidden_dims</strong>:  The hidden dims for corresponding stacks of RNNs.</li>
+<li><strong>bidirectional</strong>:  Whether to use bidirectional encoding.
+**rnn_kwargs: Additional args for building the RNN.</li>
+</ul>
+<hr />
+<h3 id="stackedrnnbuild_model"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/models/sequence_encoders.py#L96">StackedRNN.build_model</a></h3>
+<pre><code class="python">build_model(self, x)
+</code></pre>
+
+<hr />
+<h3 id="stackedrnnrequires_padding"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/models/sequence_encoders.py#L106">StackedRNN.requires_padding</a></h3>
+<pre><code class="python">requires_padding(self)
+</code></pre>
+
+<hr />
+<h2 id="attentionrnn"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/models/sequence_encoders.py#L110">AttentionRNN</a></h2>
+<hr />
+<h3 id="attentionrnn__init__"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/models/sequence_encoders.py#L112">AttentionRNN.<code>__init__</code></a></h3>
+<pre><code class="python">__init__(self, rnn_class=&lt;class 'keras.layers.recurrent.GRU'&gt;, encoder_dims=50, \
+    bidirectional=True, dropout_rate=0.5, **rnn_kwargs)
+</code></pre>
+
+<p>Creates an RNN model with attention. The attention mechanism is implemented as described
+in https://www.cs.cmu.edu/~hovy/papers/16HLT-hierarchical-attention-networks.pdf, but without
+sentence level attention.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>rnn_class</strong>:  The type of RNN to use.</li>
+<li><strong>encoder_dims</strong>:  The number of hidden units of RNN.</li>
+<li><strong>bidirectional</strong>:  Whether to use bidirectional encoding.
+**rnn_kwargs: Additional args for building the RNN.</li>
+</ul>
+<hr />
+<h3 id="attentionrnnbuild_model"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/models/sequence_encoders.py#L129">AttentionRNN.build_model</a></h3>
+<pre><code class="python">build_model(self, x)
+</code></pre>
+
+<hr />
+<h3 id="attentionrnnget_attention_tensor"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/models/sequence_encoders.py#L141">AttentionRNN.get_attention_tensor</a></h3>
+<pre><code class="python">get_attention_tensor(self)
+</code></pre>
+
+<hr />
+<h3 id="attentionrnnrequires_padding"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/models/sequence_encoders.py#L146">AttentionRNN.requires_padding</a></h3>
+<pre><code class="python">requires_padding(self)
+</code></pre>
+
+<hr />
+<h2 id="averagingencoder"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/models/sequence_encoders.py#L150">AveragingEncoder</a></h2>
+<hr />
+<h3 id="averagingencoder__init__"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/models/sequence_encoders.py#L152">AveragingEncoder.<code>__init__</code></a></h3>
+<pre><code class="python">__init__(self, dropout_rate=0)
+</code></pre>
+
+<p>An encoder that averages sequence inputs.</p>
+<hr />
+<h3 id="averagingencoderbuild_model"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/models/sequence_encoders.py#L157">AveragingEncoder.build_model</a></h3>
+<pre><code class="python">build_model(self, x)
+</code></pre>
+
+<hr />
+<h3 id="averagingencoderrequires_padding"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/models/sequence_encoders.py#L162">AveragingEncoder.requires_padding</a></h3>
+<pre><code class="python">requires_padding(self)
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../keras_text.models.token_model/" class="btn btn-neutral float-right" title="Sequence Model Builder Factory">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href=".." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="http://github.com/raghakot/keras-text" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../keras_text.models.token_model/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../js/theme.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+</html>

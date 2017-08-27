@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Dataset management - keras-text Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  <link href="../css/extras.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Dataset management";
+    var mkdocs_page_input_path = "keras_text.data.md";
+    var mkdocs_page_url = "/keras_text.data/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> keras-text Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">API Docs</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <span class="caption-text">Models</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.models.sequence_encoders/">Sequence Processing Models</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.models.token_model/">Sequence Model Builder Factory</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.models.sentence_model/">Sentence Model Builder Factory</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.models.layers/">Custom Layers</a>
+                </li>
+    </ul>
+                </li>
+                <li class=" current">
+                    
+    <span class="caption-text">Data Processing</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.processing/">Tokenizing and padding</a>
+                </li>
+                <li class="toctree-l3 current">
+                    
+    <a class="current" href="./">Dataset management</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l4"><a href="#dataset">Dataset</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l5" href="#datasetlabels">Dataset.labels</a></li>
+        
+            <li><a class="toctree-l5" href="#datasetnum_classes">Dataset.num_classes</a></li>
+        
+            <li><a class="toctree-l5" href="#datasettest_indices">Dataset.test_indices</a></li>
+        
+            <li><a class="toctree-l5" href="#datasettrain_indices">Dataset.train_indices</a></li>
+        
+            <li><a class="toctree-l5" href="#dataset__init__">Dataset.__init__</a></li>
+        
+            <li><a class="toctree-l5" href="#datasetsave">Dataset.save</a></li>
+        
+            <li><a class="toctree-l5" href="#datasettrain_val_split">Dataset.train_val_split</a></li>
+        
+        </ul>
+    
+
+    </ul>
+                </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Utilities</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.generators/">Generators</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.sampling/">Sampling</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../keras_text.utils/">Utils</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">keras-text Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>API Docs &raquo;</li>
+        
+      
+        
+          <li>Data Processing &raquo;</li>
+        
+      
+    
+    <li>Dataset management</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="http://github.com/raghakot/keras-text/blob/master/docs/templates/keras_text.data.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-text/tree/master/keras_text/data.py#L0">keras_text/data.py#L0</a></p>
+<hr />
+<h2 id="dataset"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/data.py#L16">Dataset</a></h2>
+<h4 id="datasetlabels">Dataset.labels</h4>
+<h4 id="datasetnum_classes">Dataset.num_classes</h4>
+<h4 id="datasettest_indices">Dataset.test_indices</h4>
+<h4 id="datasettrain_indices">Dataset.train_indices</h4>
+<hr />
+<h3 id="dataset__init__"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/data.py#L18">Dataset.<code>__init__</code></a></h3>
+<pre><code class="python">__init__(self, inputs, labels, test_indices=None, **kwargs)
+</code></pre>
+
+<p>Encapsulates all pieces of data to run an experiment. This is basically a bag of items that makes it
+easy to serialize and deserialize everything as </p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>inputs</strong>:  The raw model inputs. This can be set to None if you dont want
+  to serialize this value when you save the dataset.</li>
+<li><strong>labels</strong>:  The raw output labels.</li>
+<li><strong>test_indices</strong>:  The optional test indices to use. Ideally, this should be generated one time and reused
+  across experiments to make results comparable. <code>generate_test_indices</code> can be used generate first
+  time indices.
+**kwargs: Additional key value items to store.</li>
+</ul>
+<hr />
+<h3 id="datasetsave"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/data.py#L66">Dataset.save</a></h3>
+<pre><code class="python">save(self, file_path)
+</code></pre>
+
+<p>Serializes this dataset to a file.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>file_path</strong>:  The file path to use.</li>
+</ul>
+<hr />
+<h3 id="datasettrain_val_split"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/data.py#L74">Dataset.train_val_split</a></h3>
+<pre><code class="python">train_val_split(self, split_ratio=0.2)
+</code></pre>
+
+<p>Generates train and validation sets from the training indices.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>split_ratio</strong>:  The split proportion in [0, 1]</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The stratified train and val subsets. Multi-label outputs are handled as well.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../keras_text.generators/" class="btn btn-neutral float-right" title="Generators">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../keras_text.processing/" class="btn btn-neutral" title="Tokenizing and padding"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="http://github.com/raghakot/keras-text" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../keras_text.processing/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../keras_text.generators/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../js/theme.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+</html>
