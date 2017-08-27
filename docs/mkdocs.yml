@@ -1,0 +1,32 @@
+site_name: keras-text Documentation
+theme: readthedocs
+docs_dir: sources
+repo_url: http://github.com/raghakot/keras-text
+edit_uri: blob/master/docs/templates
+site_description: 'Documentation for keras-text - Text classification framework in keras.'
+
+extra_javascript:
+  - https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+
+extra_css:
+  - css/extras.css
+
+markdown_extensions:
+  - mdx_math
+
+pages:
+  - Home: index.md
+  - API Docs:
+    - Visualization: vis.visualization.md
+    - Models:
+      - Sequence Processing Models: keras_text.models.sequence_encoders.md
+      - Sequence Model Builder Factory: keras_text.models.token_model.md
+      - Sentence Model Builder Factory: keras_text.models.sentence_model.md
+      - Custom Layers: keras_text.models.layers.md
+    - Data Processing:
+      - Tokenizing and padding: keras_text.processing.md
+      - Dataset management: keras_text.data.md
+    - Utilities:
+      - Generators: keras_text.generators.md
+      - Sampling: keras_text.sampling.md
+      - Utils: keras_text.utils.md

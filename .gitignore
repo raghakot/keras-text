@@ -1,0 +1,20 @@
+# dev-env
+.idea/
+*.iml
+
+# docs
+docs/site/*
+docs/sources/*
+
+# test-related
+.coverage
+.cache
+
+keras_text.egg-info
+dist/*
+build/*
+*.pyc
+.ipynb_checkpoints
+
+# Datasets
+examples/datasets/*
