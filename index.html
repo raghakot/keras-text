@@ -53,17 +53,11 @@
     <a class="current" href=".">Home</a>
     <ul class="subnav">
             
-    <li class="toctree-l2"><a href="#keras-visualization-toolkit">Keras Visualization Toolkit</a></li>
+    <li class="toctree-l2"><a href="#keras-text-classification-library">Keras Text Classification Library</a></li>
     
         <ul>
         
-            <li><a class="toctree-l3" href="#quick-links">Quick links</a></li>
-        
-            <li><a class="toctree-l3" href="#getting-started">Getting Started</a></li>
-        
             <li><a class="toctree-l3" href="#installation">Installation</a></li>
-        
-            <li><a class="toctree-l3" href="#visualizations">Visualizations</a></li>
         
             <li><a class="toctree-l3" href="#citation">Citation</a></li>
         
@@ -169,66 +163,15 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="keras-visualization-toolkit">Keras Visualization Toolkit</h1>
-<p><a href="https://travis-ci.org/raghakot/keras-vis"><img alt="Build Status" src="https://travis-ci.org/raghakot/keras-vis.svg?branch=master" /></a>
-<a href="https://github.com/raghakot/keras-vis/blob/master/LICENSE"><img alt="license" src="https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000" /></a>
-<a href="https://keras-vis.herokuapp.com/"><img alt="Slack" src="https://img.shields.io/badge/slack-discussion-E01563.svg" /></a></p>
-<p>keras-vis is a high-level toolkit for visualizing and debugging your trained keras neural net models. Currently
-supported visualizations include:</p>
-<ul>
-<li>Activation maximization</li>
-<li>Saliency maps</li>
-<li>Class activation maps</li>
-</ul>
-<p>All visualizations by default support N-dimensional image inputs. i.e., it generalizes to N-dim image inputs 
-to your model.</p>
-<p>The toolkit generalizes all of the above as energy minimization problems with a clean, easy to use, 
-and extendable interface. Compatible with both theano and tensorflow backends with 'channels_first', 'channels_last' 
-data format.</p>
-<h2 id="quick-links">Quick links</h2>
-<ul>
-<li>Read the documentation at <a href="https://raghakot.github.io/keras-vis">https://raghakot.github.io/keras-vis</a>. </li>
-<li>Join the slack <a href="https://keras-vis.herokuapp.com/">channel</a> for questions/discussions.</li>
-<li>We are tracking new features/tasks in <a href="https://waffle.io/raghakot/keras-vis">waffle.io</a>. Would love it if you lend us 
-a hand and submit PRs.</li>
-</ul>
-<h2 id="getting-started">Getting Started</h2>
-<p>In image backprop problems, the goal is to generate an input image that minimizes some loss function.
-Setting up an image backprop problem is easy.</p>
-<p><strong>Define weighted loss function</strong></p>
-<p>Various useful loss functions are defined in <a href="https://raghakot.github.io/keras-vis/vis.losses">losses</a>.
-A custom loss function can be defined by implementing <a href="https://raghakot.github.io/keras-vis/vis.losses/#lossbuild_loss">Loss.build_loss</a>.</p>
-<pre><code class="python">from vis.losses import ActivationMaximization
-from vis.regularizers import TotalVariation, LPNorm
-
-filter_indices = [1, 2, 3]
-
-# Tuple consists of (loss_function, weight)
-# Add regularizers as needed.
-losses = [
-    (ActivationMaximization(keras_layer, filter_indices), 1),
-    (LPNorm(model.input), 10),
-    (TotalVariation(model.input), 10)
-]
-</code></pre>
-
-<p><strong>Configure optimizer to minimize weighted loss</strong></p>
-<p>In order to generate natural looking images, image search space is constrained using regularization penalties. 
-Some common regularizers are defined in <a href="https://raghakot.github.io/keras-vis/vis.regularizers">regularizers</a>.
-Like loss functions, custom regularizer can be defined by implementing 
-<a href="https://raghakot.github.io/keras-vis/vis.losses/#lossbuild_loss">Loss.build_loss</a>.</p>
-<pre><code class="python">from vis.optimizer import Optimizer
-
-optimizer = Optimizer(model.input, losses)
-opt_img, grads, _ = optimizer.minimize()
-</code></pre>
-
-<p>Concrete examples of various supported visualizations can be found in 
-<a href="https://github.com/raghakot/keras-vis/tree/master/examples">examples folder</a>.</p>
+                <h1 id="keras-text-classification-library">Keras Text Classification Library</h1>
+<p><a href="https://travis-ci.org/raghakot/keras-text"><img alt="Build Status" src="https://travis-ci.org/raghakot/keras-text.svg?branch=master" /></a>
+<a href="https://github.com/raghakot/keras-text/blob/master/LICENSE"><img alt="license" src="https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000" /></a>
+<a href="https://join.slack.com/t/keras-text/shared_invite/MjMzNDU3NDAxODMxLTE1MDM4NTg0MTktNzgxZTNjM2E4Zg"><img alt="Slack" src="https://img.shields.io/badge/slack-discussion-E01563.svg" /></a></p>
+<p>keras-text is a text classification library for training and developing new models. </p>
 <h2 id="installation">Installation</h2>
 <p>1) Install <a href="https://github.com/fchollet/keras/blob/master/README.md#installation">keras</a> 
 with theano or tensorflow backend. Note that this library requires Keras &gt; 2.0</p>
-<p>2) Install keras-vis</p>
+<p>2) Install keras-text</p>
 <blockquote>
 <p>From sources</p>
 </blockquote>
@@ -238,86 +181,20 @@ with theano or tensorflow backend. Note that this library requires Keras &gt; 2.
 <blockquote>
 <p>PyPI package</p>
 </blockquote>
-<pre><code class="bash">sudo pip install keras-vis
+<pre><code class="bash">sudo pip install keras-text
 </code></pre>
 
-<h2 id="visualizations">Visualizations</h2>
-<p><strong>NOTE: The links are currently broken and the entire documentation is being reworked.
-Please see examples/ for samples.</strong></p>
-<p>Neural nets are black boxes. In the recent years, several approaches for understanding and visualizing Convolutional 
-Networks have been developed in the literature. They give us a way to peer into the black boxes, 
-diagnose mis-classifications, and assess whether the network is over/under fitting. </p>
-<p>Guided backprop can also be used to create <a href="https://deepdreamgenerator.com/gallery">trippy art</a>, neural/texture 
-<a href="https://github.com/jcjohnson/neural-style">style transfer</a> among the list of other growing applications.</p>
-<p>Various visualizations, documented in their own pages, are summarized here.</p>
-<hr/>
-
-<h3 id="conv-filter-visualization"><a href="https://raghakot.github.io/keras-vis/visualizations/conv_filters">Conv filter visualization</a></h3>
-<p><img src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/conv_vis/cover.jpg?raw=true"/></p>
-<p><em>Convolutional filters learn 'template matching' filters that maximize the output when a similar template 
-pattern is found in the input image. Visualize those templates via Activation Maximization.</em></p>
-<hr/>
-
-<h3 id="dense-layer-visualization"><a href="https://raghakot.github.io/keras-vis/visualizations/dense">Dense layer visualization</a></h3>
-<p><img src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/dense_vis/cover.png?raw=true"/></p>
-<p><em>How can we assess whether a network is over/under fitting or generalizing well?</em></p>
-<hr/>
-
-<h3 id="attention-maps"><a href="https://raghakot.github.io/keras-vis/visualizations/attention">Attention Maps</a></h3>
-<p><img src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/attention_vis/cover.png?raw=true"/></p>
-<p><em>How can we assess whether a network is attending to correct parts of the image in order to generate a decision?</em></p>
-<hr/>
-
-<h3 id="generating-animated-gif-of-optimization-progress">Generating animated gif of optimization progress</h3>
-<p>It is possible to generate an animated gif of optimization progress by leveraging 
-<a href="https://raghakot.github.io/keras-vis/vis.callbacks">callbacks</a>. Following example shows how to visualize the 
-activation maximization for 'ouzel' class (output_index: 20).</p>
-<pre><code class="python">from vis.losses import ActivationMaximization
-from vis.regularizers import TotalVariation, LPNorm
-from vis.modifiers import Jitter
-from vis.optimizer import Optimizer
-
-from vis.callbacks import GifGenerator
-from vis.utils.vggnet import VGG16
-
-# Build the VGG16 network with ImageNet weights
-model = VGG16(weights='imagenet', include_top=True)
-print('Model loaded.')
-
-# The name of the layer we want to visualize
-# (see model definition in vggnet.py)
-layer_name = 'predictions'
-layer_dict = dict([(layer.name, layer) for layer in model.layers[1:]])
-output_class = [20]
-
-losses = [
-    (ActivationMaximization(layer_dict[layer_name], output_class), 2),
-    (LPNorm(model.input), 10),
-    (TotalVariation(model.input), 10)
-]
-opt = Optimizer(model.input, losses)
-opt.minimize(max_iter=500, verbose=True, image_modifiers=[Jitter()], callbacks=[GifGenerator('opt_progress')])
-
-</code></pre>
-
-<p>Notice how the output jitters around? This is because we used <a href="https://raghakot.github.io/keras-vis/vis.modifiers/#jitter">Jitter</a>, 
-a kind of <a href="https://raghakot.github.io/keras-vis/vis.modifiers/#imagemodifier">ImageModifier</a> that is known to produce 
-crisper activation maximization images. As an exercise, try:</p>
-<ul>
-<li>Without Jitter</li>
-<li>Varying various loss weights</li>
-</ul>
-<p><img alt="opt_progress" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/opt_progress.gif?raw=true" title="Optimization progress" /></p>
-<hr/>
-
+<p>3) Download target spacy model
+keras-text uses the excellent spacy library for tokenization. See instructions on how to 
+<a href="https://spacy.io/docs/usage/models#download">download model</a> for target language.</p>
 <h2 id="citation">Citation</h2>
-<p>Please cite keras-vis in your publications if it helped your research. Here is an example BibTeX entry:</p>
+<p>Please cite keras-text in your publications if it helped your research. Here is an example BibTeX entry:</p>
 <pre><code>@misc{raghakotkerasvis
-  title={keras-vis},
+  title={keras-text},
   author={Kotikalapudi, Raghavendra and contributors},
   year={2017},
   publisher={GitHub},
-  howpublished={\url{https://github.com/raghakot/keras-vis}},
+  howpublished={\url{https://github.com/raghakot/keras-text}},
 }
 </code></pre>
               
@@ -369,5 +246,5 @@ crisper activation maximization images. As an exercise, try:</p>
 
 <!--
 MkDocs version : 0.16.3
-Build Date UTC : 2017-08-27 19:09:22
+Build Date UTC : 2017-08-27 19:13:24
 -->

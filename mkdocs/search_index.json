@@ -2,57 +2,22 @@
     "docs": [
         {
             "location": "/", 
-            "text": "Keras Visualization Toolkit\n\n\n\n\n\n\n\n\nkeras-vis is a high-level toolkit for visualizing and debugging your trained keras neural net models. Currently\nsupported visualizations include:\n\n\n\n\nActivation maximization\n\n\nSaliency maps\n\n\nClass activation maps\n\n\n\n\nAll visualizations by default support N-dimensional image inputs. i.e., it generalizes to N-dim image inputs \nto your model.\n\n\nThe toolkit generalizes all of the above as energy minimization problems with a clean, easy to use, \nand extendable interface. Compatible with both theano and tensorflow backends with 'channels_first', 'channels_last' \ndata format.\n\n\nQuick links\n\n\n\n\nRead the documentation at \nhttps://raghakot.github.io/keras-vis\n. \n\n\nJoin the slack \nchannel\n for questions/discussions.\n\n\nWe are tracking new features/tasks in \nwaffle.io\n. Would love it if you lend us \na hand and submit PRs.\n\n\n\n\nGetting Started\n\n\nIn image backprop problems, the goal is to generate an input image that minimizes some loss function.\nSetting up an image backprop problem is easy.\n\n\nDefine weighted loss function\n\n\nVarious useful loss functions are defined in \nlosses\n.\nA custom loss function can be defined by implementing \nLoss.build_loss\n.\n\n\nfrom vis.losses import ActivationMaximization\nfrom vis.regularizers import TotalVariation, LPNorm\n\nfilter_indices = [1, 2, 3]\n\n# Tuple consists of (loss_function, weight)\n# Add regularizers as needed.\nlosses = [\n    (ActivationMaximization(keras_layer, filter_indices), 1),\n    (LPNorm(model.input), 10),\n    (TotalVariation(model.input), 10)\n]\n\n\n\n\nConfigure optimizer to minimize weighted loss\n\n\nIn order to generate natural looking images, image search space is constrained using regularization penalties. \nSome common regularizers are defined in \nregularizers\n.\nLike loss functions, custom regularizer can be defined by implementing \n\nLoss.build_loss\n.\n\n\nfrom vis.optimizer import Optimizer\n\noptimizer = Optimizer(model.input, losses)\nopt_img, grads, _ = optimizer.minimize()\n\n\n\n\nConcrete examples of various supported visualizations can be found in \n\nexamples folder\n.\n\n\nInstallation\n\n\n1) Install \nkeras\n \nwith theano or tensorflow backend. Note that this library requires Keras \n 2.0\n\n\n2) Install keras-vis\n\n\n\n\nFrom sources\n\n\n\n\nsudo python setup.py install\n\n\n\n\n\n\nPyPI package\n\n\n\n\nsudo pip install keras-vis\n\n\n\n\nVisualizations\n\n\nNOTE: The links are currently broken and the entire documentation is being reworked.\nPlease see examples/ for samples.\n\n\nNeural nets are black boxes. In the recent years, several approaches for understanding and visualizing Convolutional \nNetworks have been developed in the literature. They give us a way to peer into the black boxes, \ndiagnose mis-classifications, and assess whether the network is over/under fitting. \n\n\nGuided backprop can also be used to create \ntrippy art\n, neural/texture \n\nstyle transfer\n among the list of other growing applications.\n\n\nVarious visualizations, documented in their own pages, are summarized here.\n\n\n\n\n\nConv filter visualization\n\n\n\n\nConvolutional filters learn 'template matching' filters that maximize the output when a similar template \npattern is found in the input image. Visualize those templates via Activation Maximization.\n\n\n\n\n\nDense layer visualization\n\n\n\n\nHow can we assess whether a network is over/under fitting or generalizing well?\n\n\n\n\n\nAttention Maps\n\n\n\n\nHow can we assess whether a network is attending to correct parts of the image in order to generate a decision?\n\n\n\n\n\nGenerating animated gif of optimization progress\n\n\nIt is possible to generate an animated gif of optimization progress by leveraging \n\ncallbacks\n. Following example shows how to visualize the \nactivation maximization for 'ouzel' class (output_index: 20).\n\n\nfrom vis.losses import ActivationMaximization\nfrom vis.regularizers import TotalVariation, LPNorm\nfrom vis.modifiers import Jitter\nfrom vis.optimizer import Optimizer\n\nfrom vis.callbacks import GifGenerator\nfrom vis.utils.vggnet import VGG16\n\n# Build the VGG16 network with ImageNet weights\nmodel = VGG16(weights='imagenet', include_top=True)\nprint('Model loaded.')\n\n# The name of the layer we want to visualize\n# (see model definition in vggnet.py)\nlayer_name = 'predictions'\nlayer_dict = dict([(layer.name, layer) for layer in model.layers[1:]])\noutput_class = [20]\n\nlosses = [\n    (ActivationMaximization(layer_dict[layer_name], output_class), 2),\n    (LPNorm(model.input), 10),\n    (TotalVariation(model.input), 10)\n]\nopt = Optimizer(model.input, losses)\nopt.minimize(max_iter=500, verbose=True, image_modifiers=[Jitter()], callbacks=[GifGenerator('opt_progress')])\n\n\n\n\n\nNotice how the output jitters around? This is because we used \nJitter\n, \na kind of \nImageModifier\n that is known to produce \ncrisper activation maximization images. As an exercise, try:\n\n\n\n\nWithout Jitter\n\n\nVarying various loss weights\n\n\n\n\n\n\n\n\n\nCitation\n\n\nPlease cite keras-vis in your publications if it helped your research. Here is an example BibTeX entry:\n\n\n@misc{raghakotkerasvis\n  title={keras-vis},\n  author={Kotikalapudi, Raghavendra and contributors},\n  year={2017},\n  publisher={GitHub},\n  howpublished={\\url{https://github.com/raghakot/keras-vis}},\n}", 
+            "text": "Keras Text Classification Library\n\n\n\n\n\n\n\n\nkeras-text is a text classification library for training and developing new models. \n\n\nInstallation\n\n\n1) Install \nkeras\n \nwith theano or tensorflow backend. Note that this library requires Keras \n 2.0\n\n\n2) Install keras-text\n\n\n\n\nFrom sources\n\n\n\n\nsudo python setup.py install\n\n\n\n\n\n\nPyPI package\n\n\n\n\nsudo pip install keras-text\n\n\n\n\n3) Download target spacy model\nkeras-text uses the excellent spacy library for tokenization. See instructions on how to \n\ndownload model\n for target language.\n\n\nCitation\n\n\nPlease cite keras-text in your publications if it helped your research. Here is an example BibTeX entry:\n\n\n@misc{raghakotkerasvis\n  title={keras-text},\n  author={Kotikalapudi, Raghavendra and contributors},\n  year={2017},\n  publisher={GitHub},\n  howpublished={\\url{https://github.com/raghakot/keras-text}},\n}", 
             "title": "Home"
         }, 
         {
-            "location": "/#keras-visualization-toolkit", 
-            "text": "keras-vis is a high-level toolkit for visualizing and debugging your trained keras neural net models. Currently\nsupported visualizations include:   Activation maximization  Saliency maps  Class activation maps   All visualizations by default support N-dimensional image inputs. i.e., it generalizes to N-dim image inputs \nto your model.  The toolkit generalizes all of the above as energy minimization problems with a clean, easy to use, \nand extendable interface. Compatible with both theano and tensorflow backends with 'channels_first', 'channels_last' \ndata format.", 
-            "title": "Keras Visualization Toolkit"
-        }, 
-        {
-            "location": "/#quick-links", 
-            "text": "Read the documentation at  https://raghakot.github.io/keras-vis .   Join the slack  channel  for questions/discussions.  We are tracking new features/tasks in  waffle.io . Would love it if you lend us \na hand and submit PRs.", 
-            "title": "Quick links"
-        }, 
-        {
-            "location": "/#getting-started", 
-            "text": "In image backprop problems, the goal is to generate an input image that minimizes some loss function.\nSetting up an image backprop problem is easy.  Define weighted loss function  Various useful loss functions are defined in  losses .\nA custom loss function can be defined by implementing  Loss.build_loss .  from vis.losses import ActivationMaximization\nfrom vis.regularizers import TotalVariation, LPNorm\n\nfilter_indices = [1, 2, 3]\n\n# Tuple consists of (loss_function, weight)\n# Add regularizers as needed.\nlosses = [\n    (ActivationMaximization(keras_layer, filter_indices), 1),\n    (LPNorm(model.input), 10),\n    (TotalVariation(model.input), 10)\n]  Configure optimizer to minimize weighted loss  In order to generate natural looking images, image search space is constrained using regularization penalties. \nSome common regularizers are defined in  regularizers .\nLike loss functions, custom regularizer can be defined by implementing  Loss.build_loss .  from vis.optimizer import Optimizer\n\noptimizer = Optimizer(model.input, losses)\nopt_img, grads, _ = optimizer.minimize()  Concrete examples of various supported visualizations can be found in  examples folder .", 
-            "title": "Getting Started"
+            "location": "/#keras-text-classification-library", 
+            "text": "keras-text is a text classification library for training and developing new models.", 
+            "title": "Keras Text Classification Library"
         }, 
         {
             "location": "/#installation", 
-            "text": "1) Install  keras  \nwith theano or tensorflow backend. Note that this library requires Keras   2.0  2) Install keras-vis   From sources   sudo python setup.py install   PyPI package   sudo pip install keras-vis", 
+            "text": "1) Install  keras  \nwith theano or tensorflow backend. Note that this library requires Keras   2.0  2) Install keras-text   From sources   sudo python setup.py install   PyPI package   sudo pip install keras-text  3) Download target spacy model\nkeras-text uses the excellent spacy library for tokenization. See instructions on how to  download model  for target language.", 
             "title": "Installation"
         }, 
         {
-            "location": "/#visualizations", 
-            "text": "NOTE: The links are currently broken and the entire documentation is being reworked.\nPlease see examples/ for samples.  Neural nets are black boxes. In the recent years, several approaches for understanding and visualizing Convolutional \nNetworks have been developed in the literature. They give us a way to peer into the black boxes, \ndiagnose mis-classifications, and assess whether the network is over/under fitting.   Guided backprop can also be used to create  trippy art , neural/texture  style transfer  among the list of other growing applications.  Various visualizations, documented in their own pages, are summarized here.", 
-            "title": "Visualizations"
-        }, 
-        {
-            "location": "/#conv-filter-visualization", 
-            "text": "Convolutional filters learn 'template matching' filters that maximize the output when a similar template \npattern is found in the input image. Visualize those templates via Activation Maximization.", 
-            "title": "Conv filter visualization"
-        }, 
-        {
-            "location": "/#dense-layer-visualization", 
-            "text": "How can we assess whether a network is over/under fitting or generalizing well?", 
-            "title": "Dense layer visualization"
-        }, 
-        {
-            "location": "/#attention-maps", 
-            "text": "How can we assess whether a network is attending to correct parts of the image in order to generate a decision?", 
-            "title": "Attention Maps"
-        }, 
-        {
-            "location": "/#generating-animated-gif-of-optimization-progress", 
-            "text": "It is possible to generate an animated gif of optimization progress by leveraging  callbacks . Following example shows how to visualize the \nactivation maximization for 'ouzel' class (output_index: 20).  from vis.losses import ActivationMaximization\nfrom vis.regularizers import TotalVariation, LPNorm\nfrom vis.modifiers import Jitter\nfrom vis.optimizer import Optimizer\n\nfrom vis.callbacks import GifGenerator\nfrom vis.utils.vggnet import VGG16\n\n# Build the VGG16 network with ImageNet weights\nmodel = VGG16(weights='imagenet', include_top=True)\nprint('Model loaded.')\n\n# The name of the layer we want to visualize\n# (see model definition in vggnet.py)\nlayer_name = 'predictions'\nlayer_dict = dict([(layer.name, layer) for layer in model.layers[1:]])\noutput_class = [20]\n\nlosses = [\n    (ActivationMaximization(layer_dict[layer_name], output_class), 2),\n    (LPNorm(model.input), 10),\n    (TotalVariation(model.input), 10)\n]\nopt = Optimizer(model.input, losses)\nopt.minimize(max_iter=500, verbose=True, image_modifiers=[Jitter()], callbacks=[GifGenerator('opt_progress')])  Notice how the output jitters around? This is because we used  Jitter , \na kind of  ImageModifier  that is known to produce \ncrisper activation maximization images. As an exercise, try:   Without Jitter  Varying various loss weights", 
-            "title": "Generating animated gif of optimization progress"
-        }, 
-        {
             "location": "/#citation", 
-            "text": "Please cite keras-vis in your publications if it helped your research. Here is an example BibTeX entry:  @misc{raghakotkerasvis\n  title={keras-vis},\n  author={Kotikalapudi, Raghavendra and contributors},\n  year={2017},\n  publisher={GitHub},\n  howpublished={\\url{https://github.com/raghakot/keras-vis}},\n}", 
+            "text": "Please cite keras-text in your publications if it helped your research. Here is an example BibTeX entry:  @misc{raghakotkerasvis\n  title={keras-text},\n  author={Kotikalapudi, Raghavendra and contributors},\n  year={2017},\n  publisher={GitHub},\n  howpublished={\\url{https://github.com/raghakot/keras-text}},\n}", 
             "title": "Citation"
         }, 
         {
@@ -1002,13 +967,8 @@
         }, 
         {
             "location": "/keras_text.sampling/", 
-            "text": "Source:\n \nkeras_text/sampling.py#L0\n\n\n\n\ncalculate_class_weights\n\n\ncalculate_class_weights(y, smooth_factor=0)\n\n\n\n\nReturns the weights for each class so as to balance distribution across classes.\n\n\nArgs:\n\n\n\n\ny\n:  list of true labels. Also works for multi-label \ny\n.\n\n\nsmooth_factor\n:  factor that smooths extremely uneven weights\n\n\n\n\nReturns: An ordered dictionary of weights keyed by class idx.\n\n\n\n\nequal_distribution_folds\n\n\nequal_distribution_folds(y, folds=2)\n\n\n\n\nCreates \nfolds\n number of indices that has roughly balanced multi-label distribution.\n\n\nArgs:\n\n\n\n\ny\n:  The multi-label outputs.\n\n\nfolds\n:  The number of folds to create.\n\n\n\n\nReturns:\n\n\nfolds\n number of indices that have roughly equal multi-label distributions.\n\n\n\n\nmulti_label_train_test_split\n\n\nmulti_label_train_test_split(y, test_size=0.2)\n\n\n\n\nCreates a test split with roughly the same multi-label distribution in \ny\n.\n\n\nArgs:\n\n\n\n\ny\n:  The multi-label outputs.\n\n\ntest_size\n:  The test size in [0, 1]\n\n\n\n\nReturns:\n\n\nThe train and test indices.", 
+            "text": "Source:\n \nkeras_text/sampling.py#L0\n\n\n\n\nequal_distribution_folds\n\n\nequal_distribution_folds(y, folds=2)\n\n\n\n\nCreates \nfolds\n number of indices that has roughly balanced multi-label distribution.\n\n\nArgs:\n\n\n\n\ny\n:  The multi-label outputs.\n\n\nfolds\n:  The number of folds to create.\n\n\n\n\nReturns:\n\n\nfolds\n number of indices that have roughly equal multi-label distributions.\n\n\n\n\nmulti_label_train_test_split\n\n\nmulti_label_train_test_split(y, test_size=0.2)\n\n\n\n\nCreates a test split with roughly the same multi-label distribution in \ny\n.\n\n\nArgs:\n\n\n\n\ny\n:  The multi-label outputs.\n\n\ntest_size\n:  The test size in [0, 1]\n\n\n\n\nReturns:\n\n\nThe train and test indices.", 
             "title": "Sampling"
-        }, 
-        {
-            "location": "/keras_text.sampling/#calculate_class_weights", 
-            "text": "calculate_class_weights(y, smooth_factor=0)  Returns the weights for each class so as to balance distribution across classes.  Args:   y :  list of true labels. Also works for multi-label  y .  smooth_factor :  factor that smooths extremely uneven weights   Returns: An ordered dictionary of weights keyed by class idx.", 
-            "title": "calculate_class_weights"
         }, 
         {
             "location": "/keras_text.sampling/#equal_distribution_folds", 
@@ -1022,13 +982,8 @@
         }, 
         {
             "location": "/keras_text.utils/", 
-            "text": "Source:\n \nkeras_text/utils.py#L0\n\n\n\n\ngenerate_run_id\n\n\ngenerate_run_id()\n\n\n\n\n\n\ndump\n\n\ndump(obj, file_name)\n\n\n\n\n\n\nload\n\n\nload(file_name)", 
+            "text": "Source:\n \nkeras_text/utils.py#L0\n\n\n\n\ndump\n\n\ndump(obj, file_name)\n\n\n\n\n\n\nload\n\n\nload(file_name)", 
             "title": "Utils"
-        }, 
-        {
-            "location": "/keras_text.utils/#generate_run_id", 
-            "text": "generate_run_id()", 
-            "title": "generate_run_id"
         }, 
         {
             "location": "/keras_text.utils/#dump", 

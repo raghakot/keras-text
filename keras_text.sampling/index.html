@@ -106,9 +106,6 @@
     <a class="current" href="./">Sampling</a>
     <ul class="subnav">
             
-    <li class="toctree-l4"><a href="#calculate_class_weights">calculate_class_weights</a></li>
-    
-
     <li class="toctree-l4"><a href="#equal_distribution_folds">equal_distribution_folds</a></li>
     
 
@@ -171,19 +168,7 @@
               
                 <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-text/tree/master/keras_text/sampling.py#L0">keras_text/sampling.py#L0</a></p>
 <hr />
-<h3 id="calculate_class_weights"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/sampling.py#L13">calculate_class_weights</a></h3>
-<pre><code class="python">calculate_class_weights(y, smooth_factor=0)
-</code></pre>
-
-<p>Returns the weights for each class so as to balance distribution across classes.</p>
-<p><em>Args:</em></p>
-<ul>
-<li><strong>y</strong>:  list of true labels. Also works for multi-label <code>y</code>.</li>
-<li><strong>smooth_factor</strong>:  factor that smooths extremely uneven weights</li>
-</ul>
-<p><em>Returns: An ordered dictionary of weights keyed by class idx.</em></p>
-<hr />
-<h3 id="equal_distribution_folds"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/sampling.py#L35">equal_distribution_folds</a></h3>
+<h3 id="equal_distribution_folds"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/sampling.py#L11">equal_distribution_folds</a></h3>
 <pre><code class="python">equal_distribution_folds(y, folds=2)
 </code></pre>
 
@@ -196,7 +181,7 @@
 <p><em>Returns:</em></p>
 <p><code>folds</code> number of indices that have roughly equal multi-label distributions.</p>
 <hr />
-<h3 id="multi_label_train_test_split"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/sampling.py#L70">multi_label_train_test_split</a></h3>
+<h3 id="multi_label_train_test_split"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/sampling.py#L46">multi_label_train_test_split</a></h3>
 <pre><code class="python">multi_label_train_test_split(y, test_size=0.2)
 </code></pre>
 
