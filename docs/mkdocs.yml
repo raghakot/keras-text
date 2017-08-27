@@ -17,7 +17,6 @@ markdown_extensions:
 pages:
   - Home: index.md
   - API Docs:
-    - Visualization: vis.visualization.md
     - Models:
       - Sequence Processing Models: keras_text.models.sequence_encoders.md
       - Sequence Model Builder Factory: keras_text.models.token_model.md
