@@ -31,7 +31,7 @@ keras-text uses the excellent spacy library for tokenization. See instructions o
 Please cite keras-text in your publications if it helped your research. Here is an example BibTeX entry:
 
 ```
-@misc{raghakotkerasvis
+@misc{raghakotkerastext
   title={keras-text},
   author={Kotikalapudi, Raghavendra and contributors},
   year={2017},

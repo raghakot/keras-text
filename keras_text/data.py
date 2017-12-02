@@ -41,27 +41,17 @@ class Dataset(object):
         self.label_encoder = MultiLabelBinarizer() if self.is_multi_label else LabelBinarizer()
         self.y = self.label_encoder.fit_transform(self.y).flatten()
 
-    @staticmethod
-    def generate_test_indices(y, test_size=0.2):
-        """Generates test indices of `test_size` proportion.
+    def update_test_indices(self, test_size=0.1):
+        """Updates `test_indices` property with indices of `test_size` proportion.
 
         Args:
-            y: The multi-class or multi-label inputs. (Doesnt have to be encoded).
-            test_size: The test proportion in [0, 1]
-
-        Returns:
-            The stratified test indices. Multi-label outputs are handled as well.
+            test_size: The test proportion in [0, 1] (Default value: 0.1)
         """
-        is_multi_label = isinstance(y[0], (set, list, tuple))
-        label_encoder = MultiLabelBinarizer() if is_multi_label else LabelBinarizer()
-        y = label_encoder.fit_transform(y)
-
-        if is_multi_label:
-            _, test_indices = sampling.multi_label_train_test_split(y, test_size)
+        if self.is_multi_label:
+            self._train_indices, self._test_indices = sampling.multi_label_train_test_split(self.y, test_size)
         else:
             sss = StratifiedShuffleSplit(n_splits=1, test_size=test_size)
-            _, test_indices = next(sss.split(y, y))
-        return test_indices
+            self._train_indices, self._test_indices = next(sss.split(self.X, self.y))
 
     def save(self, file_path):
         """Serializes this dataset to a file.
@@ -71,11 +61,11 @@ class Dataset(object):
         """
         utils.dump(self, file_path)
 
-    def train_val_split(self, split_ratio=0.2):
+    def train_val_split(self, split_ratio=0.1):
         """Generates train and validation sets from the training indices.
 
         Args:
-            split_ratio: The split proportion in [0, 1]
+            split_ratio: The split proportion in [0, 1] (Default value: 0.1)
 
         Returns:
             The stratified train and val subsets. Multi-label outputs are handled as well.
@@ -84,7 +74,7 @@ class Dataset(object):
             train_indices, val_indices = sampling.multi_label_train_test_split(y, split_ratio)
         else:
             sss = StratifiedShuffleSplit(n_splits=1, test_size=split_ratio)
-            train_indices, val_indices = next(sss.split(self.y, self.y))
+            train_indices, val_indices = next(sss.split(self.X, self.y))
         return self.X[train_indices], self.X[val_indices], self.y[train_indices], self.y[val_indices]
 
     @staticmethod
