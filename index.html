@@ -203,8 +203,61 @@ ds.save('dataset')
 <p>The <code>update_test_indices</code> method automatically stratifies multi-class or multi-label data correctly.</p>
 <h3 id="build-text-classification-models">Build text classification models</h3>
 <p>See tests/ folder for usage.</p>
-<p>TODO: Update documentation and add notebook examples.</p>
+<h4 id="word-based-models">Word based models</h4>
+<p>When dataset represented as <code>(docs, words)</code> word based models can be created using <code>TokenModelFactory</code>.</p>
+<pre><code class="python">from keras_text.models import TokenModelFactory
+from keras_text.models import YoonKimCNN, AttentionRNN, StackedRNN
+
+
+# Will automagically handle padding for models that require padding (Ex: Yoon Kim CNN)
+factory = TokenModelFactory(1, tokenizer.token_index, max_tokens=100, embedding_type='glove.6B.100d')
+word_encoder_model = YoonKimCNN()
+model = factory.build_model(token_encoder_model=word_encoder_model)
+model.compile(optimizer='adam', loss='categorical_crossentropy')
+model.summary()
+</code></pre>
+
+<p>Currently supported models include:</p>
+<ul>
+<li><a href="https://arxiv.org/abs/1408.5882">Yoon Kim CNN</a></li>
+<li>Stacked RNNs</li>
+<li>Attention (with/without context) based RNN encoders.</li>
+</ul>
+<p><code>TokenModelFactory.build_model</code> uses the provided word encoder which is then classified via <code>Dense</code> block.</p>
+<h4 id="sentence-based-models">Sentence based models</h4>
+<p>When dataset represented as <code>(docs, sentences, words)</code> sentence based models can be created using <code>SentenceModelFactory</code>.</p>
+<pre><code class="python">from keras_text.models import SentenceModelFactory
+from keras_text.models import YoonKimCNN, AttentionRNN, StackedRNN, AveragingEncoder
+
+
+# Pad sentences to 500 and words to 200.
+factory = SentenceModelFactory(10, tokenizer.token_index, max_sents=500, max_tokens=200, embedding_type='glove.6B.100d')
+word_encoder_model = AttentionRNN()
+sentence_encoder_model = AttentionRNN()
+
+# Allows you to compose arbitrary word encoders followed by sentence encoder.
+model = factory.build_model(word_encoder_model, sentence_encoder_model)
+model.compile(optimizer='adam', loss='categorical_crossentropy')
+model.summary()
+</code></pre>
+
+<p>Currently supported models include:</p>
+<ul>
+<li><a href="https://arxiv.org/abs/1408.5882">Yoon Kim CNN</a></li>
+<li>Stacked RNNs</li>
+<li>Attention (with/without context) based RNN encoders.</li>
+</ul>
+<p><code>SentenceModelFactory.build_model</code> created a tiered model where words within a sentence is first encoded using<br />
+<code>word_encoder_model</code>. All such encodings per sentence is then encoded using <code>sentence_encoder_model</code>.</p>
+<ul>
+<li><a href="http://www.cs.cmu.edu/~./hovy/papers/16HLT-hierarchical-attention-networks.pdf">Hierarchical attention networks</a> 
+(HANs) can be build by composing two attention based RNN models. This is useful when a document has very large.</li>
+<li>For smaller document a resonable way to encode sentences is to average words within it. This can be done by using
+<code>token_encoder_model=AveragingEncoder()</code></li>
+<li>Mix and match encoders as you see fit for your problem.</li>
+</ul>
 <h2 id="resources">Resources</h2>
+<p>TODO: Update documentation and add notebook examples.</p>
 <p>Stay tuned for better documentation and examples. 
 Until then, the best resource is to refer to the <a href="https://raghakot.github.io/keras-text/">API docs</a></p>
 <h2 id="installation">Installation</h2>
@@ -288,5 +341,5 @@ keras-text uses the excellent spacy library for tokenization. See instructions o
 
 <!--
 MkDocs version : 0.17.2
-Build Date UTC : 2017-12-02 01:48:36
+Build Date UTC : 2017-12-02 02:20:46
 -->
