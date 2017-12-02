@@ -46,10 +46,70 @@ The `update_test_indices` method automatically stratifies multi-class or multi-l
 
 See tests/ folder for usage.
 
-TODO: Update documentation and add notebook examples.
+#### Word based models
+
+When dataset represented as `(docs, words)` word based models can be created using `TokenModelFactory`.
+
+```python
+from keras_text.models import TokenModelFactory
+from keras_text.models import YoonKimCNN, AttentionRNN, StackedRNN
+
+
+# Will automagically handle padding for models that require padding (Ex: Yoon Kim CNN)
+factory = TokenModelFactory(1, tokenizer.token_index, max_tokens=100, embedding_type='glove.6B.100d')
+word_encoder_model = YoonKimCNN()
+model = factory.build_model(token_encoder_model=word_encoder_model)
+model.compile(optimizer='adam', loss='categorical_crossentropy')
+model.summary()
+``` 
+
+Currently supported models include:
+
+- [Yoon Kim CNN](https://arxiv.org/abs/1408.5882)
+- Stacked RNNs
+- Attention (with/without context) based RNN encoders.
+
+`TokenModelFactory.build_model` uses the provided word encoder which is then classified via `Dense` block.
+
+#### Sentence based models
+
+When dataset represented as `(docs, sentences, words)` sentence based models can be created using `SentenceModelFactory`.
+
+```python
+from keras_text.models import SentenceModelFactory
+from keras_text.models import YoonKimCNN, AttentionRNN, StackedRNN, AveragingEncoder
+
+
+# Pad sentences to 500 and words to 200.
+factory = SentenceModelFactory(10, tokenizer.token_index, max_sents=500, max_tokens=200, embedding_type='glove.6B.100d')
+word_encoder_model = AttentionRNN()
+sentence_encoder_model = AttentionRNN()
+
+# Allows you to compose arbitrary word encoders followed by sentence encoder.
+model = factory.build_model(word_encoder_model, sentence_encoder_model)
+model.compile(optimizer='adam', loss='categorical_crossentropy')
+model.summary()
+``` 
+
+Currently supported models include:
+
+- [Yoon Kim CNN](https://arxiv.org/abs/1408.5882)
+- Stacked RNNs
+- Attention (with/without context) based RNN encoders.
+
+`SentenceModelFactory.build_model` created a tiered model where words within a sentence is first encoded using  
+`word_encoder_model`. All such encodings per sentence is then encoded using `sentence_encoder_model`.
+
+- [Hierarchical attention networks](http://www.cs.cmu.edu/~./hovy/papers/16HLT-hierarchical-attention-networks.pdf) 
+(HANs) can be build by composing two attention based RNN models. This is useful when a document has very large.
+- For smaller document a resonable way to encode sentences is to average words within it. This can be done by using
+`token_encoder_model=AveragingEncoder()`
+- Mix and match encoders as you see fit for your problem.
 
 
 ## Resources
+
+TODO: Update documentation and add notebook examples.
 
 Stay tuned for better documentation and examples. 
 Until then, the best resource is to refer to the [API docs](https://raghakot.github.io/keras-text/)
