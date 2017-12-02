@@ -110,6 +110,8 @@
         
             <li><a class="toctree-l5" href="#datasettrain_val_split">Dataset.train_val_split</a></li>
         
+            <li><a class="toctree-l5" href="#datasetupdate_test_indices">Dataset.update_test_indices</a></li>
+        
         </ul>
     
 
@@ -206,7 +208,7 @@ easy to serialize and deserialize everything as </p>
 **kwargs: Additional key value items to store.</li>
 </ul>
 <hr />
-<h3 id="datasetsave"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/data.py#L66">Dataset.save</a></h3>
+<h3 id="datasetsave"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/data.py#L56">Dataset.save</a></h3>
 <pre><code class="python">save(self, file_path)
 </code></pre>
 
@@ -216,17 +218,27 @@ easy to serialize and deserialize everything as </p>
 <li><strong>file_path</strong>:  The file path to use.</li>
 </ul>
 <hr />
-<h3 id="datasettrain_val_split"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/data.py#L74">Dataset.train_val_split</a></h3>
-<pre><code class="python">train_val_split(self, split_ratio=0.2)
+<h3 id="datasettrain_val_split"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/data.py#L64">Dataset.train_val_split</a></h3>
+<pre><code class="python">train_val_split(self, split_ratio=0.1)
 </code></pre>
 
 <p>Generates train and validation sets from the training indices.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>split_ratio</strong>:  The split proportion in [0, 1]</li>
+<li><strong>split_ratio</strong>:  The split proportion in [0, 1] (Default value: 0.1)</li>
 </ul>
 <p><em>Returns:</em></p>
 <p>The stratified train and val subsets. Multi-label outputs are handled as well.</p>
+<hr />
+<h3 id="datasetupdate_test_indices"><a href="https://github.com/raghakot/keras-text/tree/master/keras_text/data.py#L44">Dataset.update_test_indices</a></h3>
+<pre><code class="python">update_test_indices(self, test_size=0.1)
+</code></pre>
+
+<p>Updates <code>test_indices</code> property with indices of <code>test_size</code> proportion.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>test_size</strong>:  The test proportion in [0, 1] (Default value: 0.1)</li>
+</ul>
               
             </div>
           </div>
@@ -251,18 +263,18 @@ easy to serialize and deserialize everything as </p>
 
   Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
-	  
+      
         </div>
       </div>
 
     </section>
-    
+
   </div>
 
   <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
-          <a href="http://github.com/raghakot/keras-text" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+          <a href="http://github.com/raghakot/keras-text/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
         <span><a href="../keras_text.processing/" style="color: #fcfcfc;">&laquo; Previous</a></span>
@@ -272,8 +284,11 @@ easy to serialize and deserialize everything as </p>
       
     </span>
 </div>
+    <script>var base_url = '..';</script>
     <script src="../js/theme.js"></script>
       <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="../search/require.js"></script>
+      <script src="../search/search.js"></script>
 
 </body>
 </html>

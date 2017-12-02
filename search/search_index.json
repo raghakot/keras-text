@@ -2,13 +2,38 @@
     "docs": [
         {
             "location": "/", 
-            "text": "Keras Text Classification Library\n\n\n\n\n\n\n\n\nkeras-text is a text classification library for training and developing new models. \n\n\nInstallation\n\n\n1) Install \nkeras\n \nwith theano or tensorflow backend. Note that this library requires Keras \n 2.0\n\n\n2) Install keras-text\n\n\n\n\nFrom sources\n\n\n\n\nsudo python setup.py install\n\n\n\n\n\n\nPyPI package\n\n\n\n\nsudo pip install keras-text\n\n\n\n\n3) Download target spacy model\nkeras-text uses the excellent spacy library for tokenization. See instructions on how to \n\ndownload model\n for target language.\n\n\nCitation\n\n\nPlease cite keras-text in your publications if it helped your research. Here is an example BibTeX entry:\n\n\n@misc{raghakotkerasvis\n  title={keras-text},\n  author={Kotikalapudi, Raghavendra and contributors},\n  year={2017},\n  publisher={GitHub},\n  howpublished={\\url{https://github.com/raghakot/keras-text}},\n}", 
+            "text": "Keras Text Classification Library\n\n\n\n\n\n\n\n\nkeras-text is a one-stop text classification library implementing various state of the art models with a clean and \nextendable interface to implement custom architectures.\n\n\nQuick start\n\n\nCreate a tokenizer to build your vocabulary\n\n\n\n\nTo represent you dataset as \n(docs, words)\n use \nWordTokenizer\n\n\nTo represent you dataset as \n(docs, sentences, words)\n use \nSentenceWordTokenizer\n\n\nTo create arbitrary hierarchies, extend \nTokenizer\n and implement the \ntoken_generator\n method.\n\n\n\n\nfrom keras_text.processing import WordTokenizer\n\n\ntokenizer = WordTokenizer()\ntokenizer.build_vocab(texts)\n\n\n\n\nWant to tokenize with character tokens to leverage character models? Use \nCharTokenizer\n.\n\n\nBuild a dataset\n\n\nA dataset encapsulates tokenizer, X, y and the test set. This allows you to focus your efforts on \ntrying various architectures/hyperparameters without having to worry about inconsistent evaluation. A dataset can be \nsaved and loaded from the disk.\n\n\nfrom keras_text.data import Dataset\n\n\nds = Dataset(X, y, tokenizer=tokenizer)\nds.update_test_indices(test_size=0.1)\nds.save('dataset')\n\n\n\n\nThe \nupdate_test_indices\n method automatically stratifies multi-class or multi-label data correctly.\n\n\nBuild text classification models\n\n\nSee tests/ folder for usage.\n\n\nTODO: Update documentation and add notebook examples.\n\n\nResources\n\n\nStay tuned for better documentation and examples. \nUntil then, the best resource is to refer to the \nAPI docs\n\n\nInstallation\n\n\n1) Install \nkeras\n \nwith theano or tensorflow backend. Note that this library requires Keras \n 2.0\n\n\n2) Install keras-text\n\n\n\n\nFrom sources\n\n\n\n\nsudo python setup.py install\n\n\n\n\n\n\nPyPI package\n\n\n\n\nsudo pip install keras-text\n\n\n\n\n3) Download target spacy model\nkeras-text uses the excellent spacy library for tokenization. See instructions on how to \n\ndownload model\n for target language.\n\n\nCitation\n\n\nPlease cite keras-text in your publications if it helped your research. Here is an example BibTeX entry:\n\n\n@misc{raghakotkerastext\n  title={keras-text},\n  author={Kotikalapudi, Raghavendra and contributors},\n  year={2017},\n  publisher={GitHub},\n  howpublished={\\url{https://github.com/raghakot/keras-text}},\n}", 
             "title": "Home"
         }, 
         {
             "location": "/#keras-text-classification-library", 
-            "text": "keras-text is a text classification library for training and developing new models.", 
+            "text": "keras-text is a one-stop text classification library implementing various state of the art models with a clean and \nextendable interface to implement custom architectures.", 
             "title": "Keras Text Classification Library"
+        }, 
+        {
+            "location": "/#quick-start", 
+            "text": "", 
+            "title": "Quick start"
+        }, 
+        {
+            "location": "/#create-a-tokenizer-to-build-your-vocabulary", 
+            "text": "To represent you dataset as  (docs, words)  use  WordTokenizer  To represent you dataset as  (docs, sentences, words)  use  SentenceWordTokenizer  To create arbitrary hierarchies, extend  Tokenizer  and implement the  token_generator  method.   from keras_text.processing import WordTokenizer\n\n\ntokenizer = WordTokenizer()\ntokenizer.build_vocab(texts)  Want to tokenize with character tokens to leverage character models? Use  CharTokenizer .", 
+            "title": "Create a tokenizer to build your vocabulary"
+        }, 
+        {
+            "location": "/#build-a-dataset", 
+            "text": "A dataset encapsulates tokenizer, X, y and the test set. This allows you to focus your efforts on \ntrying various architectures/hyperparameters without having to worry about inconsistent evaluation. A dataset can be \nsaved and loaded from the disk.  from keras_text.data import Dataset\n\n\nds = Dataset(X, y, tokenizer=tokenizer)\nds.update_test_indices(test_size=0.1)\nds.save('dataset')  The  update_test_indices  method automatically stratifies multi-class or multi-label data correctly.", 
+            "title": "Build a dataset"
+        }, 
+        {
+            "location": "/#build-text-classification-models", 
+            "text": "See tests/ folder for usage.  TODO: Update documentation and add notebook examples.", 
+            "title": "Build text classification models"
+        }, 
+        {
+            "location": "/#resources", 
+            "text": "Stay tuned for better documentation and examples. \nUntil then, the best resource is to refer to the  API docs", 
+            "title": "Resources"
         }, 
         {
             "location": "/#installation", 
@@ -17,7 +42,7 @@
         }, 
         {
             "location": "/#citation", 
-            "text": "Please cite keras-text in your publications if it helped your research. Here is an example BibTeX entry:  @misc{raghakotkerasvis\n  title={keras-text},\n  author={Kotikalapudi, Raghavendra and contributors},\n  year={2017},\n  publisher={GitHub},\n  howpublished={\\url{https://github.com/raghakot/keras-text}},\n}", 
+            "text": "Please cite keras-text in your publications if it helped your research. Here is an example BibTeX entry:  @misc{raghakotkerastext\n  title={keras-text},\n  author={Kotikalapudi, Raghavendra and contributors},\n  year={2017},\n  publisher={GitHub},\n  howpublished={\\url{https://github.com/raghakot/keras-text}},\n}", 
             "title": "Citation"
         }, 
         {
@@ -887,7 +912,7 @@
         }, 
         {
             "location": "/keras_text.data/", 
-            "text": "Source:\n \nkeras_text/data.py#L0\n\n\n\n\nDataset\n\n\nDataset.labels\n\n\nDataset.num_classes\n\n\nDataset.test_indices\n\n\nDataset.train_indices\n\n\n\n\nDataset.\n__init__\n\n\n__init__(self, inputs, labels, test_indices=None, **kwargs)\n\n\n\n\nEncapsulates all pieces of data to run an experiment. This is basically a bag of items that makes it\neasy to serialize and deserialize everything as \n\n\nArgs:\n\n\n\n\ninputs\n:  The raw model inputs. This can be set to None if you dont want\n  to serialize this value when you save the dataset.\n\n\nlabels\n:  The raw output labels.\n\n\ntest_indices\n:  The optional test indices to use. Ideally, this should be generated one time and reused\n  across experiments to make results comparable. \ngenerate_test_indices\n can be used generate first\n  time indices.\n**kwargs: Additional key value items to store.\n\n\n\n\n\n\nDataset.save\n\n\nsave(self, file_path)\n\n\n\n\nSerializes this dataset to a file.\n\n\nArgs:\n\n\n\n\nfile_path\n:  The file path to use.\n\n\n\n\n\n\nDataset.train_val_split\n\n\ntrain_val_split(self, split_ratio=0.2)\n\n\n\n\nGenerates train and validation sets from the training indices.\n\n\nArgs:\n\n\n\n\nsplit_ratio\n:  The split proportion in [0, 1]\n\n\n\n\nReturns:\n\n\nThe stratified train and val subsets. Multi-label outputs are handled as well.", 
+            "text": "Source:\n \nkeras_text/data.py#L0\n\n\n\n\nDataset\n\n\nDataset.labels\n\n\nDataset.num_classes\n\n\nDataset.test_indices\n\n\nDataset.train_indices\n\n\n\n\nDataset.\n__init__\n\n\n__init__(self, inputs, labels, test_indices=None, **kwargs)\n\n\n\n\nEncapsulates all pieces of data to run an experiment. This is basically a bag of items that makes it\neasy to serialize and deserialize everything as \n\n\nArgs:\n\n\n\n\ninputs\n:  The raw model inputs. This can be set to None if you dont want\n  to serialize this value when you save the dataset.\n\n\nlabels\n:  The raw output labels.\n\n\ntest_indices\n:  The optional test indices to use. Ideally, this should be generated one time and reused\n  across experiments to make results comparable. \ngenerate_test_indices\n can be used generate first\n  time indices.\n**kwargs: Additional key value items to store.\n\n\n\n\n\n\nDataset.save\n\n\nsave(self, file_path)\n\n\n\n\nSerializes this dataset to a file.\n\n\nArgs:\n\n\n\n\nfile_path\n:  The file path to use.\n\n\n\n\n\n\nDataset.train_val_split\n\n\ntrain_val_split(self, split_ratio=0.1)\n\n\n\n\nGenerates train and validation sets from the training indices.\n\n\nArgs:\n\n\n\n\nsplit_ratio\n:  The split proportion in [0, 1] (Default value: 0.1)\n\n\n\n\nReturns:\n\n\nThe stratified train and val subsets. Multi-label outputs are handled as well.\n\n\n\n\nDataset.update_test_indices\n\n\nupdate_test_indices(self, test_size=0.1)\n\n\n\n\nUpdates \ntest_indices\n property with indices of \ntest_size\n proportion.\n\n\nArgs:\n\n\n\n\ntest_size\n:  The test proportion in [0, 1] (Default value: 0.1)", 
             "title": "Dataset management"
         }, 
         {
@@ -927,8 +952,13 @@
         }, 
         {
             "location": "/keras_text.data/#datasettrain_val_split", 
-            "text": "train_val_split(self, split_ratio=0.2)  Generates train and validation sets from the training indices.  Args:   split_ratio :  The split proportion in [0, 1]   Returns:  The stratified train and val subsets. Multi-label outputs are handled as well.", 
+            "text": "train_val_split(self, split_ratio=0.1)  Generates train and validation sets from the training indices.  Args:   split_ratio :  The split proportion in [0, 1] (Default value: 0.1)   Returns:  The stratified train and val subsets. Multi-label outputs are handled as well.", 
             "title": "Dataset.train_val_split"
+        }, 
+        {
+            "location": "/keras_text.data/#datasetupdate_test_indices", 
+            "text": "update_test_indices(self, test_size=0.1)  Updates  test_indices  property with indices of  test_size  proportion.  Args:   test_size :  The test proportion in [0, 1] (Default value: 0.1)", 
+            "title": "Dataset.update_test_indices"
         }, 
         {
             "location": "/keras_text.generators/", 
