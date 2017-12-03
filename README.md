@@ -101,8 +101,8 @@ Currently supported models include:
 `word_encoder_model`. All such encodings per sentence is then encoded using `sentence_encoder_model`.
 
 - [Hierarchical attention networks](http://www.cs.cmu.edu/~./hovy/papers/16HLT-hierarchical-attention-networks.pdf) 
-(HANs) can be build by composing two attention based RNN models. This is useful when a document has very large.
-- For smaller document a resonable way to encode sentences is to average words within it. This can be done by using
+(HANs) can be build by composing two attention based RNN models. This is useful when a document is very large.
+- For smaller document a reasonable way to encode sentences is to average words within it. This can be done by using
 `token_encoder_model=AveragingEncoder()`
 - Mix and match encoders as you see fit for your problem.
 
@@ -132,6 +132,7 @@ sudo pip install keras-text
 ```
 
 3) Download target spacy model
+
 keras-text uses the excellent spacy library for tokenization. See instructions on how to 
 [download model](https://spacy.io/docs/usage/models#download) for target language.
 
