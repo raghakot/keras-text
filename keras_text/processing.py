@@ -50,7 +50,7 @@ class _CountTracker(object):
             if indices[i] > self._prev_indices[i]:
                 self._local_counts[i] += 1
                 has_reset = True
-                for j in range(i+1, len(self.counts)):
+                for j in range(i + 1, len(self.counts)):
                     self.counts[j].append(self._local_counts[j])
                     self._local_counts[j] = 1
 
