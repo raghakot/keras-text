@@ -71,7 +71,7 @@ class Dataset(object):
             The stratified train and val subsets. Multi-label outputs are handled as well.
         """
         if self.is_multi_label:
-            train_indices, val_indices = sampling.multi_label_train_test_split(y, split_ratio)
+            train_indices, val_indices = sampling.multi_label_train_test_split(self.y, split_ratio)
         else:
             sss = StratifiedShuffleSplit(n_splits=1, test_size=split_ratio)
             train_indices, val_indices = next(sss.split(self.X, self.y))
