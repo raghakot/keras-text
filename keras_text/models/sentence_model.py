@@ -16,8 +16,8 @@ class SentenceModelFactory(object):
         Args:
             num_classes: The number of output classes.
             token_index: The dictionary of token and its corresponding integer index value.
-            max_sents: The max sentence length across all documents.
-            max_tokens: The max number of tokens across all sentences.
+            max_sents: The max number of sentences in a document.
+            max_tokens: The max number of tokens in a sentence.
             embedding_type: The embedding type to use. Set to None to use random embeddings.
                 (Default value: 'glove.6B.100d')
             embedding_dims: The number of embedding dims to use for representing a word. This argument will be ignored
@@ -29,6 +29,7 @@ class SentenceModelFactory(object):
         self.max_tokens = max_tokens
 
         # This is required to make TimeDistributed(word_encoder_model) work.
+        # TODO: Get rid of this restriction when https://github.com/fchollet/keras/issues/6917 resolves.
         if self.max_tokens is None:
             raise ValueError('`max_tokens` should be provided.')
 
@@ -64,34 +65,31 @@ class SentenceModelFactory(object):
         if not isinstance(sentence_encoder_model, SequenceEncoderBase):
             raise ValueError("`sentence_encoder_model` should be an instance of `{}`".format(SequenceEncoderBase))
 
-        if sentence_encoder_model.requires_padding() and self.max_sents is None:
+        if not sentence_encoder_model.allows_dynamic_length() and self.max_sents is None:
             raise ValueError("Sentence encoder model '{}' requires padding. "
                              "You need to provide `max_sents`")
 
-        max_token = self.max_tokens
-        max_sents = self.max_sents if sentence_encoder_model.requires_padding() else None
-        mask_zero = not sentence_encoder_model.requires_padding()
         if self.embeddings_index is None:
             # The +1 is for unknown token index 0.
             embedding_layer = Embedding(len(self.token_index) + 1,
                                         self.embedding_dims,
-                                        input_length=max_token,
-                                        mask_zero=mask_zero,
+                                        input_length=self.max_tokens,
+                                        mask_zero=True,
                                         trainable=trainable_embeddings)
         else:
             embedding_layer = Embedding(len(self.token_index) + 1,
                                         self.embedding_dims,
                                         weights=[build_embedding_weights(self.token_index, self.embeddings_index)],
-                                        input_length=max_token,
-                                        mask_zero=mask_zero,
+                                        input_length=self.max_tokens,
+                                        mask_zero=True,
                                         trainable=trainable_embeddings)
 
-        word_input = Input(shape=(max_token,), dtype='int32')
+        word_input = Input(shape=(self.max_tokens,), dtype='int32')
         x = embedding_layer(word_input)
         word_encoding = token_encoder_model(x)
         token_encoder_model = Model(word_input, word_encoding, name='word_encoder')
 
-        doc_input = Input(shape=(max_sents, max_token), dtype='int32')
+        doc_input = Input(shape=(self.max_sents, self.max_tokens), dtype='int32')
         sent_encoding = TimeDistributed(token_encoder_model)(doc_input)
         x = sentence_encoder_model(sent_encoding)
 

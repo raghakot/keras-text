@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-from keras.layers import Conv1D, Bidirectional, GRU
+from keras.layers import Conv1D, Bidirectional, LSTM
 from keras.layers import GlobalMaxPooling1D, GlobalAveragePooling1D, Dropout
 from keras.layers.merge import concatenate
 from .layers import AttentionLayer, ConsumeMask
@@ -25,6 +25,10 @@ class SequenceEncoderBase(object):
         Returns:
             The model output tensor.
         """
+        # Avoid mask propagation when dynamic mini-batches are not supported.
+        if not self.allows_dynamic_length():
+            x = ConsumeMask()(x)
+
         x = self.build_model(x)
         if self.dropout_rate > 0:
             x = Dropout(self.dropout_rate)(x)
@@ -41,10 +45,14 @@ class SequenceEncoderBase(object):
         """
         raise NotImplementedError()
 
-    def requires_padding(self):
-        """Return a boolean indicating whether this model expects inputs to be padded or not.
+    def allows_dynamic_length(self):
+        """Return a boolean indicating whether this model is capable of handling variable time steps per mini-batch.
+
+        For example, this should be True for RNN models since you can use them with variable time steps per mini-batch.
+        CNNs on the other hand expect fixed time steps across all mini-batches.
         """
-        raise NotImplementedError()
+        # Assume default as False. Should be overridden as necessary.
+        return False
 
 
 class YoonKimCNN(SequenceEncoderBase):
@@ -72,19 +80,16 @@ class YoonKimCNN(SequenceEncoderBase):
         x = pooled_tensors[0] if len(self.filter_sizes) == 1 else concatenate(pooled_tensors, axis=-1)
         return x
 
-    def requires_padding(self):
-        return True
-
 
 class StackedRNN(SequenceEncoderBase):
 
-    def __init__(self, rnn_class=GRU, hidden_dims=[50, 50], bidirectional=True, dropout_rate=0.5, **rnn_kwargs):
+    def __init__(self, rnn_class=LSTM, hidden_dims=[50, 50], bidirectional=True, dropout_rate=0.5, **rnn_kwargs):
         """Creates a stacked RNN.
 
         Args:
-            rnn_class: The type of RNN to use.
-            hidden_dims: The hidden dims for corresponding stacks of RNNs.
-            bidirectional: Whether to use bidirectional encoding.
+            rnn_class: The type of RNN to use. (Default Value = LSTM)
+            encoder_dims: The number of hidden units of RNN. (Default Value: 50)
+            bidirectional: Whether to use bidirectional encoding. (Default Value = True)
             **rnn_kwargs: Additional args for building the RNN.
         """
         super(StackedRNN, self).__init__(dropout_rate)
@@ -103,21 +108,21 @@ class StackedRNN(SequenceEncoderBase):
                 x = rnn(x)
         return x
 
-    def requires_padding(self):
-        return False
+    def allows_dynamic_length(self):
+        return True
 
 
 class AttentionRNN(SequenceEncoderBase):
 
-    def __init__(self, rnn_class=GRU, encoder_dims=50, bidirectional=True, dropout_rate=0.5, **rnn_kwargs):
+    def __init__(self, rnn_class=LSTM, encoder_dims=50, bidirectional=True, dropout_rate=0.5, **rnn_kwargs):
         """Creates an RNN model with attention. The attention mechanism is implemented as described
         in https://www.cs.cmu.edu/~hovy/papers/16HLT-hierarchical-attention-networks.pdf, but without
         sentence level attention.
 
         Args:
-            rnn_class: The type of RNN to use.
-            encoder_dims: The number of hidden units of RNN.
-            bidirectional: Whether to use bidirectional encoding.
+            rnn_class: The type of RNN to use. (Default Value = LSTM)
+            encoder_dims: The number of hidden units of RNN. (Default Value: 50)
+            bidirectional: Whether to use bidirectional encoding. (Default Value = True)
             **rnn_kwargs: Additional args for building the RNN.
         """
         super(AttentionRNN, self).__init__(dropout_rate)
@@ -143,8 +148,8 @@ class AttentionRNN(SequenceEncoderBase):
             raise ValueError('You need to build the model first')
         return self.attention_tensor
 
-    def requires_padding(self):
-        return False
+    def allows_dynamic_length(self):
+        return True
 
 
 class AveragingEncoder(SequenceEncoderBase):
@@ -155,9 +160,5 @@ class AveragingEncoder(SequenceEncoderBase):
         super(AveragingEncoder, self).__init__(dropout_rate)
 
     def build_model(self, x):
-        x = ConsumeMask()(x)
         x = GlobalAveragePooling1D()(x)
         return x
-
-    def requires_padding(self):
-        return False

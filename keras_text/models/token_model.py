@@ -16,8 +16,8 @@ class TokenModelFactory(object):
         Args:
             num_classes: The number of output classes.
             token_index: The dictionary of token and its corresponding integer index value.
-            max_tokens: The max number of tokens across all documents. Depending on
-                `SequenceEncoderBase.requires_padding`, this value is either used or discarded.
+            max_tokens: The max number of tokens across all documents. This can be set to None for models that
+                allow different word lengths per mini-batch.
             embedding_type: The embedding type to use. Set to None to use random embeddings.
                 (Default value: 'glove.6B.100d')
             embedding_dims: The number of embedding dims to use for representing a word. This argument will be ignored
@@ -53,28 +53,26 @@ class TokenModelFactory(object):
         if not isinstance(token_encoder_model, SequenceEncoderBase):
             raise ValueError("`token_encoder_model` should be an instance of `{}`".format(SequenceEncoderBase))
 
-        if token_encoder_model.requires_padding() and self.max_tokens is None:
-            raise ValueError("The provided `token_encoder_model` requires padding. "
+        if not token_encoder_model.allows_dynamic_length() and self.max_tokens is None:
+            raise ValueError("The provided `token_encoder_model` does not allow variable length mini-batches. "
                              "You need to provide `max_tokens`")
 
-        max_tokens = self.max_tokens if token_encoder_model.requires_padding() else None
-        mask_zero = not token_encoder_model.requires_padding()
         if self.embeddings_index is None:
             # The +1 is for unknown token index 0.
             embedding_layer = Embedding(len(self.token_index) + 1,
                                         self.embedding_dims,
-                                        input_length=max_tokens,
-                                        mask_zero=mask_zero,
+                                        input_length=self.max_tokens,
+                                        mask_zero=True,
                                         trainable=trainable_embeddings)
         else:
             embedding_layer = Embedding(len(self.token_index) + 1,
                                         self.embedding_dims,
                                         weights=[build_embedding_weights(self.token_index, self.embeddings_index)],
-                                        input_length=max_tokens,
-                                        mask_zero=mask_zero,
+                                        input_length=self.max_tokens,
+                                        mask_zero=True,
                                         trainable=trainable_embeddings)
 
-        sequence_input = Input(shape=(max_tokens,), dtype='int32')
+        sequence_input = Input(shape=(self.max_tokens,), dtype='int32')
         x = embedding_layer(sequence_input)
         x = token_encoder_model(x)
         x = Dense(self.num_classes, activation=output_activation)(x)

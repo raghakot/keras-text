@@ -55,7 +55,7 @@ from keras_text.models import TokenModelFactory
 from keras_text.models import YoonKimCNN, AttentionRNN, StackedRNN
 
 
-# Will automagically handle padding for models that require padding (Ex: Yoon Kim CNN)
+# RNN models can use `max_tokens=None` to indicate variable length words per mini-batch.
 factory = TokenModelFactory(1, tokenizer.token_index, max_tokens=100, embedding_type='glove.6B.100d')
 word_encoder_model = YoonKimCNN()
 model = factory.build_model(token_encoder_model=word_encoder_model)
@@ -80,7 +80,8 @@ from keras_text.models import SentenceModelFactory
 from keras_text.models import YoonKimCNN, AttentionRNN, StackedRNN, AveragingEncoder
 
 
-# Pad sentences to 500 and words to 200.
+# Pad max sentences per doc to 500 and max words per sentence to 200.
+# Can also use `max_sents=None` to allow variable sized max_sents per mini-batch.
 factory = SentenceModelFactory(10, tokenizer.token_index, max_sents=500, max_tokens=200, embedding_type='glove.6B.100d')
 word_encoder_model = AttentionRNN()
 sentence_encoder_model = AttentionRNN()
