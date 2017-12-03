@@ -17,7 +17,7 @@ class Dataset(object):
 
     def __init__(self, inputs, labels, test_indices=None, **kwargs):
         """Encapsulates all pieces of data to run an experiment. This is basically a bag of items that makes it
-        easy to serialize and deserialize everything as 
+        easy to serialize and deserialize everything as
 
         Args:
             inputs: The raw model inputs. This can be set to None if you dont want
@@ -71,7 +71,7 @@ class Dataset(object):
             The stratified train and val subsets. Multi-label outputs are handled as well.
         """
         if self.is_multi_label:
-            train_indices, val_indices = sampling.multi_label_train_test_split(y, split_ratio)
+            train_indices, val_indices = sampling.multi_label_train_test_split(self.y, split_ratio)
         else:
             sss = StratifiedShuffleSplit(n_splits=1, test_size=split_ratio)
             train_indices, val_indices = next(sss.split(self.X, self.y))
