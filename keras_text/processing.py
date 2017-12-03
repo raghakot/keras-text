@@ -541,11 +541,15 @@ class WordTokenizer(Tokenizer):
         # Perf optimization. Only process what is necessary.
         n_threads, batch_size = _parse_spacy_kwargs(**kwargs)
         nlp = spacy.load(self.lang)
+
+        disabled = ['parser']
+        if len(self.exclude_entities) > 0:
+            disabled.append('ner')
+
         kwargs = {
             'batch_size': batch_size,
             'n_threads': n_threads,
-            'entity': len(self.exclude_entities) > 0,
-            'parse': False
+            'disable': disabled
         }
 
         for text_idx, doc in enumerate(nlp.pipe(texts, **kwargs)):
@@ -609,10 +613,15 @@ class SentenceWordTokenizer(WordTokenizer):
         # Perf optimization. Only process what is necessary.
         n_threads, batch_size = _parse_spacy_kwargs(**kwargs)
         nlp = spacy.load(self.lang)
+
+        disabled = []
+        if len(self.exclude_entities) > 0:
+            disabled.append('ner')
+
         kwargs = {
             'batch_size': batch_size,
             'n_threads': n_threads,
-            'entity': len(self.exclude_entities) > 0,
+            'disable': disabled
         }
 
         for text_idx, doc in enumerate(nlp.pipe(texts, **kwargs)):
@@ -679,10 +688,11 @@ class SentenceCharTokenizer(CharTokenizer):
         # Perf optimization. Only process what is necessary.
         n_threads, batch_size = _parse_spacy_kwargs(**kwargs)
         nlp = spacy.load(self.lang)
+
         kwargs = {
             'batch_size': batch_size,
             'n_threads': n_threads,
-            'entity': False,
+            'disable': ['ner']
         }
 
         # Perf optimization: Lower the entire text instead of individual tokens.

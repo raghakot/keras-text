@@ -12,7 +12,7 @@ setup(name='keras-text',
       url='https://github.com/raghakot/keras-text',
       download_url='https://github.com/raghakot/keras-text/tarball/{}'.format(version),
       license='MIT',
-      install_requires=['keras', 'six', 'spacy', 'scikit-learn'],
+      install_requires=['keras>=2.1.2', 'six', 'spacy>=2.0.3', 'scikit-learn'],
       extras_require={
           'tests': ['pytest',
                     'pytest-pep8',
