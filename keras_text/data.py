@@ -17,7 +17,7 @@ class Dataset(object):
 
     def __init__(self, inputs, labels, test_indices=None, **kwargs):
         """Encapsulates all pieces of data to run an experiment. This is basically a bag of items that makes it
-        easy to serialize and deserialize everything as
+        easy to serialize and deserialize everything as a unit.
 
         Args:
             inputs: The raw model inputs. This can be set to None if you dont want
