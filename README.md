@@ -119,7 +119,7 @@ Until then, the best resource is to refer to the [API docs](https://raghakot.git
 ## Installation
 
 1) Install [keras](https://github.com/fchollet/keras/blob/master/README.md#installation) 
-with theano or tensorflow backend. Note that this library requires Keras > 2.0
+with theano or tensorflow backend. Note that this library requires Keras > 2.0 and Python = 2.x
 
 2) Install keras-text
 > From sources
