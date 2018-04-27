@@ -35,7 +35,7 @@ class SentenceModelFactory(object):
 
         if embedding_type is not None:
             self.embeddings_index = get_embeddings_index(embedding_type)
-            self.embedding_dims = self.embeddings_index.values()[0].shape[-1]
+            self.embedding_dims = list(self.embeddings_index.values())[0].shape[-1]
         else:
             self.embeddings_index = None
             self.embedding_dims = embedding_dims

@@ -326,7 +326,7 @@ class Tokenizer(object):
             progbar.update(indices[0])
 
         # All done. Finalize progressbar.
-        progbar.update(len(texts), force=True)
+        progbar.update(len(texts))
         return encoded_texts
 
     def decode_texts(self, encoded_texts, unknown_token="<UNK>", inplace=True):
@@ -380,7 +380,7 @@ class Tokenizer(object):
         # All done. Finalize progressbar update and count tracker.
         count_tracker.finalize()
         self._counts = count_tracker.counts
-        progbar.update(len(texts), force=True)
+        progbar.update(len(texts))
 
     def get_counts(self, i):
         """Numpy array of count values for aux_indices. For example, if `token_generator` generates

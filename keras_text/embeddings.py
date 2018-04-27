@@ -52,6 +52,7 @@ def _build_embeddings_index(embeddings_path):
             word = values[0]
             vector = np.asarray(values[1:], dtype='float32')
             index[word] = vector
+    logger.info('Done')
     return index
 
 
@@ -59,7 +60,7 @@ def build_embedding_weights(word_index, embeddings_index):
     """Builds an embedding matrix for all words in vocab using embeddings_index
     """
     logger.info('Loading embeddings for all words in the corpus')
-    embedding_dim = embeddings_index.values()[0].shape[-1]
+    embedding_dim = list(embeddings_index.values())[0].shape[-1]
 
     # +1 since tokenizer words are indexed from 1. 0 is reserved for padding and unknown words.
     embedding_weights = np.zeros((len(word_index) + 1, embedding_dim))
