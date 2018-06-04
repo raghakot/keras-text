@@ -13,7 +13,7 @@ from multiprocessing import cpu_count
 
 from keras.preprocessing.sequence import pad_sequences as keras_pad_sequences
 from keras.utils.generic_utils import Progbar
-
+from keras import __version__ as KERAS_VERSION
 
 logger = logging.getLogger(__name__)
 
@@ -326,7 +326,10 @@ class Tokenizer(object):
             progbar.update(indices[0])
 
         # All done. Finalize progressbar.
-        progbar.update(len(texts), force=True)
+        if KERAS_VERSION > '2.1.3':
+            progbar.update(len(texts))
+        else:
+            progbar.update(len(texts), force=True)
         return encoded_texts
 
     def decode_texts(self, encoded_texts, unknown_token="<UNK>", inplace=True):
